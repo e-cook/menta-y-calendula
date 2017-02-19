@@ -99,8 +99,8 @@ function myc_install_0_1() {
     quantity decimal(8,2),
     buy_total_price decimal(8,2),
     PRIMARY KEY  (id),
-    KEY (time),
-    KEY (product_id)
+    KEY time (time),
+    KEY product_id (product_id)
   ) $charset_collate;",
 
     "CREATE TABLE $price_table_name (
@@ -129,18 +129,21 @@ function myc_uninstall_0_1() {
   $wpdb->query("DROP TABLE IF EXISTS $price_table_name");  
 }
 
+function float_version_to_string($version) {
+  return str_replace( '.', '_', strval( $version ));
+}
+
 function myc_install( $myc_test_db_versions=array() ) {
   global $myc_db_version;
+
   $myc_db_version = get_option('myc_db_version');
   $myc_db_version_float = ( $myc_db_version == false ) ? 0.0 : strval($myc_db_version);
-  $testing = ( sizeof($myc_test_db_versions) == 0 ) ? true : false;
+  $testing = ( sizeof( $myc_test_db_versions ) == 0 ) ? true : false;
   $test_versions = $testing ? $myc_all_db_versions : $myc_test_db_versions;
 
   foreach( $test_versions as $previous_version_float ) {
     if( $myc_db_version_float < $previous_version_float ) {
-      $update_func = 'myc_install_' . str_replace( '.', '_', strval( $previous_version_float ));
-      //      fwrite(STDERR, print_r( "\nmyc_install calling " . $update_func . "\n" ));
-      call_user_func($update_func);
+      call_user_func( 'myc_install_' . float_version_to_string( $previous_version_float ));
     }
   }
     
@@ -153,12 +156,11 @@ register_activation_hook( __FILE__, 'myc_install' );
 
 function myc_uninstall() {
   global $myc_all_db_versions;
-  global $wpdb;
 
   foreach( array_reverse( $myc_all_db_versions ) as $version_float ) {
-    $update_func = 'myc_uninstall_' . str_replace( '.', '_', strval( $version_float ));
-    //    fwrite(STDERR, print_r( "\nmyc_uninstall calling " . $update_func . "\n" ));
-    call_user_func($update_func);
+    call_user_func( 'myc_uninstall_' . float_version_to_string( $version_float ));
   }
 
 }
+
+//      fwrite(STDERR, print_r( "\nmyc_install calling " . $update_func . "\n" ));
