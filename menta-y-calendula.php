@@ -32,8 +32,8 @@ defined( 'ABSPATH' ) or die();
 global $myc_db_version;
 $myc_db_version = '0.1';
 
-global $myc_previous_db_versions;
-$myc_previous_db_versions = array( '0.0' );
+global $myc_all_db_versions;
+$myc_all_db_versions = array( '0', '0.1' );
 
 function recipe_init() {
 	 // create recipe taxonomy
@@ -41,13 +41,13 @@ function recipe_init() {
 		'recipe',
 		'post',
 		array(
-			'label'        => __( 'Recipe', 'menta-y-calendula' )
-			'rewrite'      => array( 'slug' => 'recipe' ),
-			'capabilities' => array( 'assign_terms' => 'edit_recipes',
-				       	  	 'edit_terms'   => 'edit_recipes',
-						 'manage_terms' => 'edit_recipes',
-						 'delete_terms' => 'edit_recipes',
-						 )
+		      'label'        => __( 'Recipe', 'menta-y-calendula' ),
+		      'rewrite'      => array( 'slug' => 'recipe' ),
+		      'capabilities' => array( 'assign_terms' => 'edit_recipes',
+					       'edit_terms'   => 'edit_recipes',
+					       'manage_terms' => 'edit_recipes',
+					       'delete_terms' => 'edit_recipes',
+					       )
 		)
 	);
 }
@@ -56,23 +56,30 @@ add_action( 'init', 'recipe_init' );
 
 load_plugin_textdomain( 'menta-y-calendula', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
-function upgrade_admin_notice($problematic_version_number) {
+/*
+function upgrade_not_found($problematic_version_number) {
     ?>
     <div class="error">
-        <p><?php _e( "Tried to upgrade to version $problematic_version_number out of sequence", 'myc-text-domain' ); ?></p>
+        <p><?php _e( "Could not find code to upgrade to version $problematic_version_number", 'myc-text-domain' ); ?></p>
     </div>
     <?php
 }
 
 function register_version_number($new_version_float) {
   global $myc_db_version;
-  global $myc_previous_db_versions;
-  if( in_array( $new_version_float, $myc_previous_db_versions )) {
-    add_action( 'admin_notices', upgrade_admin_notice( $new_version_float ));
+  global $myc_all_db_versions;
+  if( !in_array( $new_version_float, $myc_all_db_versions )) {
+    add_action( 'admin_notices', upgrade_not_found( $new_version_float ));
   }
-  $myc_previous_db_versions[] = $new_version_float;
   $myc_db_version = strval($new_version_float);
   add_option( 'myc_db_version', $myc_db_version );
+}
+*/
+
+function myc_install_0() {
+}
+
+function myc_uninstall_0() {
 }
 
 function myc_install_0_1() {
@@ -81,8 +88,10 @@ function myc_install_0_1() {
   $charset_collate = $wpdb->get_charset_collate();
 
   $buy_table_name = $wpdb->prefix . "buy";
+  $price_table_name = $wpdb->prefix . "price";
 
-  $buy_sql = "CREATE TABLE $buy_table_name (
+  $sql = array(
+    "CREATE TABLE $buy_table_name (
     id bigint(20) NOT NULL AUTO_INCREMENT,
     time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
     product_id bigint(20) UNSIGNED NOT NULL,
@@ -92,11 +101,9 @@ function myc_install_0_1() {
     PRIMARY KEY  (id),
     KEY (time),
     KEY (product_id)
-  ) $charset_collate;";
+  ) $charset_collate;",
 
-  $price_table_name = $wpdb->prefix . "price";
-
-  $price_sql = "CREATE TABLE $price_table_name (
+    "CREATE TABLE $price_table_name (
     id bigint(20) NOT NULL AUTO_INCREMENT,
     product_id bigint(20) UNSIGNED NOT NULL,
     provider_id bigint(20) UNSIGNED NOT NULL,
@@ -106,20 +113,52 @@ function myc_install_0_1() {
     PRIMARY KEY  (id),
     KEY last_update (last_update),
     KEY product_id (product_id)
-  ) $charset_collate;";
+  ) $charset_collate;" );
 
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-  dbDelta( $buy_sql );
-  dbDelta( $price_sql );
-
-  $myc_db_version = 0.1;
-
-  
+  dbDelta( $sql );
 }
 
-function myc_update_db_check() {
+function myc_uninstall_0_1() {
+  global $wpdb;
+
+  $buy_table_name = $wpdb->prefix . "buy";
+  $price_table_name = $wpdb->prefix . "price";
+
+  $wpdb->query("DROP TABLE IF EXISTS $buy_table_name");  
+  $wpdb->query("DROP TABLE IF EXISTS $price_table_name");  
+}
+
+function myc_install( $myc_test_db_versions=array() ) {
   global $myc_db_version;
-  
+  $myc_db_version = get_option('myc_db_version');
+  $myc_db_version_float = ( $myc_db_version == false ) ? 0.0 : strval($myc_db_version);
+  $testing = ( sizeof($myc_test_db_versions) == 0 ) ? true : false;
+  $test_versions = $testing ? $myc_all_db_versions : $myc_test_db_versions;
+
+  foreach( $test_versions as $previous_version_float ) {
+    if( $myc_db_version_float < $previous_version_float ) {
+      $update_func = 'myc_install_' . str_replace( '.', '_', strval( $previous_version_float ));
+      //      fwrite(STDERR, print_r( "\nmyc_install calling " . $update_func . "\n" ));
+      call_user_func($update_func);
+    }
+  }
+    
+  $myc_db_version = strval( array_slice( $myc_test_db_versions, -1 )[0] );
+  add_option( 'myc_db_version', $myc_db_version );  
+  return $myc_db_version;
 }
 
 register_activation_hook( __FILE__, 'myc_install' );
+
+function myc_uninstall() {
+  global $myc_all_db_versions;
+  global $wpdb;
+
+  foreach( array_reverse( $myc_all_db_versions ) as $version_float ) {
+    $update_func = 'myc_uninstall_' . str_replace( '.', '_', strval( $version_float ));
+    //    fwrite(STDERR, print_r( "\nmyc_uninstall calling " . $update_func . "\n" ));
+    call_user_func($update_func);
+  }
+
+}
