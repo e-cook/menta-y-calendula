@@ -59,21 +59,6 @@ VALUES
 	  $this->assertTrue( $wpdb->get_var( "SELECT buy_total_price FROM $table_name WHERE id='1'" ) == 4.5 );
 	}
 
-	function test_populate_price() {
-	  global $wpdb;
-	  $table_name = $wpdb->prefix . 'price';
-	  $wpdb->query(
-"INSERT INTO $table_name (`id`, `product_id`, `provider_id`, `week_price`, `month_price`)
-VALUES
-(1, 2, 3, 			array(
-			      'id' => 1,
-			      'product_id' => 2,
-			      'provider_id' => 3,
-			      'week_price' => 23.0,
-			      'month_price' => 24.0
-			      ));
-	  $this->assertTrue( $wpdb->get_var( "SELECT week_price FROM $table_name WHERE id='1'" ) == 23.0 );
-	}
 
 	function test_uninstall() {
 	  global $wpdb;

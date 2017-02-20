@@ -88,7 +88,6 @@ function myc_install_0_1() {
   $charset_collate = $wpdb->get_charset_collate();
 
   $buy_table_name = $wpdb->prefix . 'buy';
-  $price_table_name = $wpdb->prefix . 'price';
   $provided_by_table_name = $wpdb->prefix . 'provided_by';
 
   $sql = array(
@@ -103,18 +102,6 @@ PRIMARY KEY  (id),
 KEY time (time),
 KEY product_id (product_id)
   ) $charset_collate;",
-
-"CREATE TABLE $price_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-product_id bigint(20) UNSIGNED NOT NULL,
-provider_id bigint(20) UNSIGNED NOT NULL,
-last_update timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-best_price_week decimal(8,2),
-best_price_month decimal(8,2),
-PRIMARY KEY  (id),
-KEY last_update (last_update),
-KEY product_id (product_id)
-) $charset_collate;",
 
 "CREATE TABLE $provided_by_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -134,11 +121,9 @@ function myc_uninstall_0_1() {
   global $wpdb;
 
   $buy_table_name = $wpdb->prefix . "buy";
-  $price_table_name = $wpdb->prefix . "price";
   $provided_by_table_name = $wpdb->prefix . 'provided_by';
 
   $wpdb->query("DROP TABLE IF EXISTS $buy_table_name");  
-  $wpdb->query("DROP TABLE IF EXISTS $price_table_name");  
   $wpdb->query("DROP TABLE IF EXISTS $provided_by_table_name");  
 }
 
