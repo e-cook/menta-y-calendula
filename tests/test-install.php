@@ -46,17 +46,17 @@ VALUES
 	  global $wpdb;
 	  $table_name = $wpdb->prefix . "buy";
 	  $wpdb->query(
-"INSERT INTO $table_name (`timestamp`, `product_id`, `provider_id`, `quantity`, `buy_total_price`)
+"INSERT INTO $table_name (`date`, `product_id`, `provider_id`, `quantity`, `total_price`, `unit_price`)
 VALUES
-(NOW() - INTERVAL 1 WEEK, 1, 4, 4.0, 4.5),
-(NOW(),                   1, 4, 4.0, 5.0),
-(NOW() - INTERVAL 1 WEEK, 1, 5, 4.0, 6.0),
-(NOW(),                   1, 5, 4.0, 5.5),
-(NOW(),                   2, 6, 10.0, 30.0),
-(NOW() - INTERVAL 2 WEEK, 2, 7, 10.0, 40.0),
-(NOW(),                   3, 5, 0.5, 4.0),
-(NOW(),                   3, 7, 0.5, 5.0)");
-	  $this->assertTrue( $wpdb->get_var( "SELECT buy_total_price FROM $table_name WHERE id='1'" ) == 4.5 );
+(NOW() - INTERVAL 1 WEEK, 1, 4, 4.0, 4.5, 1.125),
+(NOW(),                   1, 4, 4.0, 5.0, 1.25),
+(NOW() - INTERVAL 1 WEEK, 1, 5, 4.0, 6.0, 1.5),
+(NOW(),                   1, 5, 4.0, 5.5, 1.375),
+(NOW(),                   2, 6, 10.0, 30.0, 3.0),
+(NOW() - INTERVAL 2 WEEK, 2, 7, 10.0, 40.0, 4.0),
+(NOW(),                   3, 5, 0.5, 4.0, 8.0),
+(NOW(),                   3, 7, 0.5, 5.0, 10.0)");
+	  $this->assertTrue( $wpdb->get_var( "SELECT total_price FROM $table_name WHERE id='1'" ) == 4.5 );
 	}
 
 

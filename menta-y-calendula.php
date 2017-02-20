@@ -93,14 +93,16 @@ function myc_install_0_1() {
   $sql = array(
 "CREATE TABLE $buy_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
-time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 product_id bigint(20) UNSIGNED NOT NULL,
 provider_id bigint(20) UNSIGNED NOT NULL,
 quantity decimal(8,2),
-buy_total_price decimal(8,2),
+total_price decimal(8,2),
+unit_price decimal(10,4),
 PRIMARY KEY  (id),
-KEY time (time),
-KEY product_id (product_id)
+KEY date (date),
+KEY product_id (product_id),
+KEY unit_price (unit_price)
   ) $charset_collate;",
 
 "CREATE TABLE $provided_by_table_name (
