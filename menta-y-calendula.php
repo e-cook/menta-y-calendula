@@ -87,33 +87,44 @@ function myc_install_0_1() {
 
   $charset_collate = $wpdb->get_charset_collate();
 
-  $buy_table_name = $wpdb->prefix . "buy";
-  $price_table_name = $wpdb->prefix . "price";
+  $buy_table_name = $wpdb->prefix . 'buy';
+  $price_table_name = $wpdb->prefix . 'price';
+  $provided_by_table_name = $wpdb->prefix . 'provided_by';
 
   $sql = array(
-    "CREATE TABLE $buy_table_name (
-    id bigint(20) NOT NULL AUTO_INCREMENT,
-    time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-    product_id bigint(20) UNSIGNED NOT NULL,
-    provider_id bigint(20) UNSIGNED NOT NULL,
-    quantity decimal(8,2),
-    buy_total_price decimal(8,2),
-    PRIMARY KEY  (id),
-    KEY time (time),
-    KEY product_id (product_id)
+"CREATE TABLE $buy_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+product_id bigint(20) UNSIGNED NOT NULL,
+provider_id bigint(20) UNSIGNED NOT NULL,
+quantity decimal(8,2),
+buy_total_price decimal(8,2),
+PRIMARY KEY  (id),
+KEY time (time),
+KEY product_id (product_id)
   ) $charset_collate;",
 
-    "CREATE TABLE $price_table_name (
-    id bigint(20) NOT NULL AUTO_INCREMENT,
-    product_id bigint(20) UNSIGNED NOT NULL,
-    provider_id bigint(20) UNSIGNED NOT NULL,
-    last_update datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-    week_price decimal(8,2),
-    month_price decimal(8,2),
-    PRIMARY KEY  (id),
-    KEY last_update (last_update),
-    KEY product_id (product_id)
-  ) $charset_collate;" );
+"CREATE TABLE $price_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+product_id bigint(20) UNSIGNED NOT NULL,
+provider_id bigint(20) UNSIGNED NOT NULL,
+last_update timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+week_price decimal(8,2),
+month_price decimal(8,2),
+PRIMARY KEY  (id),
+KEY last_update (last_update),
+KEY product_id (product_id)
+) $charset_collate;",
+
+"CREATE TABLE $provided_by_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+product_id bigint(20) UNSIGNED NOT NULL,
+provider_id bigint(20) UNSIGNED NOT NULL,
+PRIMARY KEY  (id),
+KEY product_id (product_id),
+KEY provider_id (provider_id)
+) $charset_collate;"
+	       );
 
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
   dbDelta( $sql );
@@ -124,9 +135,11 @@ function myc_uninstall_0_1() {
 
   $buy_table_name = $wpdb->prefix . "buy";
   $price_table_name = $wpdb->prefix . "price";
+  $provided_by_table_name = $wpdb->prefix . 'provided_by';
 
   $wpdb->query("DROP TABLE IF EXISTS $buy_table_name");  
   $wpdb->query("DROP TABLE IF EXISTS $price_table_name");  
+  $wpdb->query("DROP TABLE IF EXISTS $provided_by_table_name");  
 }
 
 function float_version_to_string($version) {
