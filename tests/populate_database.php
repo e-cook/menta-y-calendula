@@ -4,6 +4,9 @@
  *
  * @package Menta_Y_Calendula
  */
+function test_install() {
+    $this->assertTrue(myc_install()==1);
+}
 
 function populate_products($wpdb, $posts_table) {
   $wpdb->query(
