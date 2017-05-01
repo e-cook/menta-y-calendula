@@ -34,24 +34,87 @@ global $myc_db_version;
 global $myc_all_db_versions;
 $myc_all_db_versions = array( '0', '0.1' );
 
-function recipe_init() {
-    // create recipe taxonomy
+add_action( 'init', 'create_post_type' );
+function create_post_type() {
+    register_post_type( 'myc_ingredient',
+			array(
+			    'labels' => array(
+				'name' => __( 'Ingredients' ),
+				'singular_name' => __( 'Ingredient' ),
+				'add_new_item' => _x( 'Add new ingredient', 'myc_ingredient' ),
+				'edit_item' => _x( 'Edit ingredient', 'myc_ingredient' ),
+				'view_item' => _x( 'View ingredient', 'myc_ingredient' ),
+			    ),
+			    'public' => true,
+			    'has_archive' => true,
+			)
+    );
+
+    register_post_type( 'myc_provider',
+			array(
+			    'labels' => array(
+				'name' => __( 'Providers' ),
+				'singular_name' => __( 'Provider' ),
+				'add_new_item' => _x( 'Add new provider', 'myc_provider' ),
+				'edit_item' => _x( 'Edit provider', 'myc_provider' ),
+				'view_item' => _x( 'View provider', 'myc_provider' ),
+			    ),
+			    'public' => true,
+			    'has_archive' => true,
+			)
+    );
+    
+    register_post_type( 'myc_recipe',
+			array(
+			    'labels' => array(
+				'name' => __( 'Recipes' ),
+				'singular_name' => __( 'Recipe' ),
+				'add_new_item' => _x( 'Add new recipe', 'myc_recipe' ),
+				'edit_item' => _x( 'Edit recipe', 'myc_recipe' ),
+				'view_item' => _x( 'View recipe', 'myc_recipe' ),
+			    ),
+			    'public' => true,
+			    'has_archive' => true,
+			)
+    );
+
     register_taxonomy(
-	'recipe',
-	'post',
+	'type',
+	'myc_recipe',
 	array(
-	    'label'        => __( 'Recipe', 'menta-y-calendula' ),
-	    'rewrite'      => array( 'slug' => 'recipe' ),
-	    'capabilities' => array( 'assign_terms' => 'edit_recipes',
-				     'edit_terms'   => 'edit_recipes',
-				     'manage_terms' => 'edit_recipes',
-				     'delete_terms' => 'edit_recipes',
-	    )
+	    'label'        => __( 'Type', 'taxonomy' ),
+	    'rewrite'      => array( 'slug' => 'type' ),
+	    /* 'capabilities' => array( 'assign_terms' => 'edit_recipes',
+	       'edit_terms'   => 'edit_recipes',
+	       'manage_terms' => 'edit_recipes',
+	       'delete_terms' => 'edit_recipes',
+	       )*/
 	)
     );
-}
+    wp_insert_term( __( 'Soup' ), 'type' ); 
+    wp_insert_term( __( 'Salad' ), 'type' ); 
+    wp_insert_term( __( 'Side' ), 'type' ); 
+    wp_insert_term( __( 'Dessert' ), 'type' ); 
 
-add_action( 'init', 'recipe_init' );
+    
+    register_taxonomy(
+	'spiciness',
+	'myc_recipe',
+	array(
+	    'label'        => __( 'Spiciness', 'taxonomy' ),
+	    'rewrite'      => array( 'slug' => 'spiciness' ),
+	    /* 'capabilities' => array( 'assign_terms' => 'edit_recipes',
+	       'edit_terms'   => 'edit_recipes',
+	       'manage_terms' => 'edit_recipes',
+	       'delete_terms' => 'edit_recipes',
+	       )*/
+	)
+    );
+    wp_insert_term( __( 'bland' ), 'spiciness' ); 
+    wp_insert_term( __( 'spicy' ), 'spiciness' ); 
+    wp_insert_term( __( 'hot' ), 'spiciness' ); 
+    wp_insert_term( __( 'extreme' ), 'spiciness' ); 
+}
 
 load_plugin_textdomain( 'menta-y-calendula', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -188,8 +251,8 @@ function myc_uninstall_0_1() {
     $posts_table = $wpdb->prefix . 'posts';
 
     $wpdb->query("DELETE FROM $posts_table WHERE id>9");
-    foreach(array($buy_table_name, $provided_by_table_name, $recipe_table_name, $ingredient_table_name,
-		  $provider_tag_table_name, $recipe_tag_table_name, $ingredient_tag_table_name) as $t) {
+    foreach(array($ingredient_table_name, $ingredient_tag_table_name, $provider_table_name, $provider_tag_table_name, $provided_by_table_name,
+		  $buy_table_name, $recipe_table_name, $recipe_tag_table_name) as $t) {
 	$wpdb->query("DROP TABLE IF EXISTS $t");
     }
 }
