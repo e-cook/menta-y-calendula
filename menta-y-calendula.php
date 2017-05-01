@@ -32,10 +32,10 @@ defined( 'ABSPATH' ) or die();
 global $myc_db_version;
 
 global $myc_all_db_versions;
-$myc_all_db_versions = array( '0', '0.1' );
+$myc_all_db_versions = array( '0.1' );
 
 add_action( 'init', 'create_post_type' );
-function create_post_type() {
+function create_post_type() { /* move this to another place so it's not called every time a new page is opened */
     register_post_type( 'myc_ingredient',
 			array(
 			    'labels' => array(
@@ -114,6 +114,25 @@ function create_post_type() {
     wp_insert_term( __( 'spicy' ), 'spiciness' ); 
     wp_insert_term( __( 'hot' ), 'spiciness' ); 
     wp_insert_term( __( 'extreme' ), 'spiciness' ); 
+
+    register_taxonomy(
+	'difficulty',
+	'myc_recipe',
+	array(
+	    'label'        => __( 'Difficulty', 'taxonomy' ),
+	    'rewrite'      => array( 'slug' => 'difficulty' ),
+	    /* 'capabilities' => array( 'assign_terms' => 'edit_recipes',
+	       'edit_terms'   => 'edit_recipes',
+	       'manage_terms' => 'edit_recipes',
+	       'delete_terms' => 'edit_recipes',
+	       )*/
+	)
+    );
+    wp_insert_term( __( '1' ), 'difficulty' ); 
+    wp_insert_term( __( '2' ), 'difficulty' ); 
+    wp_insert_term( __( '3' ), 'difficulty' ); 
+    wp_insert_term( __( '4' ), 'difficulty' ); 
+    wp_insert_term( __( '5' ), 'difficulty' ); 
 }
 
 load_plugin_textdomain( 'menta-y-calendula', false, basename( dirname( __FILE__ ) ) . '/languages' );
@@ -150,15 +169,6 @@ PRIMARY KEY  (id),
 KEY name (name)
 ) $charset_collate;",
 
-	"CREATE TABLE $ingredient_tag_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-tag varchar(20),
-for_id bigint(20),
-PRIMARY KEY  (id),
-KEY tag (tag),
-KEY for_id (for_id)
-) $charset_collate;",
-
 	"CREATE TABLE $provider_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
 name varchar(100),
@@ -173,15 +183,6 @@ account text,
 comment text,
 PRIMARY KEY  (id),
 KEY name (name)
-) $charset_collate;",
-
-	"CREATE TABLE $provider_tag_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-tag varchar(20),
-for_id bigint(20),
-PRIMARY KEY  (id),
-KEY tag (tag),
-KEY for_id (for_id)
 ) $charset_collate;",
 
 	"CREATE TABLE $provided_by_table_name (
@@ -217,15 +218,6 @@ last_price_update date,
 difficulty int(11),
 PRIMARY KEY  (id),
 KEY name (name)
-) $charset_collate;",
-
-	"CREATE TABLE $recipe_tag_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-tag varchar(20),
-for_id bigint(20),
-PRIMARY KEY  (id),
-KEY tag (tag),
-KEY for_id (for_id)
 ) $charset_collate;"
     );
 
@@ -237,22 +229,14 @@ function myc_uninstall_0_1() {
     global $wpdb;
 
     $ingredient_table_name     = $wpdb->prefix . 'ingredient'; 
-    $ingredient_tag_table_name = $wpdb->prefix . 'ingredient_tag'; 
-
     $provider_table_name       = $wpdb->prefix . 'provider';
-    $provider_tag_table_name   = $wpdb->prefix . 'provider_tag'; 
-
     $provided_by_table_name    = $wpdb->prefix . 'provided_by';
     $buy_table_name            = $wpdb->prefix . 'buy';
-
     $recipe_table_name         = $wpdb->prefix . 'recipe';
-    $recipe_tag_table_name     = $wpdb->prefix . 'recipe_tag'; 
-
-    $posts_table = $wpdb->prefix . 'posts';
+    $posts_table               = $wpdb->prefix . 'posts';
 
     $wpdb->query("DELETE FROM $posts_table WHERE id>9");
-    foreach(array($ingredient_table_name, $ingredient_tag_table_name, $provider_table_name, $provider_tag_table_name, $provided_by_table_name,
-		  $buy_table_name, $recipe_table_name, $recipe_tag_table_name) as $t) {
+    foreach(array($ingredient_table_name, $provider_table_name, $provided_by_table_name, $buy_table_name, $recipe_table_name) as $t) {
 	$wpdb->query("DROP TABLE IF EXISTS $t");
     }
 }
@@ -270,13 +254,10 @@ function myc_install() {
 	require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
 
 	populate_ingredients    ($wpdb, $wpdb->prefix . 'ingredient');
-	populate_ingredient_tags($wpdb, $wpdb->prefix . 'ingredient_tag');
 	populate_providers      ($wpdb, $wpdb->prefix . 'provider');
-	populate_provider_tags  ($wpdb, $wpdb->prefix . 'provider_tag');
 	populate_provided_by    ($wpdb, $wpdb->prefix . 'provided_by');
 	populate_buy            ($wpdb, $wpdb->prefix . 'buy');
 	populate_recipes        ($wpdb, $wpdb->prefix . 'recipe');
-	populate_recipe_tags    ($wpdb, $wpdb->prefix . 'recipe_tag');
     }
     return 1;
 }
