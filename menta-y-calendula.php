@@ -128,7 +128,8 @@ function float_version_to_string($version) {
 
 function myc_install( $myc_test_db_versions=array() ) {
     myc_install_0_1();
-    add_option( 'myc_db_version', '0.1', '', 'yes' );  
+    add_option( 'myc_db_version', '0.1', '', 'yes' );
+    return 1;
 }
 
 register_activation_hook( __FILE__, 'myc_install' );
