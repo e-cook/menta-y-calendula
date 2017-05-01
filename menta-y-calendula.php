@@ -60,31 +60,109 @@ function myc_install_0_1() {
 
     $charset_collate = $wpdb->get_charset_collate();
 
-    $buy_table_name = $wpdb->prefix . 'buy';
-    $provided_by_table_name = $wpdb->prefix . 'provided_by';
+    $ingredient_table_name     = $wpdb->prefix . 'ingredient'; 
+    $ingredient_tag_table_name = $wpdb->prefix . 'ingredient_tag'; 
 
+    $provider_table_name       = $wpdb->prefix . 'provider';
+    $provider_tag_table_name   = $wpdb->prefix . 'provider_tag'; 
+
+    $provided_by_table_name    = $wpdb->prefix . 'provided_by';
+    $buy_table_name            = $wpdb->prefix . 'buy';
+
+    $recipe_table_name         = $wpdb->prefix . 'recipe';
+    $recipe_tag_table_name     = $wpdb->prefix . 'recipe_tag'; 
+    
     $sql = array(
+	"CREATE TABLE $ingredient_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+name varchar(55),
+comment text,
+modified date,
+last_price decimal(8,2),
+last_price_update date,
+best_price decimal(8,2),
+best_price_update date,
+base_unit varchar(20),
+PRIMARY KEY  (id),
+KEY name (name)
+) $charset_collate;",
+
+	"CREATE TABLE $ingredient_tag_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+tag varchar(20),
+for_id bigint(20),
+PRIMARY KEY  (id),
+KEY tag (tag),
+KEY for_id (for_id)
+) $charset_collate;",
+
+	"CREATE TABLE $provider_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+name varchar(100),
+modified date,
+address text,
+phone1 varchar(20),
+phone2 varchar(20),
+email1 text,
+email2 text,
+url text,
+account text,
+comment text,
+PRIMARY KEY  (id),
+KEY name (name)
+) $charset_collate;",
+
+	"CREATE TABLE $provider_tag_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+tag varchar(20),
+for_id bigint(20),
+PRIMARY KEY  (id),
+KEY tag (tag),
+KEY for_id (for_id)
+) $charset_collate;",
+
+	"CREATE TABLE $provided_by_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+ingredient_id bigint(20) UNSIGNED NOT NULL,
+provider_id bigint(20) UNSIGNED NOT NULL,
+PRIMARY KEY  (id),
+KEY ingredient_id (ingredient_id),
+KEY provider_id (provider_id)
+) $charset_collate;",
+	
 	"CREATE TABLE $buy_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
 date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-product_id bigint(20) UNSIGNED NOT NULL,
+ingredient_id bigint(20) UNSIGNED NOT NULL,
 provider_id bigint(20) UNSIGNED NOT NULL,
 quantity decimal(8,2),
 total_price decimal(8,2),
 unit_price decimal(10,4),
 PRIMARY KEY  (id),
 KEY date (date),
-KEY product_id (product_id),
+KEY ingredient_id (ingredient_id),
 KEY unit_price (unit_price)
-  ) $charset_collate;",
+) $charset_collate;",
 
-	"CREATE TABLE $provided_by_table_name (
+
+	"CREATE TABLE $recipe_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
-product_id bigint(20) UNSIGNED NOT NULL,
-provider_id bigint(20) UNSIGNED NOT NULL,
+name varchar(55),
+modified date,
+production_price decimal(8,2),
+last_price_update date,
+difficulty int(11),
 PRIMARY KEY  (id),
-KEY product_id (product_id),
-KEY provider_id (provider_id)
+KEY name (name)
+) $charset_collate;",
+
+	"CREATE TABLE $recipe_tag_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+tag varchar(20),
+for_id bigint(20),
+PRIMARY KEY  (id),
+KEY tag (tag),
+KEY for_id (for_id)
 ) $charset_collate;"
     );
 
@@ -95,13 +173,25 @@ KEY provider_id (provider_id)
 function myc_uninstall_0_1() {
     global $wpdb;
 
-    $posts_table = $wpdb->prefix . 'posts';
-    $buy_table_name = $wpdb->prefix . "buy";
-    $provided_by_table_name = $wpdb->prefix . 'provided_by';
+    $ingredient_table_name     = $wpdb->prefix . 'ingredient'; 
+    $ingredient_tag_table_name = $wpdb->prefix . 'ingredient_tag'; 
 
-    $wpdb->query("DROP TABLE IF EXISTS $buy_table_name");  
-    $wpdb->query("DROP TABLE IF EXISTS $provided_by_table_name");
+    $provider_table_name       = $wpdb->prefix . 'provider';
+    $provider_tag_table_name   = $wpdb->prefix . 'provider_tag'; 
+
+    $provided_by_table_name    = $wpdb->prefix . 'provided_by';
+    $buy_table_name            = $wpdb->prefix . 'buy';
+
+    $recipe_table_name         = $wpdb->prefix . 'recipe';
+    $recipe_tag_table_name     = $wpdb->prefix . 'recipe_tag'; 
+
+    $posts_table = $wpdb->prefix . 'posts';
+
     $wpdb->query("DELETE FROM $posts_table WHERE id>9");
+    foreach(array($buy_table_name, $provided_by_table_name, $recipe_table_name, $ingredient_table_name,
+		  $provider_tag_table_name, $recipe_tag_table_name, $ingredient_tag_table_name) as $t) {
+	$wpdb->query("DROP TABLE IF EXISTS $t");
+    }
 }
 
 function float_version_to_string($version) {
@@ -116,14 +206,14 @@ function myc_install() {
     if ('myc_'===$wpdb->prefix) {
 	require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
 
-	$posts_table = $wpdb->prefix . 'posts';
-	populate_products($wpdb, $posts_table);
-
-	$provided_by_table = $wpdb->prefix . 'provided_by';
-	populate_providers($wpdb, $provided_by_table);
-
-	$table_name = $wpdb->prefix . "buy";
-	populate_buy($wpdb, $table_name);
+	populate_ingredients    ($wpdb, $wpdb->prefix . 'ingredient');
+	populate_ingredient_tags($wpdb, $wpdb->prefix . 'ingredient_tag');
+	populate_providers      ($wpdb, $wpdb->prefix . 'provider');
+	populate_provider_tags  ($wpdb, $wpdb->prefix . 'provider_tag');
+	populate_provided_by    ($wpdb, $wpdb->prefix . 'provided_by');
+	populate_buy            ($wpdb, $wpdb->prefix . 'buy');
+	populate_recipes        ($wpdb, $wpdb->prefix . 'recipe');
+	populate_recipe_tags    ($wpdb, $wpdb->prefix . 'recipe_tag');
     }
     return 1;
 }
