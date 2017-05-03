@@ -195,4 +195,4 @@ register_deactivation_hook( __FILE__, 'myc_uninstall' );
 
 require_once(dirname(__FILE__) . '/includes/myc-ingredient.php');
 require_once(dirname(__FILE__) . '/includes/class-myc-recipe.php');
-require_once(dirname(__FILE__) . '/includes/class-myc-remove-stuff.php');
+require_once(dirname(__FILE__) . '/includes/class-myc-customize.php');

@@ -187,25 +187,26 @@ function recipe_custom_js() {
     endif;
 ?><script type='text/javascript'>
    jQuery( document ).ready( function() {
-       jQuery( '.options_group.pricing' ).addClass( 'show_if_recipe' ).show();
+       //jQuery( '.options_group.pricing' ).addClass( 'show_if_recipe' ).show();
    });
-</script><?php
-	 }
+</script>
+<?php
+}
 
-	 add_action( 'admin_footer', 'recipe_custom_js' );
+add_action( 'admin_footer', 'recipe_custom_js' );
 
-	 
-	 function wh_recipe_admin_custom_js() {
 
-	     if ('product' != get_post_type()) :
-	     return;
-	     endif;
-	 ?>
+function wh_recipe_admin_custom_js() {
+
+    if ('product' != get_post_type()) :
+    return;
+    endif;
+?>
     <script type='text/javascript'>
      jQuery(document).ready(function () {
 	 // for Price tab
 	 jQuery('.product_data_tabs .general_tab').addClass('show_if_recipe').show();
-	 jQuery('#general_product_data .pricing').addClass('show_if_recipe').show();
+	 jQuery('#general_product_data .pricing').hide();
 	 // for Inventory tab
 	 jQuery('.inventory_options').addClass('hide_if_recipe').show();
 	 jQuery('.shipping_options').addClass('hide_if_recipe').show();

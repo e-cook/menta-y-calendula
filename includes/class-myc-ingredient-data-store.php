@@ -12,7 +12,8 @@ class WC_Product_Ingredient_Data_Store_CPT extends WC_Product_Grouped_Data_Store
      * @param bool Force update. Used during create.
      * @since 3.0.0
      */
-    protected function update_post_meta( &$product, $force = false ) {
+    protected function add_post_meta( &$product, $force = false ) {
+	error_log("add_post_meta");
 	$meta_key_to_props = array(
 	    '_providers' => 'providers',
 	    '_prices' => 'prices',
@@ -21,7 +22,7 @@ class WC_Product_Ingredient_Data_Store_CPT extends WC_Product_Grouped_Data_Store
 	);
 
 	$props_to_update = $force ? $meta_key_to_props : $this->get_props_to_update( $product, $meta_key_to_props );
-
+	error_log("props_to_update: " . var_dump($props_to_update));
 	foreach ( $props_to_update as $meta_key => $prop ) {
 	    $value   = $product->{"get_$prop"}( 'edit' );
 	    $updated = update_post_meta( $product->get_id(), $meta_key, $value );
@@ -30,7 +31,7 @@ class WC_Product_Ingredient_Data_Store_CPT extends WC_Product_Grouped_Data_Store
 	    }
 	}
 
-	parent::update_post_meta( $product, $force );
+	parent::add_post_meta( $product, $force );
     }
 
     /**
@@ -42,8 +43,8 @@ class WC_Product_Ingredient_Data_Store_CPT extends WC_Product_Grouped_Data_Store
     protected function handle_updated_props( &$product ) {
 	if ( in_array( 'prices', $this->updated_props ) ) {
 	    $last_price = array_slice($product->get_prices(), -1)[0];
-	    $best_recent_price = $product->get_best_recent_price();
-	    if ($last_price[1] > $best_recent_price[1]) {
+	    $best_recent_price = $product->get_best_recent_price() ? $product->get_best_recent_price() : array('1900-1-1', 100000);
+	    if ($last_price[1] < $best_recent_price[1]) {
 		$product->set_best_recent_price($last_price);
 		delete_post_meta( $product->get_id(), '_best_recent_price' );
 		add_post_meta( $product->get_id(), '_best_recent_price', $last_price );
