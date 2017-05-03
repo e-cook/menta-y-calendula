@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-require_once(dirname(__FILE__) . "/../../woocommerce/woocommerce.php");
+
 
 class WC_Product_Ingredient extends WC_Product {
     public function __construct( $product ) {
@@ -11,35 +11,39 @@ class WC_Product_Ingredient extends WC_Product {
 	parent::__construct( $product );
     }
 
+    public function get_type() {
+	return 'ingredient';
+    }
+
     protected $extra_data = array(
-	'providers' => array(),
-	'prices' => array(),
-	'best_recent_price' => array(),
+	'provided_by' => array(),
+	'purchases' => array(),
+	'myc_stock' => array(),
 	'base_unit' => array()
     );
 
-    public function get_providers( $context = 'view' ) {
-	return $this->get_prop( 'providers', $context );
+    public function get_provided_by( $context = 'view' ) {
+	return $this->get_prop( 'provided_by', $context );
     }
 
-    public function set_providers( $providers ) {
-	$this->set_prop( 'providers', array_filter( wp_parse_id_list( (array) $providers ) ) );
+    public function set_provided_by( $provided_by ) {
+	$this->set_prop( 'provided_by', array_filter( wp_parse_id_list( (array) $provided_by ) ) );
     }
 
-    public function get_prices( $context = 'view' ) {
-	return $this->get_prop( 'prices', $context );
+    public function get_purchases( $context = 'view' ) {
+	return $this->get_prop( 'purchases', $context );
     }
 
-    public function set_prices( $prices ) {
-	$this->set_prop( 'prices', $prices );
+    public function set_purchases( $purchases ) {
+	$this->set_prop( 'purchases', $purchases );
     }
 
-    public function get_best_recent_price( $context = 'view' ) {
-	return $this->get_prop( 'best_recent_price', $context );
+    public function get_myc_stock( $context = 'view' ) {
+	return $this->get_prop( 'myc_stock', $context );
     }
 
-    public function set_best_recent_price( $best_recent_price ) {
-	$this->set_prop( 'best_recent_price', $best_recent_price );
+    public function set_myc_stock( $myc_stock ) {
+	$this->set_prop( 'myc_stock', $myc_stock );
     }
 
     public function get_base_unit( $context = 'view' ) {

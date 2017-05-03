@@ -3,27 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Register the custom product type after init
- */
-/* function add_stores($stores) {
- *     error_log("add_stores");
- *     $stores['_acquisition'] = 'WC_Product_Ingredient_Data_Store_CPT';
- *     return $stores;
- * }
- * */
-function register_ingredient_product_type() {
-    require_once(dirname(__FILE__) . '/class-myc-ingredient.php');
-//    require_once(dirname(__FILE__) . '/class-myc-ingredient-data-store.php');
 
-//    add_filter( 'woocommerce_data_stores', 'add_stores' );
-
-}
-add_action( 'plugins_loaded', 'register_ingredient_product_type' );
-
-
-function add_acquisition_fields() {
-    error_log("add_acquisition_fields");
+function add_purchase_fields() {
     global $woocommerce, $post;
     echo '<div class="options_group">';
     // Custom field Type
@@ -43,8 +24,8 @@ function add_acquisition_fields() {
 	    }?>
 	</span>
     </p>
-    <p class="form-field _acquisition">
-	<label for="_acquisition"><?php echo __( 'New acquisition', 'woocommerce' ); ?></label>
+    <p class="form-field _purchase">
+	<label for="_purchase"><?php echo __( 'New purchase', 'woocommerce' ); ?></label>
 	<span class="wrap">
 	    <?php
 	    echo
@@ -53,12 +34,12 @@ function add_acquisition_fields() {
 	    '<input placeholder="' . __( 'Quantity', 'woocommerce' )  . '" type="text" name="_field_qty"   style="width: 80px;" />';
 	    ?>
 	</span>
-	<span class="description"><?php __( 'New acquisition', 'woocommerce' ); ?></span>
+	<span class="description"><?php __( 'New purchase', 'woocommerce' ); ?></span>
     </p>
     <?php
     echo '</div>';
     }
-    add_action( 'woocommerce_product_options_general_product_data', 'add_acquisition_fields' );
+    add_action( 'woocommerce_product_options_general_product_data', 'add_purchase_fields' );
 
     function save_ingredient_fields( $post_id ) {
 	add_post_meta( $post_id, '_prices', array( esc_attr( $_POST['_field_date'] ),
@@ -79,26 +60,10 @@ function add_acquisition_fields() {
     add_filter( 'product_type_selector', 'add_ingredient_product' );
 
     /**
-     * Show pricing fields for ingredient product.
-     */
-    function ingredient_custom_js() {
-	if ( 'product' != get_post_type() ) {
-	    return;
-	}
-    ?><script type='text/javascript'>
-       jQuery( document ).ready( function() {
-	 //  jQuery( '.options_group.pricing' ).addClass( 'show_if_ingredient' ).show();
-       });
-    </script>
-    <?php
-    }
-
-    //add_action( 'admin_footer', 'ingredient_custom_js' );
-
-    /**
      * Add a custom product tab.
      */
     function custom_product_tabs( $tabs) {
+	$tabs['general']['label'] = __( 'Purchase', 'myc' );
 	$tabs['cooking'] = array(
 	    'label'		=> __( 'Cooking', 'woocommerce' ),
 	    'target'	=> 'cooking_options',

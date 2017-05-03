@@ -34,23 +34,6 @@ global $myc_db_version;
 global $myc_all_db_versions;
 $myc_all_db_versions = array( '0.1' );
 
-add_action( 'init', 'create_post_type' );
-function create_post_type() { /* move this to another place so it's not called every time a new page is opened */
-    register_post_type( 'myc_provider',
-			array(
-			    'labels' => array(
-				'name' => __( 'Providers' ),
-				'singular_name' => __( 'Provider' ),
-				'add_new_item' => _x( 'Add new provider', 'myc_provider' ),
-				'edit_item' => _x( 'Edit provider', 'myc_provider' ),
-				'view_item' => _x( 'View provider', 'myc_provider' ),
-			    ),
-			    'public' => true,
-			    'has_archive' => true,
-			)
-    );
-    
-}
 load_plugin_textdomain( 'menta-y-calendula', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
 function myc_install_0_1() {
@@ -58,77 +41,37 @@ function myc_install_0_1() {
 
     $charset_collate = $wpdb->get_charset_collate();
 
-    $ingredient_table_name     = $wpdb->prefix . 'ingredient'; 
-    $provider_table_name       = $wpdb->prefix . 'provider';
-    $provided_by_table_name    = $wpdb->prefix . 'provided_by';
-    $buy_table_name            = $wpdb->prefix . 'buy';
-    $recipe_table_name         = $wpdb->prefix . 'recipe';
+    $purchase_table_name    = $wpdb->prefix . 'purchase'; 
+    $stock_table_name       = $wpdb->prefix . 'stock';
     
     $sql = array(
-	"CREATE TABLE $ingredient_table_name (
+	"CREATE TABLE $purchase_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
-name varchar(55),
-comment text,
-modified date,
-last_price decimal(8,2),
-last_price_update date,
-best_price decimal(8,2),
-best_price_update date,
+phys_ingredient_id bigint(20),
+provider_id bigint(20),
+dt datetime,
+qty_before decimal(8,2),
+price_paid decimal(8,2),
+base_unit varchar(20),
+unit_price decimal(8,2),
+PRIMARY KEY  (id),
+KEY phys_ingredient_id (phys_ingredient_id),
+KEY provider_id (provider_id),
+KEY dt (dt)
+) $charset_collate;",
+
+	"CREATE TABLE $stock_table_name (
+id bigint(20) NOT NULL AUTO_INCREMENT,
+phys_ingredient_id bigint(20),
+dt datetime,
+qty_before decimal(8,2),
+delta decimal(8,2),
+qty_current decimal(8,2),
 base_unit varchar(20),
 PRIMARY KEY  (id),
-KEY name (name)
+KEY phys_ingredient_id (phys_ingredient_id),
+KEY dt (dt)
 ) $charset_collate;",
-
-	"CREATE TABLE $provider_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-name varchar(100),
-modified date,
-address text,
-phone1 varchar(20),
-phone2 varchar(20),
-email1 text,
-email2 text,
-url text,
-account text,
-comment text,
-PRIMARY KEY  (id),
-KEY name (name)
-) $charset_collate;",
-
-	"CREATE TABLE $provided_by_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-ingredient_id bigint(20) UNSIGNED NOT NULL,
-provider_id bigint(20) UNSIGNED NOT NULL,
-PRIMARY KEY  (id),
-KEY ingredient_id (ingredient_id),
-KEY provider_id (provider_id)
-) $charset_collate;",
-	
-	"CREATE TABLE $buy_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-ingredient_id bigint(20) UNSIGNED NOT NULL,
-provider_id bigint(20) UNSIGNED NOT NULL,
-quantity decimal(8,2),
-total_price decimal(8,2),
-unit_price decimal(10,4),
-PRIMARY KEY  (id),
-KEY date (date),
-KEY ingredient_id (ingredient_id),
-KEY unit_price (unit_price)
-) $charset_collate;",
-
-	"CREATE TABLE $recipe_table_name (
-id bigint(20) NOT NULL AUTO_INCREMENT,
-name varchar(55),
-modified date,
-production_price decimal(8,2),
-last_price_update date,
-difficulty int(11),
-PRIMARY KEY  (id),
-KEY name (name)
-
-) $charset_collate;"
     );
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -140,20 +83,13 @@ KEY name (name)
 function myc_uninstall_0_1() {
     global $wpdb;
 
-    $ingredient_table_name     = $wpdb->prefix . 'ingredient'; 
-    $provider_table_name       = $wpdb->prefix . 'provider';
-    $provided_by_table_name    = $wpdb->prefix . 'provided_by';
-    $buy_table_name            = $wpdb->prefix . 'buy';
-    $recipe_table_name         = $wpdb->prefix . 'recipe';
-    $posts_table               = $wpdb->prefix . 'posts';
-    $terms_table               = $wpdb->prefix . 'terms';
-    $terms_r_table             = $wpdb->prefix . 'term_relationships';
-    $term_tax_table            = $wpdb->prefix . 'term_taxonomy';
 
+    $purchase_table_name    = $wpdb->prefix . 'purchase'; 
+    $stock_table_name       = $wpdb->prefix . 'stock';
     $woo_tax_table             = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
     
     $wpdb->query("DELETE FROM $posts_table WHERE id>9");
-    foreach(array($ingredient_table_name, $provider_table_name, $provided_by_table_name, $buy_table_name, $recipe_table_name) as $t) {
+    foreach(array($purchase_table_name, $stock_table_name) as $t) {
 	$wpdb->query("DROP TABLE IF EXISTS $t");
     }
 
@@ -168,16 +104,16 @@ function myc_install() {
     myc_install_0_1();
     add_option( 'myc_db_version', '0.1', '', 'yes' );
 
-    global $wpdb;
-    if ('myc_'===$wpdb->prefix) {
-	require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
+    /* global $wpdb;
+     * if ('myc_'===$wpdb->prefix) {
+       require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
 
-	populate_ingredients    ($wpdb, $wpdb->prefix . 'ingredient');
-	populate_providers      ($wpdb, $wpdb->prefix . 'provider');
-	populate_provided_by    ($wpdb, $wpdb->prefix . 'provided_by');
-	populate_buy            ($wpdb, $wpdb->prefix . 'buy');
-	populate_recipes        ($wpdb, $wpdb->prefix . 'recipe');
-    }
+       populate_ingredients    ($wpdb, $wpdb->prefix . 'ingredient');
+       populate_providers      ($wpdb, $wpdb->prefix . 'provider');
+       populate_provided_by    ($wpdb, $wpdb->prefix . 'provided_by');
+       populate_buy            ($wpdb, $wpdb->prefix . 'buy');
+       populate_recipes        ($wpdb, $wpdb->prefix . 'recipe');
+     * }*/
     return 1;
 }
 
@@ -192,6 +128,10 @@ register_deactivation_hook( __FILE__, 'myc_uninstall' );
 //      fwrite(STDERR, print_r( "\nmyc_install calling " . $update_func . "\n" ));
 
 
-require_once(dirname(__FILE__) . '/includes/myc-ingredient.php');
+require_once(dirname(__FILE__) . '/../woocommerce/woocommerce.php');
+require_once(dirname(__FILE__) . '/includes/class-myc-ingredient.php');
 require_once(dirname(__FILE__) . '/includes/class-myc-recipe.php');
+require_once(dirname(__FILE__) . '/includes/class-myc-provider.php');
+require_once(dirname(__FILE__) . '/includes/class-myc-meal.php');
 require_once(dirname(__FILE__) . '/includes/class-myc-customize.php');
+

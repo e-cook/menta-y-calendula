@@ -8,6 +8,14 @@ function test_install() {
     $this->assertTrue(myc_install()==1);
 }
 
+function populate_posts($wpdb) {
+    $wpdb->query(
+	"INSERT INTO myc_posts (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`)
+VALUES
+(1, NOW(), NOW() - INTERVAL 1 HOUR, 'vermell', 'Tomàquet')"
+	);
+}
+
 function populate_ingredients($wpdb, $table) {
     $wpdb->query(
 	"INSERT INTO $table (`id`, `name`, `comment`, `modified`, `last_price`, `last_price_update`, `best_price`, `best_price_update`, `base_unit`)
