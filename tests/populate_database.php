@@ -63,4 +63,3 @@ VALUES
 (2, 'All i verdura', NOW() - INTERVAL 1 WEEK, 3.2, NOW() - INTERVAL 30 MINUTE, 1)");
 }
 
-

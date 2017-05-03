@@ -51,7 +51,6 @@ function create_post_type() { /* move this to another place so it's not called e
     );
     
 }
-
 load_plugin_textdomain( 'menta-y-calendula', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
 function myc_install_0_1() {
@@ -119,7 +118,6 @@ KEY ingredient_id (ingredient_id),
 KEY unit_price (unit_price)
 ) $charset_collate;",
 
-
 	"CREATE TABLE $recipe_table_name (
 id bigint(20) NOT NULL AUTO_INCREMENT,
 name varchar(55),
@@ -129,6 +127,7 @@ last_price_update date,
 difficulty int(11),
 PRIMARY KEY  (id),
 KEY name (name)
+
 ) $charset_collate;"
     );
 

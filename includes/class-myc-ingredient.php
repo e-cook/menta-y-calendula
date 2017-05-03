@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+require_once(dirname(__FILE__) . "/../../woocommerce/woocommerce.php");
+
 class WC_Product_Ingredient extends WC_Product {
     public function __construct( $product ) {
 	$this->product_type = 'ingredient';
