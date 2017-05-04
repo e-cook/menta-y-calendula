@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+require_once(dirname(__FILE__) . '/class-myc-list-purchases.php');
 
 function create_ingredient() {
 
@@ -51,6 +52,12 @@ function create_ingredient() {
 	    $this->set_prop( 'base_unit', $base_unit );
 	}
 
+	public function latest_purchases() {
+	    $latest_purchases = new MYC_Latest_Purchases();
+	    $latest_purchases->prepare_items();
+	    return $latest_purchases->display();
+	}
+	
     }
 }
 add_action( 'plugins_loaded', 'create_ingredient' );

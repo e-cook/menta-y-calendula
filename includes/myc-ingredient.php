@@ -3,32 +3,57 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-require_once(dirname(__FILE__) . '/class-myc-list-purchases.php');
-
-function render_latest_purchases( $id ) {
-?><div id='purchases_options' class='panel woocommerce_options_panel'>
-    <div class="options_group">
-	<p class="form-field _latest_purchases">
-	    <label for="_latest_purchases"><?php echo __( 'Latest Purchases' ); ?></label>
-	    <span class="wrap">
-		<?php $latest_purchases = new MYC_Latest_Purchases( $id );
-		$latest_purchases->prepare_items();
-		$latest_purchases->display();
+function render_latest_purchases() {
+?>
+    <div id='purchases_options' class='panel woocommerce_options_panel'>
+	<div class="options_group">
+	    <p class="form-field _latest_purchases">
+		<label for="_latest_purchases"><?= __( 'Latest Purchases' )?></label>
+		<span class="wrap">
+		    <?php
+		    global $post;
+		    echo "latest";
+//		    echo wc_get_product($post)->latest_purchases();
+		    ?>
+		</span>
+	    </p>
+	    <p class="form-field _new_purchase">
+		<?php echo __( 'New purchase', 'woocommerce' ); 
+		woocommerce_wp_text_input( array(
+		   'id'		=> '_purchase_date',
+		   'label'	        => __( 'Date' ),
+		   'desc_tip'	=> 'true',
+		   'description'	=> __( 'When did you buy this?' ),
+		   'type' 	        => 'text',
+		   ) );
+		   
+		   woocommerce_wp_text_input( array(
+		   'id'		=> '_purchase_provider',
+		   'label'	        => __( 'Provider' ),
+		   'desc_tip'	=> 'true',
+		   'description'	=> __( 'Who did you buy this from?' ),
+		   'type' 	        => 'text',
+		   ) );
+		   
+		   woocommerce_wp_text_input( array(
+		   'id'		=> '_purchase_price',
+		   'label'	        => __( 'Price' ),
+		   'desc_tip'	=> 'true',
+		   'description'	=> __( 'How much did you pay in total?' ),
+		   'type' 	        => 'text',
+		   ) );
+		   
+		   woocommerce_wp_text_input( array(
+		   'id'		=> '_purchase_qty',
+		   'label'	        => __( 'Quantity' ),
+		   'desc_tip'	=> 'true',
+		   'description'	=> __( 'How much did you buy?' ),
+		   'type' 	        => 'text',
+		   ) );
 		?>
-	    </span>
-	</p>
-	<p class="form-field _latest_purchases">
-	    <label for="_latest_purchases"><?php echo __( 'New purchase', 'woocommerce' ); ?></label>
-	    <span class="wrap">
-		<input placeholder="<?= __( 'Date' )?>"     type="text" name="_field_date"     style="width: 80px;" />
-		<input placeholder="<?= __( 'Provider' )?>" type="text" name="_field_provider" style="width: 80px;" />
-		<input placeholder="<?= __( 'Price' )?>   " type="text" name="_field_price"    style="width: 80px;" />
-		<input placeholder="<?= __( 'Quantity' )?>" type="text" name="_field_qty"      style="width: 80px;" />
-	    </span>
-	    <span class="description"><?php __( 'New purchase' ); ?></span>
-	</p>
+	    </p>
+	</div>
     </div>
-</div>
 <?php
 }
 add_action( 'woocommerce_product_data_panels', 'render_latest_purchases' );
@@ -41,9 +66,9 @@ function save_ingredient_fields( $post_id ) {
        esc_attr( $_POST['_field_qty'] ),
        esc_attr( (float) $_POST['_field_price'] / (float) $_POST['_field_qty']) ) );
      */
-    error_log("saving $POST");
+    error_log("save_ingredient_fields");
 }
-add_action( 'woocommerce_process_product_meta', 'save_ingredient_fields' );
+add_action( 'woocommerce_process_product_meta_ingredient', 'save_ingredient_fields' );
 
 
 /**
