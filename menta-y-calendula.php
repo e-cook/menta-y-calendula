@@ -128,10 +128,39 @@ register_deactivation_hook( __FILE__, 'myc_uninstall' );
 //      fwrite(STDERR, print_r( "\nmyc_install calling " . $update_func . "\n" ));
 
 
-require_once(dirname(__FILE__) . '/../woocommerce/woocommerce.php');
+//require_once(dirname(__FILE__) . "/../woocommerce/woocommerce.php");
+/*
+// Hook to the 'all' action
+//add_action( 'all', 'backtrace_filters_and_actions');
+function backtrace_filters_and_actions() {
+    // The arguments are not truncated, so we get everything
+    $arguments = func_get_args();
+    $tag = array_shift( $arguments ); // Shift the tag
+
+    // Get the hook type by backtracing
+    $backtrace = debug_backtrace();
+    $hook_type = $backtrace[3]['function'];
+
+    error_log("$hook_type $tag");
+    foreach ( $arguments as $argument ) {
+	error_log("arg: " . var_export( $argument, true ) );
+    }
+}
+
+//add_action( 'all', create_function( '', 'error_log( var_export( current_filter(), true ) );' ) );
+ */
+
+//require_once(dirname(__FILE__) . '/../woocommerce/woocommerce.php');
+
 require_once(dirname(__FILE__) . '/includes/class-myc-ingredient.php');
 require_once(dirname(__FILE__) . '/includes/class-myc-recipe.php');
 require_once(dirname(__FILE__) . '/includes/class-myc-provider.php');
 require_once(dirname(__FILE__) . '/includes/class-myc-meal.php');
+
+require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-ingredient-data-store-cpt.php');
+require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-recipe-data-store-cpt.php');
+require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-provider-data-store-cpt.php');
+require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-meal-data-store-cpt.php');
+
 require_once(dirname(__FILE__) . '/includes/class-myc-customize.php');
 
