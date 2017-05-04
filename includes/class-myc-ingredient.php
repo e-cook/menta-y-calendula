@@ -15,8 +15,8 @@ function create_ingredient() {
 
 	protected $extra_data = array(
 	    'provided_by' => array(),
-	    'purchases' => array(),
-	    'myc_stock' => array(),
+	    'was_purchased' => array(),
+	    'changed_stock' => array(),
 	    'base_unit' => array()
 	);
 
@@ -28,20 +28,20 @@ function create_ingredient() {
 	    $this->set_prop( 'provided_by', array_filter( wp_parse_id_list( (array) $provided_by ) ) );
 	}
 
-	public function get_purchases( $context = 'view' ) {
-	    return $this->get_prop( 'purchases', $context );
+	public function get_was_purchased( $context = 'view' ) {
+	    return $this->get_prop( 'was_purchased', $context );
 	}
 
-	public function set_purchases( $purchases ) {
-	    $this->set_prop( 'purchases', $purchases );
+	public function set_was_purchased( $was_purchased ) {
+	    $this->set_prop( 'was_purchased', $was_purchased );
 	}
 
-	public function get_myc_stock( $context = 'view' ) {
-	    return $this->get_prop( 'myc_stock', $context );
+	public function get_changed_stock( $context = 'view' ) {
+	    return $this->get_prop( 'changed_stock', $context );
 	}
 
-	public function set_myc_stock( $myc_stock ) {
-	    $this->set_prop( 'myc_stock', $myc_stock );
+	public function set_changed_stock( $changed_stock ) {
+	    $this->set_prop( 'changed_stock', $changed_stock );
 	}
 
 	public function get_base_unit( $context = 'view' ) {
@@ -53,11 +53,23 @@ function create_ingredient() {
 	}
 
 	public function latest_purchases() {
-	    $latest_purchases = new MYC_Latest_Purchases();
-	    $latest_purchases->prepare_items();
-	    return $latest_purchases->display();
+	    $purchases = get_post_meta( $this->get_id(), '_was_purchased', false );
+	    $base_unit = get_post_meta( $this->get_id(), '_base_unit', true);
+	    $latest = array();
+	    foreach ($purchases as $p) {
+		if ($p) {
+		    $unit_price = (float) $p['price'] / (float) $p['qty'];
+		    $latest[] = array(
+			'purchase_date' => $p['date'],
+			'provider'      => $p['provider'],
+			'qty_unit'      => $p['qty'] . $base_unit,
+			'price_paid'    => $p['price'],
+			'unit_price'    => round( 100 * $unit_price ) / 100
+		    );
+		}
+	    }
+	    return $latest;
 	}
-	
     }
 }
 add_action( 'plugins_loaded', 'create_ingredient' );

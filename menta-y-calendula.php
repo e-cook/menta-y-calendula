@@ -74,8 +74,8 @@ KEY dt (dt)
 ) $charset_collate;",
     );
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    dbDelta( $sql );
+//    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+//    dbDelta( $sql );
 
     
 }
@@ -89,10 +89,10 @@ function myc_uninstall_0_1() {
     $woo_tax_table             = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
     
     $wpdb->query("DELETE FROM $posts_table WHERE id>9");
-    foreach(array($purchase_table_name, $stock_table_name) as $t) {
-	$wpdb->query("DROP TABLE IF EXISTS $t");
-    }
-
+    /* foreach(array($purchase_table_name, $stock_table_name) as $t) {
+       $wpdb->query("DROP TABLE IF EXISTS $t");
+     * }
+     */
     
 }
 

@@ -36,35 +36,43 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 
 class MYC_Latest_Purchases extends WP_List_Table {
 
-    function get_columns() {
+    protected $_latest;
+    
+    public function __construct( $latest ) {
+	parent::__construct();
+	$this->_latest = $latest;
+    }
+    
+    public function get_columns() {
 	return array(
-	    'provider_name'        => __( 'Provider' ),
-	    'dt'                   => __( 'Date' ),
-	    'qty_unit'             => __( 'Quantity' ),
-	    'price_paid'           => __( 'Paid' ),
-	    'unit_price'           => __( 'Unit Price'),
+	    'purchase_date' => __( 'Date' ),
+	    'provider'      => __( 'Provider' ),
+	    'qty_unit'      => __( 'Quantity' ),
+	    'price_paid'    => __( 'Paid' ),
+	    'unit_price'    => __( 'Unit Price'),
 	);
     }
 
-    function query() {
-	global $wpdb, $post;
-	$result = $wpdb->query("SELECT * FROM myc_purchase 
-WHERE phys_ingredient_id = {$post->ID}
-AND dt >= NOW() - INTERVAL 2 WEEK
-ORDER BY dt DESC");
-	return array(
-	    'provider_name'        => $result['provider_id'],
-	    'dt'                   => $result['dt'],
-	    'qty_unit'             => $result['qty'] . ' ' . $result['base_unit'],
-	    'unit_price'           => $result['unit_price']
-	);
-    }
-    
-    function prepare_items() {
+    public function prepare_items() {
 	$columns = $this->get_columns();
 	$hidden = array();
 	$sortable = array();
 	$this->_column_headers = array($columns, $hidden, $sortable);
-	$this->items = $this->query();
+	$this->items = $this->_latest;
     }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'purchase_date':
+            case 'provider':
+            case 'qty_unit':
+            case 'price_paid':
+            case 'unit_price':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
 }

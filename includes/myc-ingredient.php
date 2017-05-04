@@ -8,48 +8,49 @@ function render_latest_purchases() {
     <div id='purchases_options' class='panel woocommerce_options_panel'>
 	<div class="options_group">
 	    <p class="form-field _latest_purchases">
-		<label for="_latest_purchases"><?= __( 'Latest Purchases' )?></label>
 		<span class="wrap">
+		    <h4 for="_latest_purchases"><?= __( 'Latest Purchases' )?></h4>
 		    <?php
 		    global $post;
-		    echo "latest";
-//		    echo wc_get_product($post)->latest_purchases();
+		    $table = new MYC_Latest_Purchases( wc_get_product( $post )->latest_purchases() );
+		    $table->prepare_items();
+		    $table->display();
 		    ?>
 		</span>
 	    </p>
 	    <p class="form-field _new_purchase">
 		<?php echo __( 'New purchase', 'woocommerce' ); 
 		woocommerce_wp_text_input( array(
-		   'id'		=> '_purchase_date',
-		   'label'	        => __( 'Date' ),
-		   'desc_tip'	=> 'true',
-		   'description'	=> __( 'When did you buy this?' ),
-		   'type' 	        => 'text',
-		   ) );
-		   
-		   woocommerce_wp_text_input( array(
-		   'id'		=> '_purchase_provider',
-		   'label'	        => __( 'Provider' ),
-		   'desc_tip'	=> 'true',
-		   'description'	=> __( 'Who did you buy this from?' ),
-		   'type' 	        => 'text',
-		   ) );
-		   
-		   woocommerce_wp_text_input( array(
-		   'id'		=> '_purchase_price',
-		   'label'	        => __( 'Price' ),
-		   'desc_tip'	=> 'true',
-		   'description'	=> __( 'How much did you pay in total?' ),
-		   'type' 	        => 'text',
-		   ) );
-		   
-		   woocommerce_wp_text_input( array(
-		   'id'		=> '_purchase_qty',
-		   'label'	        => __( 'Quantity' ),
-		   'desc_tip'	=> 'true',
-		   'description'	=> __( 'How much did you buy?' ),
-		   'type' 	        => 'text',
-		   ) );
+		    'id'		=> '_purchase_date',
+		    'label'	        => __( 'Date' ),
+		    'desc_tip'	=> 'true',
+		    'description'	=> __( 'When did you buy this?' ),
+		    'type' 	        => 'text',
+		) );
+		
+		woocommerce_wp_text_input( array(
+		    'id'		=> '_purchase_provider',
+		    'label'	        => __( 'Provider' ),
+		    'desc_tip'	=> 'true',
+		    'description'	=> __( 'Who did you buy this from?' ),
+		    'type' 	        => 'text',
+		) );
+		
+		woocommerce_wp_text_input( array(
+		    'id'		=> '_purchase_qty',
+		    'label'	        => __( 'Quantity' ),
+		    'desc_tip'	=> 'true',
+		    'description'	=> __( 'How much did you buy?' ),
+		    'type' 	        => 'text',
+		) );
+
+		woocommerce_wp_text_input( array(
+		    'id'		=> '_purchase_price',
+		    'label'	        => __( 'Price' ),
+		    'desc_tip'	=> 'true',
+		    'description'	=> __( 'How much did you pay in total?' ),
+		    'type' 	        => 'text',
+		) );
 		?>
 	    </p>
 	</div>
@@ -60,6 +61,16 @@ add_action( 'woocommerce_product_data_panels', 'render_latest_purchases' );
 
 
 function save_ingredient_fields( $post_id ) {
+    $purchase_date     = $_POST['_purchase_date'];
+    $purchase_provider = $_POST['_purchase_provider'];
+    $purchase_price    = $_POST['_purchase_price'];
+    $purchase_qty      = $_POST['_purchase_qty'];
+    if ( $purchase_date && $purchase_provider && $purchase_price && $purchase_qty ) {
+	add_post_meta( $post_id, '_was_purchased', array( 'date'     => $purchase_date,
+							  'provider' => $purchase_provider,
+							  'price'    => $purchase_price,
+							  'qty'      => $purchase_qty ) );
+    }
     /*
        add_post_meta( $post_id, '_prices', array( esc_attr( $_POST['_field_date'] ),
        esc_attr( $_POST['_field_price'] ),
