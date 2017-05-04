@@ -66,7 +66,7 @@ function custom_product_tabs( $tabs ) {
     );
     $tabs['purchases'] = array(
 	'label'                => __( 'Purchases' ),
-	'target'               => 'purchases_list',
+	'target'               => 'purchases_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'show_if_ingredient', 'hide_if_recipe' ),
     );
     $tabs['composition'] = array(

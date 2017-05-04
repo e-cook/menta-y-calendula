@@ -50,7 +50,7 @@ id bigint(20) NOT NULL AUTO_INCREMENT,
 phys_ingredient_id bigint(20),
 provider_id bigint(20),
 dt datetime,
-qty_before decimal(8,2),
+qty decimal(8,2),
 price_paid decimal(8,2),
 base_unit varchar(20),
 unit_price decimal(8,2),
@@ -130,37 +130,40 @@ register_deactivation_hook( __FILE__, 'myc_uninstall' );
 
 //require_once(dirname(__FILE__) . "/../woocommerce/woocommerce.php");
 /*
-// Hook to the 'all' action
-//add_action( 'all', 'backtrace_filters_and_actions');
-function backtrace_filters_and_actions() {
-    // The arguments are not truncated, so we get everything
-    $arguments = func_get_args();
-    $tag = array_shift( $arguments ); // Shift the tag
+   // Hook to the 'all' action
+   //add_action( 'all', 'backtrace_filters_and_actions');
+   function backtrace_filters_and_actions() {
+   // The arguments are not truncated, so we get everything
+   $arguments = func_get_args();
+   $tag = array_shift( $arguments ); // Shift the tag
 
-    // Get the hook type by backtracing
-    $backtrace = debug_backtrace();
-    $hook_type = $backtrace[3]['function'];
+   // Get the hook type by backtracing
+   $backtrace = debug_backtrace();
+   $hook_type = $backtrace[3]['function'];
 
-    error_log("$hook_type $tag");
-    foreach ( $arguments as $argument ) {
-	error_log("arg: " . var_export( $argument, true ) );
-    }
-}
+   error_log("$hook_type $tag");
+   foreach ( $arguments as $argument ) {
+   error_log("arg: " . var_export( $argument, true ) );
+   }
+   }
 
-//add_action( 'all', create_function( '', 'error_log( var_export( current_filter(), true ) );' ) );
+   //add_action( 'all', create_function( '', 'error_log( var_export( current_filter(), true ) );' ) );
  */
 
 //require_once(dirname(__FILE__) . '/../woocommerce/woocommerce.php');
 
-require_once(dirname(__FILE__) . '/includes/class-myc-ingredient.php');
-require_once(dirname(__FILE__) . '/includes/class-myc-recipe.php');
-require_once(dirname(__FILE__) . '/includes/class-myc-provider.php');
-require_once(dirname(__FILE__) . '/includes/class-myc-meal.php');
+$id = dirname(__FILE__) . '/includes/';
 
-require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-ingredient-data-store-cpt.php');
-require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-recipe-data-store-cpt.php');
-require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-provider-data-store-cpt.php');
-require_once(dirname(__FILE__) . '/includes/data-stores/class-myc-product-meal-data-store-cpt.php');
+require_once($id . 'class-myc-ingredient.php');
+require_once($id . 'class-myc-recipe.php');
+require_once($id . 'class-myc-provider.php');
+require_once($id . 'class-myc-meal.php');
 
-require_once(dirname(__FILE__) . '/includes/class-myc-customize.php');
+require_once($id . 'data-stores/class-myc-product-ingredient-data-store-cpt.php');
+require_once($id . 'data-stores/class-myc-product-recipe-data-store-cpt.php');
+require_once($id . 'data-stores/class-myc-product-provider-data-store-cpt.php');
+require_once($id . 'data-stores/class-myc-product-meal-data-store-cpt.php');
 
+require_once($id . 'class-myc-customize.php');
+
+require_once($id . 'myc-ingredient.php');
