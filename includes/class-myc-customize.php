@@ -13,7 +13,7 @@ function myc_add_custom_product_types( $types ) {
 	'recipe'      => __( 'Recipe' ),
 	'provider'    => __( 'Provider' ),
 	'meal'        => __( 'Meal' ),
-	);
+    );
 }
 add_filter( 'product_type_selector', 'myc_add_custom_product_types' );
 
@@ -49,6 +49,8 @@ function myc_admin_custom_js() {
      jQuery('.inventory_options')             .addClass( 'hide_if_provider show_if_meal hide_if_ingredient hide_if_recipe' );
      jQuery('.shipping_options')              .addClass( 'hide_if_provider show_if_meal hide_if_ingredient hide_if_recipe' );
      jQuery('.linked_product_options')        .addClass( 'hide_if_provider show_if_meal hide_if_ingredient hide_if_recipe' );
+     jQuery('.advanced_options')              .addClass( 'hide_if_provider hide_if_meal hide_if_ingredient hide_if_recipe' );
+     jQuery('.composition_options')           .addClass( 'hide_if_provider hide_if_meal hide_if_ingredient show_if_recipe' );
  });
 </script>
 <?php
@@ -59,9 +61,9 @@ add_action('admin_footer', 'myc_admin_custom_js');
  * Add a custom product tab.
  */
 function custom_product_tabs( $tabs ) {
-    $tabs['ingredients_sold'] = array(
-	'label'                => __( 'Ingredients sold' ),
-	'target'               => 'ingredients_sold_list',
+    $tabs['ingredients'] = array(
+	'label'                => __( 'Ingredients' ),
+	'target'               => 'ingredients_list',
 	'class'                => array( 'show_if_provider', 'hide_if_meal', 'hide_if_ingredient', 'hide_if_recipe' ),
     );
     $tabs['purchases'] = array(
@@ -71,7 +73,7 @@ function custom_product_tabs( $tabs ) {
     );
     $tabs['composition'] = array(
 	'label'                => __( 'Composition' ),
-	'target'               => 'composition_list',
+	'target'               => 'composition_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'hide_if_ingredient', 'show_if_recipe' ),
     );
     return $tabs;

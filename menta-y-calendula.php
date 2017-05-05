@@ -74,8 +74,8 @@ KEY dt (dt)
 ) $charset_collate;",
     );
 
-//    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-//    dbDelta( $sql );
+    //    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    //    dbDelta( $sql );
 
     
 }
@@ -166,4 +166,11 @@ require_once($id . 'data-stores/class-myc-product-meal-data-store-cpt.php');
 
 require_once($id . 'class-myc-customize.php');
 
+require_once($id. 'class-myc-lists.php');
 require_once($id . 'myc-ingredient.php');
+require_once($id . 'myc-recipe.php');
+
+function alert_change( $product, $old_type, $new_type ) {
+    error_log("changed $product from $old_type to $new_type");
+}
+add_action( 'woocommerce_product_type_changed', 'alert_change', 10, 2 );

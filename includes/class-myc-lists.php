@@ -76,3 +76,41 @@ class MYC_Latest_Purchases extends WP_List_Table {
     }
 
 }
+
+
+class MYC_Recipe_Lines extends WP_List_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct();
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'ingredient' => __( 'Ingredient' ),
+	    'qty_unit'   => __( 'Quantity' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'ingredient':
+            case 'qty_unit':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
+}

@@ -3,8 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-require_once(dirname(__FILE__) . '/class-myc-list-purchases.php');
-
 function create_ingredient() {
 
     class WC_Product_Ingredient extends WC_Product {
@@ -54,6 +52,10 @@ function create_ingredient() {
 
 	public function latest_purchases() {
 	    $purchases = get_post_meta( $this->get_id(), '_was_purchased', false );
+	    if ( ! $purchases || is_wp_error( $purchases ) ) {
+		error_log( "no purchases found" );
+		return array();
+	    }
 	    $base_unit = get_post_meta( $this->get_id(), '_base_unit', true);
 	    $latest = array();
 	    foreach ($purchases as $p) {
@@ -70,6 +72,10 @@ function create_ingredient() {
 	    }
 	    return $latest;
 	}
+
+	/* public function providers_of() {
+	   $providers = get_post_meta( 
+	   }*/
     }
 }
 add_action( 'plugins_loaded', 'create_ingredient' );

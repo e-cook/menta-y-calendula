@@ -24,8 +24,8 @@ function create_ingredient_store() {
 	    error_log("update_post_meta:");
 	    $meta_key_to_props = array(
 		'_provided_by' => 'provided_by',
-		'_purchases' => 'purchases',
-		'_myc_stock' => 'myc_stock',
+		'_was_purchased' => 'was_purchased',
+		'_changed_stock' => 'changed_stock',
 		'_base_unit' => 'base_unit',
 	    );
 
@@ -35,7 +35,7 @@ function create_ingredient_store() {
 	    foreach ( $props_to_update as $meta_key => $prop ) {
 		$value   = $product->{"get_$prop"}( 'edit' );
 		$updated = update_post_meta( $product->get_id(), $meta_key, $value );
-		error_log("updated $value to $updated");
+		error_log("updated " . var_export($value,true) . " to " . $updated);
 		if ( $updated ) {
 		    $this->updated_props[] = $prop;
 		}
