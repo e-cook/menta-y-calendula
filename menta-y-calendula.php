@@ -154,21 +154,25 @@ register_deactivation_hook( __FILE__, 'myc_uninstall' );
 
 $id = dirname(__FILE__) . '/includes/';
 
-require_once($id . 'class-myc-ingredient.php');
+require_once($id . 'class-myc-phys-ingredient.php');
+require_once($id . 'class-myc-abs-ingredient.php');
 require_once($id . 'class-myc-recipe.php');
 require_once($id . 'class-myc-provider.php');
 require_once($id . 'class-myc-meal.php');
 
-require_once($id . 'data-stores/class-myc-product-ingredient-data-store-cpt.php');
+require_once($id . 'data-stores/class-myc-product-phys-ingredient-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-recipe-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-provider-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-meal-data-store-cpt.php');
 
 require_once($id . 'class-myc-customize.php');
 
-require_once($id. 'class-myc-lists.php');
-require_once($id . 'myc-ingredient.php');
+require_once($id . 'class-myc-lists.php');
+require_once($id . 'myc-phys-ingredient.php');
+require_once($id . 'myc-abs-ingredient.php');
 require_once($id . 'myc-recipe.php');
+require_once($id . 'myc-meal.php');
+require_once($id . 'myc-provider.php');
 
 function alert_change( $product, $old_type, $new_type ) {
     error_log("changed $product from $old_type to $new_type");

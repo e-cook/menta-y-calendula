@@ -7,22 +7,25 @@ add_action( 'woocommerce_product_data_panels', 'render_latest_purchases' );
 function render_latest_purchases() {
     global $post;
     $product = wc_get_product( $post );
-    if ( 'ingredient' != $product->get_type() ) {
+    if ( 'phys_ingredient' != $product->get_type() ) {
 	return;
     }
 ?>
 <div id='purchases_options' class='panel woocommerce_options_panel'>
     <div class="options_group">
+	<p class="form-field _select_provider">
+	    <h4><?php echo __( 'Provider' )?></h4>
+	    <form id="provider-select" class="category-select" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get">
+		<?php wp_dropdown_categories( 'show_count=1&hierarchical=1' ); ?>
+	    </form>
+	</p>
 	<p class="form-field _latest_purchases">
 	    <span class="wrap">
 		<h4 for="_latest_purchases"><?= __( 'Latest Purchases' )?></h4>
 		<?php
-
 		$table = new MYC_Latest_Purchases( $product->latest_purchases() );
 		$table->prepare_items();
 		$table->display();
-
-		//		    echo "latest";
 		?>
 	    </span>
 	</p>
@@ -33,14 +36,6 @@ function render_latest_purchases() {
 		'label'	        => __( 'Date' ),
 		'desc_tip'	=> 'true',
 		'description'	=> __( 'When did you buy this?' ),
-		'type' 	        => 'text',
-	    ) );
-	    
-	    woocommerce_wp_text_input( array(
-		'id'		=> '_purchase_provider',
-		'label'	        => __( 'Provider' ),
-		'desc_tip'	=> 'true',
-		'description'	=> __( 'Who did you buy this from?' ),
 		'type' 	        => 'text',
 	    ) );
 	    
@@ -74,8 +69,8 @@ function render_latest_purchases() {
 }
 
 
-add_action( 'admin_footer', 'save_ingredient_js' );
-function save_ingredient_js() {?>
+add_action( 'admin_footer', 'save_phys_ingredient_js' );
+function save_phys_ingredient_js() {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
 	 jQuery.find('wp-content-media-buttons').hide();
@@ -112,7 +107,7 @@ function process_nopriv_purchase () {
 
 
 
-function save_ingredient_fields( $post_id ) {
+function save_phys_ingredient_fields( $post_id ) {
     //    if ( ! wp_verify_nonce( $_REQUEST['myc_save_purchase_nonce'], 'myc_save_purchase_nonce' ) ) {
     //	wp_send_json_error( 'bad_nonce' );
     //	wp_die();
@@ -144,7 +139,7 @@ function save_ingredient_fields( $post_id ) {
        esc_attr( $_POST['_field_qty'] ),
        esc_attr( (float) $_POST['_field_price'] / (float) $_POST['_field_qty']) ) );
      */
-    error_log("save_ingredient_fields");
+    error_log("save_phys_ingredient_fields");
 }
 //add_action( 'woocommerce_process_product_meta_ingredient', 'save_ingredient_fields' );
 //add_action( 'wp_ajax_save_purchase', 'save_ingredient_fields' );

@@ -3,20 +3,20 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function create_ingredient_store() {
+function create_phys_ingredient_store() {
     /**
-     * WC Ingredient Product Data Store: Stored in CPT.
+     * WC Phys_Ingredient Product Data Store: Stored in CPT.
      *
      * @version  0.1
      * @category Class
      * @author   MYC
      */
-    class WC_Product_Ingredient_Data_Store_CPT extends WC_Product_Data_Store_CPT implements WC_Object_Data_Store_Interface {
+    class WC_Product_Phys_Ingredient_Data_Store_CPT extends WC_Product_Data_Store_CPT implements WC_Object_Data_Store_Interface {
 
 	/**
-	 * Helper method that updates all the post meta for an ingredient.
+	 * Helper method that updates all the post meta for an phys_ingredient.
 	 *
-	 * @param WC_Product_Ingredient
+	 * @param WC_Product_Phys_Ingredient
 	 * @param bool Force update. Used during create.
 	 * @since 3.0.0
 	 */
@@ -102,4 +102,4 @@ function create_ingredient_store() {
 	 */
     }
 }
-add_action( 'plugins_loaded', 'create_ingredient_store' );
+add_action( 'plugins_loaded', 'create_phys_ingredient_store' );

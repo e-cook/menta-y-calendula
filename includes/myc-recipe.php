@@ -8,7 +8,6 @@ function render_recipe_lines() {
     global $post;
     $product = wc_get_product( $post );
     if ( 'recipe' != $product->get_type() ) {
-	error_log("didnt get recipe");
 	return;
     }
 ?>
@@ -18,7 +17,6 @@ function render_recipe_lines() {
 	    <span class="wrap">
 		<h4 for="_recipe_lines"><?= __( 'Ingredients' )?></h4>
 		<?php
-
 		$table = new MYC_Recipe_Lines( $product->recipe_lines() );
 		$table->prepare_items();
 		$table->display();

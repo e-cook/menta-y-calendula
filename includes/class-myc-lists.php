@@ -34,7 +34,33 @@ if( ! class_exists( 'WP_List_Table' ) ) {
     //require_once(dirname(__FILE__) . '/class-wp-list-table.php');
 }
 
-class MYC_Latest_Purchases extends WP_List_Table {
+class NoNonce_Table extends WP_List_Table {
+    protected function display_tablenav( $which ) {
+	/*
+	if ( 'top' === $which ) {
+	    wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+	}
+	*/
+?>
+    <div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+	<?php if ( $this->has_items() ): ?>
+	    <div class="alignleft actions bulkactions">
+		<?php $this->bulk_actions( $which ); ?>
+	    </div>
+	<?php endif;
+	$this->extra_tablenav( $which );
+	$this->pagination( $which );
+	?>
+
+	<br class="clear" />
+    </div>
+<?php
+}
+
+}
+
+class MYC_Latest_Purchases extends NoNonce_Table {
 
     protected $_latest;
     
@@ -46,7 +72,6 @@ class MYC_Latest_Purchases extends WP_List_Table {
     public function get_columns() {
 	return array(
 	    'purchase_date' => __( 'Date' ),
-	    'provider'      => __( 'Provider' ),
 	    'qty_unit'      => __( 'Quantity' ),
 	    'price_paid'    => __( 'Paid' ),
 	    'unit_price'    => __( 'Unit Price'),
@@ -65,7 +90,6 @@ class MYC_Latest_Purchases extends WP_List_Table {
     {
         switch( $column_name ) {
             case 'purchase_date':
-            case 'provider':
             case 'qty_unit':
             case 'price_paid':
             case 'unit_price':
@@ -78,7 +102,7 @@ class MYC_Latest_Purchases extends WP_List_Table {
 }
 
 
-class MYC_Recipe_Lines extends WP_List_Table {
+class MYC_Recipe_Lines extends NoNonce_Table {
 
     protected $_lines;
     
@@ -114,3 +138,188 @@ class MYC_Recipe_Lines extends WP_List_Table {
     }
 
 }
+
+
+class MYC_Uses_Recipe_Lines extends NoNonce_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct();
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'recipe' => __( 'Recipe' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'recipe':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
+}
+
+
+class MYC_Instances extends NoNonce_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct( array( 'plural' => 'instances',
+				    'singular' => 'instance' ) );
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'phys_ingredient_id' => __( 'Ingredient' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'phys_ingredient_id':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
+}
+
+class MYC_Total_Inventory extends NoNonce_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct();
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'phys_ingredient_id' => __( 'Ingredient' ),
+	    'qty'                => __( 'Quantity' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'phys_ingredient_id':
+	    case 'qty':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
+}
+
+class MYC_Total_Purchases extends NoNonce_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct();
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'date'               => __( 'Date' ),
+	    'phys_ingredient_id' => __( 'Ingredient' ),
+	    'unit_price'         => __( 'Unit Price' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+	    case 'date':
+            case 'phys_ingredient_id':
+	    case 'unit_price':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
+}
+
+class MYC_Provides_Lines extends NoNonce_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct();
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'ingredient' => __( 'Ingredient' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'ingredient':
+                return $item[ $column_name ];
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+
+}
+

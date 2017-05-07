@@ -1123,9 +1123,9 @@ class WP_List_Table {
 	public function display() {
 		$singular = $this->_args['singular'];
 
-		$this->display_tablenav( 'top' );
+//		$this->display_tablenav( 'top' );
 
-		$this->screen->render_screen_reader_content( 'heading_list' );
+//		$this->screen->render_screen_reader_content( 'heading_list' );
 ?>
 <table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
 	<thead>

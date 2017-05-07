@@ -3,12 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function create_ingredient() {
+function create_phys_ingredient() {
 
-    class WC_Product_Ingredient extends WC_Product {
+    class WC_Product_Phys_Ingredient extends WC_Product {
 
 	public function get_type() {
-	    return 'ingredient';
+	    return 'phys_ingredient';
 	}
 
 	protected $extra_data = array(
@@ -78,5 +78,5 @@ function create_ingredient() {
 	   }*/
     }
 }
-add_action( 'plugins_loaded', 'create_ingredient' );
+add_action( 'plugins_loaded', 'create_phys_ingredient' );
 

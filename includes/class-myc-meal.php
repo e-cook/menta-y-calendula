@@ -13,7 +13,6 @@ function create_meal() {
 
 	protected $extra_data = array(
 	    'uses_recipe' => array(),
-	    'uses_phys_ingredient' => array()
 	);
 
 	public function get_uses_recipe( $context = 'view' ) {
@@ -24,14 +23,22 @@ function create_meal() {
 	    $this->set_prop( 'uses_recipe', array_filter( wp_parse_id_list( (array) $uses_recipe ) ) );
 	}
 
-	public function get_uses_phys_ingredient( $context = 'view' ) {
-	    return $this->get_prop( 'uses_phys_ingredient', $context );
+	public function uses_recipe_lines() {
+	    $items = get_post_meta( $this->get_id(), '_uses_recipe', false );
+	    if ( ! $items || is_wp_error( $items ) ) {
+		error_log( "no items found" );
+		return array();
+	    }
+	    $result = array();
+	    foreach ($items as $i) {
+		if ($i) {
+		    $result[] = array(
+			'recipe_id' => $i['recipe_id'],
+		    );
+		}
+	    }
+	    return $result;
 	}
-
-	public function set_uses_phys_ingredient( $uses_phys_ingredient ) {
-	    $this->set_prop( 'uses_phys_ingredient', array_filter( wp_parse_id_list( (array) $uses_phys_ingredient ) ) );
-	}
-
     }
 }
 add_action( 'plugins_loaded', 'create_meal' );
