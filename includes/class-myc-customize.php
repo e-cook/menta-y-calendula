@@ -104,6 +104,24 @@ function custom_product_tabs( $tabs ) {
     );
     return $tabs;
 }
-
 add_filter( 'woocommerce_product_data_tabs', 'custom_product_tabs' );
 
+function hide_non_meals_query ( $tax_query, $this ) {
+
+    error_log("query before: " . var_export($tax_query, true));
+    
+    if ( ! is_admin() && is_shop() ) {
+	$only_meals = array(
+	    'taxonomy' => 'product_type',
+	    'field'    => 'slug',
+	    'terms'    => 'meal',
+	    'operator' => '='
+	);
+	$tax_query[] = $only_meals;
+//	$q->query_vars['tax_query'] = $q->tax_query->queries;
+	error_log("query after: " . var_export($tax_query, true));
+	remove_action( 'woocommerce_product_query_tax_query', 'hide_non_meals_query' );
+	return $tax_query;
+    }
+}
+add_action( 'woocommerce_product_query_tax_query', 'hide_non_meals_query', 10, 2 );

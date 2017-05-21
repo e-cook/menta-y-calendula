@@ -8,13 +8,18 @@ function test_install() {
     $this->assertTrue(myc_install()==1);
 }
 
-function populate_posts($wpdb) {
+function populate_product_types() {
+    global $wpdb;
     $wpdb->query(
-	"INSERT INTO myc_posts (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`)
-VALUES
-(1, NOW(), NOW() - INTERVAL 1 HOUR, 'vermell', 'Tomàquet')"
-	);
+	"INSERT INTO myc_terms (`term_id`, `name`, `slug`) VALUES
+(15, 'generic_ingredient', 'generic_ingredient'),
+(16, 'physical_ingredient', 'physical_ingredient'),
+(17, 'provider', 'provider'),
+(18, 'recipe', 'recipe'),
+(19, 'meal', 'meal')"
+    );
 }
+
 
 function populate_ingredients($wpdb, $table) {
     $wpdb->query(

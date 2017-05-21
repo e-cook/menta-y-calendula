@@ -74,8 +74,8 @@ KEY dt (dt)
 ) $charset_collate;",
     );
 
-    //    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    //    dbDelta( $sql );
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
 
     
 }
@@ -83,17 +83,14 @@ KEY dt (dt)
 function myc_uninstall_0_1() {
     global $wpdb;
 
-
+    $posts_table_name       = $wpdb->prefix . 'posts';
     $purchase_table_name    = $wpdb->prefix . 'purchase'; 
     $stock_table_name       = $wpdb->prefix . 'stock';
-    $woo_tax_table             = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
     
     $wpdb->query("DELETE FROM $posts_table WHERE id>9");
-    /* foreach(array($purchase_table_name, $stock_table_name) as $t) {
-       $wpdb->query("DROP TABLE IF EXISTS $t");
-     * }
-     */
-    
+    foreach(array($purchase_table_name, $stock_table_name) as $t) {
+	$wpdb->query("DROP TABLE IF EXISTS $t");
+    }
 }
 
 function float_version_to_string($version) {
@@ -104,16 +101,18 @@ function myc_install() {
     myc_install_0_1();
     add_option( 'myc_db_version', '0.1', '', 'yes' );
 
-    /* global $wpdb;
-     * if ('myc_'===$wpdb->prefix) {
-       require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
+    global $wpdb;
+    if ('myc_'===$wpdb->prefix) {
+	require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
 
-       populate_ingredients    ($wpdb, $wpdb->prefix . 'ingredient');
-       populate_providers      ($wpdb, $wpdb->prefix . 'provider');
-       populate_provided_by    ($wpdb, $wpdb->prefix . 'provided_by');
-       populate_buy            ($wpdb, $wpdb->prefix . 'buy');
-       populate_recipes        ($wpdb, $wpdb->prefix . 'recipe');
-     * }*/
+	populate_product_types   ();
+	populate_abs_ingredients ();
+	populate_phys_ingredients();
+	populate_providers       ();
+	populate_provided_by     ();
+	populate_buy             ();
+	populate_recipes         ();
+    }
     return 1;
 }
 
@@ -150,7 +149,7 @@ register_deactivation_hook( __FILE__, 'myc_uninstall' );
    //add_action( 'all', create_function( '', 'error_log( var_export( current_filter(), true ) );' ) );
  */
 
-//require_once(dirname(__FILE__) . '/../woocommerce/woocommerce.php');
+require_once(dirname(__FILE__) . '/../woocommerce/woocommerce.php');
 
 $id = dirname(__FILE__) . '/includes/';
 
@@ -174,7 +173,8 @@ require_once($id . 'myc-recipe.php');
 require_once($id . 'myc-meal.php');
 require_once($id . 'myc-provider.php');
 
-function alert_change( $product, $old_type, $new_type ) {
-    error_log("changed $product from $old_type to $new_type");
-}
-add_action( 'woocommerce_product_type_changed', 'alert_change', 10, 2 );
+/* function alert_change( $product, $old_type, $new_type ) {
+ *     error_log("changed $product from $old_type to $new_type");
+ * }
+ * add_action( 'woocommerce_product_type_changed', 'alert_change', 10, 2 );*/
+

@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function create_meal() {
 
-    class WC_Product_Meal extends WC_Product {
+    class WC_Product_Meal extends WC_Product_Simple {
 
 	public function get_type() {
 	    return 'meal';
