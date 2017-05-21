@@ -106,22 +106,16 @@ function custom_product_tabs( $tabs ) {
 }
 add_filter( 'woocommerce_product_data_tabs', 'custom_product_tabs' );
 
-function hide_non_meals_query ( $tax_query, $this ) {
-
-    error_log("query before: " . var_export($tax_query, true));
-    
-    if ( ! is_admin() && is_shop() ) {
-	$only_meals = array(
+function hide_non_meals_query ( $query ) {
+    $only_meals = array(
+	array(
 	    'taxonomy' => 'product_type',
 	    'field'    => 'slug',
-	    'terms'    => 'meal',
-	    'operator' => '='
-	);
-	$tax_query[] = $only_meals;
-//	$q->query_vars['tax_query'] = $q->tax_query->queries;
-	error_log("query after: " . var_export($tax_query, true));
-	remove_action( 'woocommerce_product_query_tax_query', 'hide_non_meals_query' );
-	return $tax_query;
-    }
+	    'terms'    => '(meal)',
+	    'operator' => 'IN'
+	)
+    );
+    $query->tax_query->queries[] = $only_meals;
+    $query->query_vars[ 'tax_query' ] = $query->tax_query->queries;
 }
-add_action( 'woocommerce_product_query_tax_query', 'hide_non_meals_query', 10, 2 );
+add_action( 'pre_get_posts', 'hide_non_meals_query', 10, 2 );
