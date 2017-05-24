@@ -107,6 +107,13 @@ function custom_product_tabs( $tabs ) {
 add_filter( 'woocommerce_product_data_tabs', 'custom_product_tabs' );
 
 function hide_non_meals_query ( $query ) {
+
+    if ( $query->is_admin ||
+	 is_post_type_archive( 'product' ) &&
+	 ! $query->is_main_query() ) {
+	return;
+    }
+
     $only_meals = array(
 	array(
 	    'taxonomy' => 'product_type',
@@ -115,6 +122,7 @@ function hide_non_meals_query ( $query ) {
 	    'operator' => 'IN'
 	)
     );
+
     $query->tax_query->queries[] = $only_meals;
     $query->query_vars[ 'tax_query' ] = $query->tax_query->queries;
 }
