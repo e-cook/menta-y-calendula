@@ -178,3 +178,4 @@ require_once($id . 'myc-provider.php');
  * }
  * add_action( 'woocommerce_product_type_changed', 'alert_change', 10, 2 );*/
 
+

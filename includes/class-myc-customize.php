@@ -203,7 +203,7 @@ function render_visibility_column( $column ) {
 	    echo '<input type="checkbox" name="' . $id . '" id="' . $id . '" '
 	       . 'class="active_button" '
 	       . checked( $currently_visible, 'visible', false )
-	       . ' link="' . $link . '" />';
+	       . '" />';
     }
 }
 add_action( 'manage_product_posts_custom_column', 'render_visibility_column' );
@@ -211,24 +211,22 @@ add_action( 'manage_product_posts_custom_column', 'render_visibility_column' );
 function toggle_activity_js() {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
-
 	 // handle click on activation button
 	 jQuery( '#the-list' ).find( '.active_button' ).click( function() {
 	     var $ = jQuery( this );
 	     var checked = $.attr( 'checked' );
 	     
 	     // post query to persist change in the database
-	     var data = {
+	     jQuery.post( ajaxurl, {
 		 'action' : ( checked == 'checked' ) ? 'activate_meal' : 'deactivate_meal',
 		 'post_id': $.attr( 'id' ).substring( 8 ), // leave out '_active_'
-		 '_nonce' : '<?php echo wp_create_nonce( 'active' ) ?>';
-	     };
-	     jQuery.post( ajaxurl, data );
+		 '_nonce' : '<?php echo wp_create_nonce( 'active' ) ?>'
+	     });
 
 	     // color row title accordingly
 	     var row_title = $.parent().prev().find( '.row-title' );
 	     if ( checked === undefined ) {
-		 row_title.css( 'color', '#d3d3d3' );
+		 row_title.css( 'color', '#cdcdc1' );
 	     } else {
 		 row_title.css( 'color', '' );
 	     }
@@ -238,7 +236,7 @@ function toggle_activity_js() {?>
 	 jQuery( '#the-list' ).find( '.row-title' ).each( function() {
 	     var active = jQuery( this ).parent().parent().next().children( '.active_button' ).attr('checked');
 	     if ( active === undefined ) {
-		 jQuery( this ).css( "color", "#d3d3d3" );
+		 jQuery( this ).css( "color", '#cdcdc1' );
 	     }
 	 });
      });
@@ -266,3 +264,44 @@ function myc_ajax_deactivate_meal() {
     $prod->save();
 }
 add_action( 'wp_ajax_deactivate_meal' , 'myc_ajax_deactivate_meal' );
+
+
+
+// date format
+function myc_custom_order_date_format( $post ) {
+    return get_post_time( __( 'd/m/Y', 'woocommerce' ), $post );
+}
+add_filter( 'woocommerce_admin_order_date_format' , 'myc_custom_order_date_format' );
+
+
+// menu
+require_once( ABSPATH . 'wp-includes/pluggable.php' );
+require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+require_once( dirname(__FILE__) . '/myc-order-dates.php' );
+
+function register_order_dates() {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+	add_submenu_page( 'woocommerce', __( 'Order dates', 'myc' ), __( 'Order dates', 'myc' ), 'manage_woocommerce', 'manage_order_dates', 'manage_order_dates_page' );
+    }
+    if ( ! get_term_by( 'slug', 'order_date', 'category' ) ) {
+	wp_insert_term( 'order_date', 'category', 'order_date' );
+    }
+}
+
+add_action( 'admin_menu', 'register_order_dates', 11 );
+
+/* function myc_jquery_assets() {
+ *     error_log("in jquery_assets");
+ *     $s = wp_register_script( 'jquery-ui-js', dirname(__FILE__) . '/../assets/js/jquery-ui-1.12.1/jquery-ui.min.js' );
+ *     wp_enqueue_script( 'jquery-ui-js');
+ *     error_log("first: $s");
+ * 
+ *     $s = wp_register_style('jquery-ui-css', dirname(__FILE__) . '/../assets/js/jquery-ui-1.12.1/jquery-ui.min.css' );
+ *     wp_enqueue_style('jquery-ui-css');
+ *     error_log("second: $s");
+ * 
+ *     wp_enqueue_script('field-date-js', dirname(__FILE__) . '/../assets/js/field_date.js');
+ * //    wp_enqueue_style('jquery-ui-datepicker');
+ * }
+ * //add_action( 'admin_enqueue_scripts', 'myc_jquery_assets' );
+ * */

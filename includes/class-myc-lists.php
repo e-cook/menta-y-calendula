@@ -37,10 +37,10 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 class NoNonce_Table extends WP_List_Table {
     protected function display_tablenav( $which ) {
 	/*
-	if ( 'top' === $which ) {
-	    wp_nonce_field( 'bulk-' . $this->_args['plural'] );
-	}
-	*/
+	   if ( 'top' === $which ) {
+	   wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+	   }
+	 */
 ?>
     <div class="tablenav <?php echo esc_attr( $which ); ?>">
 
@@ -323,3 +323,39 @@ class MYC_Provides_Lines extends NoNonce_Table {
 
 }
 
+
+class MYC_Order_Dates extends NoNonce_Table {
+
+    protected $_dates;
+    
+    public function __construct( $dates ) {
+	parent::__construct();
+	$this->_dates = $dates;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'order_date' => __( 'Order Date', 'myc' ),
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_dates;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'order_date':
+		$action = array( 'delete' => '<button class="delete_order_date button" date="' . substr( $item[$column_name], 0, 10 ) 
+					 . '">' . __( 'Delete' ) . '</button>' );
+                return sprintf('%1$s %2$s', $item[ $column_name ], $this->row_actions( $action ) );
+            default:
+                return print_r( $item, true ) ;
+        }
+    }
+}
