@@ -101,7 +101,7 @@ add_action( 'wp_ajax_save_new_order_date', 'myc_save_new_order_date' );
 
 // delete order date
 
-function delete_order_date_js() {?>
+add_action( 'admin_footer', function() {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
 	 jQuery( '#the-list' ).find( '.delete_order_date' ).click( function() {
@@ -117,8 +117,7 @@ function delete_order_date_js() {?>
      });
     </script>
 <?php
-}
-add_action( 'admin_footer', 'delete_order_date_js' );
+});
 
 
 function myc_delete_order_date() {
@@ -135,8 +134,7 @@ add_action( 'wp_ajax_delete_order_date', 'myc_delete_order_date' );
 // add dates to order
 // http://www.portmanteaudesigns.com/blog/2015/02/04/woocommerce-custom-checkout-fields-email-backend/
 
-add_action( 'woocommerce_after_order_notes', 'myc_order_date_checkout_field_after_order_notes' );
-function myc_order_date_checkout_field_after_order_notes( $checkout ) {
+add_action( 'woocommerce_after_order_notes', function( $checkout ) {
     echo '<div class="myc_order_date_checkout_field"><h2>' . __('Date for Order') .'</h2>';
     //    error_log(var_export($checkout,1));
     session_start();
@@ -153,16 +151,15 @@ function myc_order_date_checkout_field_after_order_notes( $checkout ) {
 			  : '' );
 
     echo '</div>';
-}
+});
 
-add_action( 'woocommerce_after_cart_contents', 'myc_order_date_checkout_field_after_cart_contents' );
-function myc_order_date_checkout_field_after_cart_contents() {
+add_action( 'woocommerce_after_cart_contents', function () {
     echo '<div class="myc_order_date_checkout_field"><h3>' . __('Date for Order') .'</h3>';
     echo '<input type="text" class="datepicker order_date_picker" id="order_date" value="' . date( 'M d, Y', strtotime( 'next Monday' ) ) . '"/>';
     echo '</div>';
-}
+});
 
-function order_date_cart_js() {?>
+add_action( 'wp_footer', function () {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
 	 jQuery( '.order_date_picker' ).datepicker({
@@ -179,20 +176,18 @@ function order_date_cart_js() {?>
      });
     </script>
 <?php
-}
-add_action( 'wp_footer', 'order_date_cart_js' );
+});
 
-function myc_set_order_date_in_session() {
+add_action( 'wp_ajax_set_order_date_in_session', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'set_order_date_in_session' ) ) {
 	wp_die( "Don't mess with me!" );
     }
     session_start();
     $_SESSION[ 'order_date' ] = $_POST[ 'order_date' ];
     wp_die();
-}
-add_action( 'wp_ajax_set_order_date_in_session', 'myc_set_order_date_in_session' );
+});
 
-function myc_after_checkout_validation( $data, $errors ) {
+add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
     error_log("myc_after_checkout_validation");
     error_log("data " . var_export($data,1));
     error_log("errors " . var_export($errors,1));
@@ -202,91 +197,13 @@ function myc_after_checkout_validation( $data, $errors ) {
     } elseif( strtotime( $_SESSION[ 'order_date' ] ) < strtotime( 'now' ) ) {
 	$errors->add( 'validation', __( 'The date for your order must lie in the future', 'myc' ) );
     }
-} 
-add_action( 'woocommerce_after_checkout_validation', 'myc_after_checkout_validation', 10, 2 );
+}, 10, 2 );
 
-function myc_save_order_date( $order_id, $posted ) {
-    error_log("posted: ". var_export($posted,1));
-}
-add_action( 'woocommerce_checkout_update_order_meta', 'myc_save_order_date', 10, 2 );
+add_action( 'woocommerce_checkout_update_order_meta', function( $order_id, $posted ) {
+    session_start();
+    error_log("order_id: $order_id, posted: ". var_export($posted,1));
+    $order = wc_get_order( $order_id );
+    $order->update_meta_data( '_order_date', date( 'Y-m-d', strtotime( $_SESSION[ 'order_date' ] ) ) );
+    $order->save();
+}, 10, 2 );
 
-
-
-/*
-   add_action('woocommerce_checkout_update_order_meta', 'myc_order_date_update_order_meta' );
-   function myc_order_date_update_order_meta( $order_id ) {
-   if ( ! empty( $_POST['order_date'] ) ) {
-   update_post_meta( $order_id, 'order_date', $_POST['order_date'] );
-   }
-   }
- */
-
-// https://wisdmlabs.com/blog/add-custom-data-woocommerce-order/
-
-/*
-   add_filter('woocommerce_add_cart_item_data', 'myc_add_order_date_to_cart', 1, 2);
-   function myc_add_order_date_to_cart($cart_item_data, $product_id)
-   {
-   session_start();    
-   if( ! isset( $_SESSION[ 'order_date' ] ) ) {
-   return $cart_item_data;
-   }
-
-   $new_value = array( 'order_date' => $_SESSION[ 'order_date' ] );
-   //    unset($_SESSION['order_date']);
-
-   return empty( $cart_item_data )
-   ? $new_value
-   : array_merge( $cart_item_data, $new_value );
-   }
-
-
-   add_filter('woocommerce_get_cart_item_from_session', 'myc_get_cart_items_from_session', 1, 3 );
-   function myc_get_cart_items_from_session($item, $values, $key)
-   {
-   error_log( ' myc_get_cart_items_from_session ' . array_key_exists( 'order_date', $values) );
-   if( array_key_exists( 'order_date', $values ) ) {
-   $item[ 'order_date' ] = $values[ 'order_date' ];
-   } elseif ( isset( $_SESSION[ 'order_date' ] ) ) {
-   $item[ 'order_date' ] = $_SESSION[ 'order_date' ];
-   }
-   return $item;
-   }
-
-   add_filter('woocommerce_checkout_cart_item_quantity','myc_add_order_date_from_session_into_cart', 1, 3);  
-   add_filter('woocommerce_cart_item_price',            'myc_add_order_date_from_session_into_cart', 1, 3);
-   function myc_add_order_date_from_session_into_cart( $product_name, $values, $cart_item_key )
-   {
-   error_log( 'myc_add_order_date_from_session_into_cart: '. array_key_exists( 'order_date', $values) );
-   if( ! isset( $values[ 'order_date' ] ) ||
-   empty(   $values[ 'order_date' ] ) ) {
-   return $product_name;
-   }
-   return $product_name . "</a><dl class='variation'>"
-   . "<table class='myc_options_table' id='" . $values['product_id'] . "'>"
-   . "<tr><td>" . $values['order_date'] . "</td></tr>"
-   . "</table></dl>"; 
-   }
-
-
-   add_action('woocommerce_add_order_item_meta','myc_add_order_date_to_order_item_meta', 1, 2);
-   function myc_add_order_date_to_order_item_meta( $item_id, $values )
-   {
-   $order_date = $values['order_date'];
-   if( ! empty( $order_date ) ) {
-   wc_add_order_item_meta($item_id, 'order_date', $order_date);  
-   }
-   }
-
-   add_action('woocommerce_before_cart_item_quantity_zero', 'myc_remove_order_data_from_cart', 1, 1);
-   function myc_remove_order_data_from_cart( $cart_item_key )
-   {
-   global $woocommerce;
-   $cart = $woocommerce->cart->get_cart();
-   // For each item in cart, if item is upsell of deleted product, delete it
-   foreach( $cart as $key => $values) {
-   if ( $values['order_date'] == $cart_item_key )
-   unset( $woocommerce->cart->cart_contents[ $key ] );
-   }
-   }
- */
