@@ -3,6 +3,18 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// add jquery-ui
+
+function myc_add_jquery() {
+    wp_enqueue_script( 'myc-helpers',  plugins_url( 'assets/js/helpers.js',  dirname(__FILE__) ) );
+    wp_enqueue_script( 'myc-script-1', plugins_url( 'assets/jquery-ui-1.12.1/jquery-ui.min.js',  dirname(__FILE__) ), array( 'jquery' ) );
+    wp_register_style( 'myc-style-1',  plugins_url( 'assets/jquery-ui-1.12.1/jquery-ui.min.css', dirname(__FILE__) ) );
+    wp_enqueue_style(  'myc-style-1' );
+    wp_enqueue_script( 'jquery-ui-datepicker' );
+}
+add_action( 'admin_enqueue_scripts', 'myc_add_jquery' );
+add_action(    'wp_enqueue_scripts', 'myc_add_jquery' );
+
 /**
  * add custom types
  */
