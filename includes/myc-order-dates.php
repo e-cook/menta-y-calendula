@@ -3,41 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function order_dates( $only_enabled = false ) {
-    $id = get_term_by( 'name', 'order_date', 'category' )->term_id;
-    $raw_dates = get_term_meta( $id )[ 'order_date' ];
-    sort( $raw_dates );
-    $dates = array();
-    $now = strtotime( 'now' );
-    foreach( $raw_dates as $date ) {
-	$dt = strtotime( $date );
-	$ordering_threshold = ( false == $only_enabled )
-			    ? PHP_INT_MAX
-			    : strtotime( $date . ' - 3 days' );
-	if ( $dt >= $now && $ordering_threshold >= $now ) {
-	    $dates[] = $date;
-	}
-    }
-    return $dates;
-}
-
-function formatted_order_dates() {
-    $dates = array();
-    foreach ( order_dates() as $date ) {
-	$dates[] = array( 'order_date' => $date . ' (' . date( 'D', strtotime( $date ) ) . ')' );
-    }
-    return $dates;
-}
-
-function next_order_date() {
-    $now = date( 'Y-m-d', strtotime( 'now' ) );
-    foreach( order_dates( true ) as $date ) {
-	if ( $date >= $now ) {
-	    return $date;
-	}	    
-    }
-    return '';
-}
+require_once( dirname(__FILE__) . '/myc-order-date-functions.php' );
 
 
 function manage_order_dates_page() {
@@ -63,38 +29,9 @@ function manage_order_dates_page() {
 <?php
 }
 
-function save_date_js() {?>
+add_action( 'admin_footer', function() {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
-	 // Validates that the input string is a valid date formatted as "mm/dd/yyyy"
-	 function validateDate(dateString)
-	 {
-	     // First check for the pattern
-	     if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
-		 return false;
-
-	     // Parse the date parts to integers
-	     var parts = dateString.split("/");
-	     var day = parseInt(parts[1], 10);
-	     var month = parseInt(parts[0], 10);
-	     var year = parseInt(parts[2], 10);
-
-	     // Check the ranges of month and year
-	     if (year < 1000 || year > 3000 || month == 0 || month > 12)
-		 return false;
-
-	     var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-
-	     // Adjust for leap years
-	     if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
-		 monthLength[1] = 29;
-
-	     // Check the range of the day
-	     if (day < 0 || day > monthLength[month - 1])
-		 return false;
-	     return parts[2] + "-" + parts[0] + "-" + parts[1];
-	 };
-	 
 	 // handle click on save date button
 	 jQuery( '.order_date_picker' ).datepicker();
 	 jQuery( '#save-date-button' ).click( function() {
@@ -110,10 +47,9 @@ function save_date_js() {?>
      });
     </script>
 <?php
-}
-add_action( 'admin_footer', 'save_date_js' );
+});
 
-function myc_save_new_order_date() {
+add_action( 'wp_ajax_save_new_order_date', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'order_date' ) ) {
 	wp_die( "Don't mess with me!" );
     }
@@ -122,8 +58,7 @@ function myc_save_new_order_date() {
     if ( ! in_array( $new_date, get_term_meta( $term_id )[ 'order_date' ] ) ) {
 	add_term_meta( $term_id, 'order_date', $new_date );
     }
-}
-add_action( 'wp_ajax_save_new_order_date', 'myc_save_new_order_date' );
+});
 
 // delete order date
 
@@ -146,15 +81,14 @@ add_action( 'admin_footer', function() {?>
 });
 
 
-function myc_delete_order_date() {
+add_action( 'wp_ajax_delete_order_date', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'delete_order_date' ) ) {
 	wp_die( "Don't mess with me!" );
     }
     $date = $_POST['date'];
     $term_id = get_term_by( 'slug', 'order_date', 'category' )->term_id;
     delete_term_meta( $term_id, 'order_date', $date );
-}
-add_action( 'wp_ajax_delete_order_date', 'myc_delete_order_date' );
+});
 
 
 // add dates to order
@@ -185,20 +119,6 @@ add_action( 'woocommerce_after_cart_contents', function () {
     echo '<input type="text" class="datepicker order_date_picker" id="order_date" value="' . date( 'M d, Y', strtotime( next_order_date() ) ) . '"/>';
     echo '</div>';
 });
-
-function php_array_2_js( $arr ) {
-    $jarr = '[';
-    $ct = 0;
-    foreach ( $arr as $a ) {
-	if ( $ct > 0 ) {
-	    $jarr .= ',';
-	} else {
-	    $ct = 1;
-	}
-	$jarr .= '"' . $a . '"';
-    }
-    return $jarr . ']';
-}
 
 add_action( 'wp_footer', function () {?>
     <script type="text/javascript">

@@ -290,30 +290,18 @@ add_filter( 'woocommerce_admin_order_date_format' , 'myc_custom_order_date_forma
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 require_once( dirname(__FILE__) . '/myc-order-dates.php' );
+require_once( dirname(__FILE__) . '/myc-what-to-cook.php' );
 
 function register_order_dates() {
     if ( current_user_can( 'manage_woocommerce' ) ) {
 	add_submenu_page( 'woocommerce', __( 'Order dates', 'myc' ), __( 'Order dates', 'myc' ), 'manage_woocommerce', 'manage_order_dates', 'manage_order_dates_page' );
+	add_submenu_page( 'woocommerce', __( 'What to cook', 'myc' ), __( 'What to cook', 'myc' ), 'manage_woocommerce', 'what_to_cook', 'what_to_cook_page' );
     }
     if ( ! get_term_by( 'slug', 'order_date', 'category' ) ) {
 	wp_insert_term( 'order_date', 'category', 'order_date' );
     }
 }
-
 add_action( 'admin_menu', 'register_order_dates', 11 );
 
-/* function myc_jquery_assets() {
- *     error_log("in jquery_assets");
- *     $s = wp_register_script( 'jquery-ui-js', dirname(__FILE__) . '/../assets/js/jquery-ui-1.12.1/jquery-ui.min.js' );
- *     wp_enqueue_script( 'jquery-ui-js');
- *     error_log("first: $s");
- * 
- *     $s = wp_register_style('jquery-ui-css', dirname(__FILE__) . '/../assets/js/jquery-ui-1.12.1/jquery-ui.min.css' );
- *     wp_enqueue_style('jquery-ui-css');
- *     error_log("second: $s");
- * 
- *     wp_enqueue_script('field-date-js', dirname(__FILE__) . '/../assets/js/field_date.js');
- * //    wp_enqueue_style('jquery-ui-datepicker');
- * }
- * //add_action( 'admin_enqueue_scripts', 'myc_jquery_assets' );
- * */
+
+
