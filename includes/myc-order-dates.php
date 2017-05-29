@@ -3,16 +3,42 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function order_dates() {
+function order_dates( $only_enabled = false ) {
     $id = get_term_by( 'name', 'order_date', 'category' )->term_id;
     $raw_dates = get_term_meta( $id )[ 'order_date' ];
     sort( $raw_dates );
     $dates = array();
+    $now = strtotime( 'now' );
     foreach( $raw_dates as $date ) {
-	$dates[] = array( 'order_date' => $date . ' (' . date('D', strtotime( $date ) ) . ')' );
+	$dt = strtotime( $date );
+	$ordering_threshold = ( false == $only_enabled )
+			    ? PHP_INT_MAX
+			    : strtotime( $date . ' - 3 days' );
+	if ( $dt >= $now && $ordering_threshold >= $now ) {
+	    $dates[] = $date;
+	}
     }
     return $dates;
 }
+
+function formatted_order_dates() {
+    $dates = array();
+    foreach ( order_dates() as $date ) {
+	$dates[] = array( 'order_date' => $date . ' (' . date( 'D', strtotime( $date ) ) . ')' );
+    }
+    return $dates;
+}
+
+function next_order_date() {
+    $now = date( 'Y-m-d', strtotime( 'now' ) );
+    foreach( order_dates( true ) as $date ) {
+	if ( $date >= $now ) {
+	    return $date;
+	}	    
+    }
+    return '';
+}
+
 
 function manage_order_dates_page() {
     echo '<h2>' . __( 'Order dates', 'myc' ) . '</h2>';
@@ -21,7 +47,7 @@ function manage_order_dates_page() {
 	<p class="form-field _order_dates">
 	    <span class="wrap">
 		<?php
-		$table = new MYC_Order_Dates( order_dates() );
+		$table = new MYC_Order_Dates( formatted_order_dates() );
 		$table->prepare_items();
 		$table->display();
 		?>
@@ -155,22 +181,53 @@ add_action( 'woocommerce_after_order_notes', function( $checkout ) {
 
 add_action( 'woocommerce_after_cart_contents', function () {
     echo '<div class="myc_order_date_checkout_field"><h3>' . __('Date for Order') .'</h3>';
-    echo '<input type="text" class="datepicker order_date_picker" id="order_date" value="' . date( 'M d, Y', strtotime( 'next Monday' ) ) . '"/>';
+    error_log( 'next_order_date: ' . next_order_date() );
+    echo '<input type="text" class="datepicker order_date_picker" id="order_date" value="' . date( 'M d, Y', strtotime( next_order_date() ) ) . '"/>';
     echo '</div>';
 });
+
+function php_array_2_js( $arr ) {
+    $jarr = '[';
+    $ct = 0;
+    foreach ( $arr as $a ) {
+	if ( $ct > 0 ) {
+	    $jarr .= ',';
+	} else {
+	    $ct = 1;
+	}
+	$jarr .= '"' . $a . '"';
+    }
+    return $jarr . ']';
+}
 
 add_action( 'wp_footer', function () {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
 	 jQuery( '.order_date_picker' ).datepicker({
 	     onSelect: function() {
-		 alert(jQuery(this).val());
 		 jQuery.post( ajaxurl, {
 		     'action': 'set_order_date_in_session',
 		     'order_date': jQuery( this ).val(),
 		     '_nonce': '<?php echo wp_create_nonce( 'set_order_date_in_session' ) ?>'
 		 });
-		 //sessionStorage.setItem( 'order_date', jQuery( this ).val() );
+	     },
+	     beforeShowDay: function( date ) {
+		 var d = date.getDate();
+		 if (d<10) {
+		     d = '0' + d;
+		 }
+		 var m = date.getMonth() + 1;
+		 if (m<10) {
+		     m = '0' + m;
+		 }
+		 var y = date.getFullYear();
+		 var enabled_dates = <?php echo php_array_2_js( order_dates( true ) ) ?>;
+		 var current_date = y + '-' + m + '-' + d;
+		 if ( jQuery.inArray( current_date, enabled_dates ) != -1 ) {
+		     return [true];
+		 } else {
+		     return [false];
+		 }
 	     }
 	 });
      });
