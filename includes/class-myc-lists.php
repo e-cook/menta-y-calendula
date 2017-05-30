@@ -324,7 +324,7 @@ class MYC_Provides_Lines extends NoNonce_Table {
 }
 
 
-class MYC_Order_Dates extends NoNonce_Table {
+class MYC_Order_Deadlines extends NoNonce_Table {
 
     protected $_dates;
     
@@ -335,7 +335,7 @@ class MYC_Order_Dates extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'order_date' => __( 'Order Date', 'myc' ),
+	    'order_deadline' => __( 'Order Deadline', 'myc' ),
 	);
     }
 
@@ -350,8 +350,8 @@ class MYC_Order_Dates extends NoNonce_Table {
     public function column_default( $item, $column_name )
     {
         switch( $column_name ) {
-            case 'order_date':
-		$action = array( 'delete' => '<button class="delete_order_date button" date="' . substr( $item[$column_name], 0, 10 ) 
+            case 'order_deadline':
+		$action = array( 'delete' => '<button class="delete_order_deadline button" date="' . substr( $item[$column_name], 0, 10 ) 
 					 . '">' . __( 'Delete' ) . '</button>' );
                 return sprintf('%1$s %2$s', $item[ $column_name ], $this->row_actions( $action ) );
             default:

@@ -1,0 +1,29 @@
+.what-to-cook-table {
+    border-collapse: collapse;
+}
+
+.what-to-cook-table th, td {
+    border: 1px solid black;
+    border-spacing: 1;
+    padding: 1;
+}
+
+.what-to-cook-table div {
+    text-align: center;
+}
+
+div.myc-customer-wrap {
+    text-align: center;
+    width: 100%;
+}
+
+div.myc-customer {
+    display: inline-block;
+    font-weight: bold;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.what-to-cook-table tr {
+    tr:nth-child(even) {background-color: #f2f2f2}
+}

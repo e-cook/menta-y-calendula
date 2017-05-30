@@ -10,6 +10,8 @@ function myc_add_jquery() {
     wp_enqueue_script( 'myc-script-1', plugins_url( 'assets/jquery-ui-1.12.1/jquery-ui.min.js',  dirname(__FILE__) ), array( 'jquery' ) );
     wp_register_style( 'myc-style-1',  plugins_url( 'assets/jquery-ui-1.12.1/jquery-ui.min.css', dirname(__FILE__) ) );
     wp_enqueue_style(  'myc-style-1' );
+    wp_register_style( 'myc-style-2',  plugins_url( 'assets/css/myc.css', dirname(__FILE__) ) );
+    wp_enqueue_style(  'myc-style-2' );
     wp_enqueue_script( 'jquery-ui-datepicker' );
 }
 add_action( 'admin_enqueue_scripts', 'myc_add_jquery' );
@@ -279,10 +281,10 @@ add_action( 'wp_ajax_deactivate_meal' , 'myc_ajax_deactivate_meal' );
 
 
 // date format
-function myc_custom_order_date_format( $post ) {
+function myc_custom_delivery_date_format( $post ) {
     return get_post_time( __( 'd/m/Y', 'woocommerce' ), $post );
 }
-add_filter( 'woocommerce_admin_order_date_format' , 'myc_custom_order_date_format' );
+add_filter( 'woocommerce_admin_delivery_date_format' , 'myc_custom_delivery_date_format' );
 
 
 // menu
@@ -291,16 +293,18 @@ require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 require_once( dirname(__FILE__) . '/myc-order-dates.php' );
 require_once( dirname(__FILE__) . '/myc-what-to-cook.php' );
 
-function register_order_dates() {
+add_action( 'admin_menu', function() {
     if ( current_user_can( 'manage_woocommerce' ) ) {
-	add_submenu_page( 'woocommerce', __( 'Order dates', 'myc' ), __( 'Order dates', 'myc' ), 'manage_woocommerce', 'manage_order_dates', 'manage_order_dates_page' );
+	add_submenu_page( 'woocommerce', __( 'Order deadline', 'myc' ), __( 'Order deadlines', 'myc' ), 'manage_woocommerce', 'manage_order_deadlines', 'manage_order_deadlines_page' );
 	add_submenu_page( 'woocommerce', __( 'What to cook', 'myc' ), __( 'What to cook', 'myc' ), 'manage_woocommerce', 'what_to_cook', 'what_to_cook_page' );
     }
-    if ( ! get_term_by( 'slug', 'order_date', 'category' ) ) {
-	wp_insert_term( 'order_date', 'category', 'order_date' );
+    if ( ! get_term_by( 'slug', 'delivery_date', 'category' ) ) {
+	wp_insert_term( 'delivery_date', 'category', 'delivery_date' );
     }
-}
-add_action( 'admin_menu', 'register_order_dates', 11 );
+    if ( ! get_term_by( 'slug', 'order_deadline', 'category' ) ) {
+	wp_insert_term( 'order_deadline', 'category', 'order_deadline' );
+    }
+}, 11 );
 
 
 
