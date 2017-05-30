@@ -63,13 +63,13 @@ define ('K_PATH_FONTS', K_PATH_MAIN.'fonts/');
  * Default images directory.
  * By default it is automatically set but you can also set it as a fixed string to improve performances.
  */
-define ('K_PATH_IMAGES', dirname(__FILE__).'/images/');
+define ('K_PATH_IMAGES', dirname(__FILE__).'/../../');
 
 /**
  * Deafult image logo used be the default Header() method.
  * Please set here your own logo or an empty string to disable it.
  */
-define ('PDF_HEADER_LOGO', 'tcpdf_logo.jpg');
+define ('PDF_HEADER_LOGO', 'myc-thumb.png');
 
 /**
  * Header logo image width in user units.
@@ -104,17 +104,17 @@ define ('PDF_CREATOR', 'TCPDF');
 /**
  * Document author.
  */
-define ('PDF_AUTHOR', 'Menta y Calèndula');
+define ('PDF_AUTHOR', 'Menta i Calèndula');
 
 /**
  * Header title.
  */
-define ('PDF_HEADER_TITLE', 'Menta y Calèndula');
+define ('PDF_HEADER_TITLE', 'Menta i Calèndula');
 
 /**
  * Header description string.
  */
-define ('PDF_HEADER_STRING', "Cuina entre xarxes\nmenta-y-calendula.cat");
+define ('PDF_HEADER_STRING', "Cuina entre xarxes\nmenta-i-calendula.cat");
 
 /**
  * Document unit of measure [pt=point, mm=millimeter, cm=centimeter, in=inch].
