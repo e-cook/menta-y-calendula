@@ -108,7 +108,7 @@ function cook_table_data( $date ) {
 }
 
 function cook_table_html( $customers, $meals, $table ) {
-    $out = '<table cellspacing="0" cellpadding="1" border="1">'."\n".'<tr><th/>';
+    $out = '<table cellspacing="0" cellpadding="1" border="1">'."\n".'<tr><th></th>';
     foreach ( $customers as $c => $v ) {
 	$out .= "<th>$c</th>";
     }
@@ -122,8 +122,8 @@ function cook_table_html( $customers, $meals, $table ) {
 		    : '&nbsp;' )
 		  . '</td>';
 	}
+	$out .= "</tr>\n";
     }
-    $out .= "</tr>\n";
     $out .= '</table>';
     return $out;
 }    
@@ -141,7 +141,59 @@ add_action( 'wp_ajax_show_what_to_cook_pdf', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'what_to_cook' ) ) {
 	wp_die( "Don't mess with me!" );
     }
-    $cd = cook_table_data( $_POST[ 'date' ] );
+
+    $date = $_POST[ 'date' ];
+    
+    require_once( dirname(__FILE__) . '/../assets/php/tcpdf/tcpdf_config.php' );
+    require_once( dirname(__FILE__) . '/../assets/php/tcpdf/tcpdf.php' );
+
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+    // set document information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Menta y Calendula');
+    $pdf->SetTitle("What to cook on $date");
+
+    // set default header data
+    $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+    // set header and footer fonts
+    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+    // set margins
+    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+    // set image scale factor
+    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+    // set some language-dependent strings (optional)
+    /* if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+       require_once(dirname(__FILE__).'/lang/eng.php');
+       $pdf->setLanguageArray($l);
+     * }
+     */
+    // ---------------------------------------------------------
+
+    // set font
+    $pdf->SetFont('helvetica', 'B', 20);
+
+    $cd   = cook_table_data( $date );
     $html = cook_table_html( $cd[ 'customers' ], $cd[ 'meals' ], $cd[ 'table' ] );
+    
+    // add a page
+    $pdf->AddPage();
+    $pdf->Write(0, 'What to cook on ' . $date, '', 0, 'L', true, 0, false, false, 0);
+    $pdf->SetFont('helvetica', '', 8);
+    $pdf->writeHTML($html, true, false, false, false, '');
+    $pdf->Output("/tmp/cook-for-$date.pdf", 'F');
     wp_die();
 });
