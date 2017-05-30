@@ -23,7 +23,6 @@ function manage_order_dates_page() {
 	    <h4><?php echo __( 'Add Order Date' );?></h4>
 	    <input type="text" class="datepicker order_date_picker" id="new_order_date" />
 	    <button class="button" id="save-date-button"><?php echo __( 'Save date' )?></button>
-
 	</p>
     </div>
 <?php
