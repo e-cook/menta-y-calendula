@@ -62,7 +62,7 @@ function myc_admin_custom_js() {
      jQuery('.inventory_options')             .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.shipping_options')              .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.linked_product_options')        .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
-     jQuery('.advanced_options')              .addClass( 'hide_if_provider hide_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
+     jQuery('.advanced_options')              .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
  });
 </script>
 <?php
@@ -72,7 +72,7 @@ add_action('admin_footer', 'myc_admin_custom_js');
 /**
  * Add a custom product tab.
  */
-function custom_product_tabs( $tabs ) {
+add_filter( 'woocommerce_product_data_tabs', function ( $tabs ) {
     $tabs['provides'] = array(
 	'label'                => __( 'Provides What' ),
 	'target'               => 'provides_options',
@@ -115,12 +115,11 @@ function custom_product_tabs( $tabs ) {
 	'class'                => array( 'hide_if_provider', 'show_if_meal', 'hide_if_phys_ingredient', 'hide_if_recipe' ),
     );
     return $tabs;
-}
-add_filter( 'woocommerce_product_data_tabs', 'custom_product_tabs' );
+});
 
 function hide_non_meals_query ( $query ) {
-
     if ( $query->is_admin ||
+	 'post' == get_post_type() ||
 	 is_post_type_archive( 'product' ) &&
 	 ! $query->is_main_query() ) {
 	return;
@@ -138,7 +137,7 @@ function hide_non_meals_query ( $query ) {
     $query->tax_query->queries[] = $only_meals;
     $query->query_vars[ 'tax_query' ] = $query->tax_query->queries;
 }
-add_action( 'pre_get_posts', 'hide_non_meals_query', 10, 2 );
+//add_action( 'pre_get_posts', 'hide_non_meals_query', 10, 2 );
 
 /*
    // Bulk action change visibility
