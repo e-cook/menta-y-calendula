@@ -3,7 +3,7 @@
 }
 
 .what-to-cook-table th, td {
-    border: 1px solid black;
+    border: 1px solid #a9a9a9;
     border-spacing: 1;
     padding: 1;
 }
@@ -24,6 +24,6 @@ div.myc-customer {
     width: 50%;
 }
 
-.what-to-cook-table tr {
-    tr:nth-child(even) {background-color: #f2f2f2}
-}
+/* .what-to-cook-table tr:nth-of-type(even) { */
+/*     background-color: #ffccff; */
+/* } */

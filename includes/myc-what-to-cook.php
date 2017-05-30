@@ -19,10 +19,9 @@ function what_to_cook_page() {
 	    ?>
 	</select>
     </div>
-    <h2><?php echo __( 'You need to cook', 'myc' ); ?></h2>
+    <h2><?php echo __( 'You need to cook', 'myc' ); ?>: &nbsp;&nbsp;<a id="download-pdf-button" href="<?php echo wp_upload_dir()[ 'url' ] . '/cook.pdf' ?>">(<?php echo __( 'Download pdf' )?>)</a>
+    </h2>
     <div id="table-wrapper"></div>
-    <br/>
-    <button class="button" id="download-pdf-button"><?php echo __( 'Download pdf' )?></button>
 <?php
 }
 
@@ -41,16 +40,6 @@ add_action( 'admin_footer', function() {?>
 			      jQuery( '#table-wrapper' ).html(response);
 			      jQuery( '#download-pdf-button' ).show();
 			  });
-	 });
-	 jQuery( '#download-pdf-button' ).click( function() {
-	     jQuery.post( ajaxurl, {
-		 'action' : 'show_what_to_cook_pdf',
-		 'date'   : jQuery( '#what-to-cook' ).val(),
-		 '_nonce' : '<?php echo wp_create_nonce( 'what_to_cook' ) ?>'
-	     },
-			  function( response ) {
-			      jQuery( '#table-wrapper' ).html(response);
-			  });	     
 	 });
      });
     </script>
@@ -121,27 +110,37 @@ function cook_table_data( $date ) {
 }
 
 function cook_table_html( $meals, $table, $delivery_on ) {
-    $out = '<table class="what-to-cook-table">'."\n".'<tr><th>' . __( 'Delivery date', 'myc' ) . '</th>';
-    foreach ( $delivery_on as $date => $customers ) {
-	$out .= '<th colspan="' . sizeof( $customers ) . "\">$date</th>"; 
-    }
-    $out .= '<th>' . __( 'Total' ) . "</th></tr>\n";
+    $background_color = '#ffe3bc';
 
-    $out .= '<tr><td></td>'; 
+    $out = '<table class="what-to-cook-table">'."\n".'<tr><th><strong>' . __( 'Delivery date', 'myc' ) . '</strong></th>';
+    foreach ( $delivery_on as $date => $customers ) {
+	$out .= '<th colspan="' . sizeof( $customers ) . '" align="center"><strong>' . prettify_date( $date ) .'</strong></th>'; 
+    }
+    $out .= '<th align="center"><strong>' . __( 'Total' ) . "</strong></th></tr>\n";
+
+    $out .= '<tr style="background-color:' . $background_color . ';"><td></td>'; 
     foreach ( $delivery_on as $date => $customers ) {
 	foreach ( $customers as $c ) {
-	    $out .= "<td><div class='myc-customer-wrap'><div class='myc-customer'>$c</div></div></td>";
+	    $out .= "<td><div class='myc-customer-wrap'><div class='myc-customer' align=\"center\"><strong>$c</strong></div></div></td>";
+	    //	    $out .= "<td><div class='myc-customer' align=\"center\"><strong>$c</strong></div></td>";
 	}
     }
     $out .= "<td>&nbsp;</td></tr>\n";
 
+    $mod2 = 0;
     foreach ( $meals as $m ) {
-	$out .= "<tr><td>$m</td>";
+	if ( 0 == $mod2 ) {
+	    $mod2 = 1;
+	    $out .= "<tr><td><strong>$m</strong></td>";
+	} else {
+	    $mod2 = 0;
+	    $out .= '<tr style="background-color:' . $background_color . ';"><td><strong>' . $m . '</strong></td>';
+	}
 	$total = 0;
 	foreach ( $delivery_on as $date => $customers ) {
 	    foreach ( $customers as $c ) {
 		if( isset( $table[ $m ][ $c ] ) ) { 
-		    $out .= "<td><div>" . $table[ $m ][ $c ] . '</div></td>';
+		    $out .= '<td align="center">' . $table[ $m ][ $c ] . '</td>';
 		    $total += $table[ $m ][ $c ];
 		} else {
 		    $out .= '<td>&nbsp;</td>';
@@ -154,22 +153,7 @@ function cook_table_html( $meals, $table, $delivery_on ) {
     return $out;
 }    
 
-add_action( 'wp_ajax_show_what_to_cook', function() {
-    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'what_to_cook' ) ) {
-	wp_die( "Don't mess with me!" );
-    }
-    $cd = cook_table_data( $_POST[ 'date' ] );
-    echo cook_table_html( $cd[ 'meals' ], $cd[ 'table' ], $cd[ 'delivery_on' ] );
-    wp_die();
-});
-
-add_action( 'wp_ajax_show_what_to_cook_pdf', function() {
-    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'what_to_cook' ) ) {
-	wp_die( "Don't mess with me!" );
-    }
-
-    $date = $_POST[ 'date' ];
-    
+function create_pdf( $date, $html ) {
     require_once( dirname(__FILE__) . '/../assets/php/tcpdf/tcpdf_config.php' );
     require_once( dirname(__FILE__) . '/../assets/php/tcpdf/tcpdf.php' );
 
@@ -201,12 +185,6 @@ add_action( 'wp_ajax_show_what_to_cook_pdf', function() {
     // set image scale factor
     $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-    // set some language-dependent strings (optional)
-    /* if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-       require_once(dirname(__FILE__).'/lang/eng.php');
-       $pdf->setLanguageArray($l);
-     * }
-     */
     // ---------------------------------------------------------
 
     // set font
@@ -221,6 +199,17 @@ add_action( 'wp_ajax_show_what_to_cook_pdf', function() {
     $pdf->Write(0, 'What to cook on ' . $date, '', 0, 'L', true, 0, false, false, 0);
     $pdf->SetFont('helvetica', '', 8);
     $pdf->writeHTML($html, true, false, false, false, '');
-    $pdf->Output("/tmp/cook-for-$date.pdf", 'F');
+    $pdf->Output( wp_upload_dir()[ 'path' ] . "/cook.pdf", 'F');
+}
+
+add_action( 'wp_ajax_show_what_to_cook', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'what_to_cook' ) ) {
+	wp_die( "Don't mess with me!" );
+    }
+    $date = $_POST[ 'date' ];
+    $cd = cook_table_data( $date );
+    $html = cook_table_html( $cd[ 'meals' ], $cd[ 'table' ], $cd[ 'delivery_on' ] );
+    create_pdf( $date, $html );
+    echo $html;
     wp_die();
 });
