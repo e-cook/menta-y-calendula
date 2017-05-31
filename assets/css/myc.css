@@ -2,10 +2,12 @@
     border-collapse: collapse;
 }
 
-.what-to-cook-table th, td {
+.what-to-cook-table th {
     border: 1px solid #a9a9a9;
-    border-spacing: 1;
-    padding: 1;
+}
+
+.what-to-cook-table td {
+    border: 1px solid #a9a9a9;
 }
 
 .what-to-cook-table div {
@@ -22,6 +24,16 @@ div.myc-customer {
     font-weight: bold;
     margin: 0 auto;
     width: 50%;
+}
+
+#adminmenu #toplevel_page_woocommerce .menu-icon-generic div.wp-menu-image::before {
+	font-family: dashicons !important;
+	content: '\f513';
+}
+
+#adminmenu #menu-posts-product .menu-icon-product div.dashicons-admin-post::before {
+    font-family: dashicons !important;
+    content: '\f511';
 }
 
 /* .what-to-cook-table tr:nth-of-type(even) { */

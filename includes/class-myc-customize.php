@@ -6,31 +6,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 // add jquery-ui
 
 function myc_add_jquery() {
-    wp_enqueue_script( 'myc-helpers',  plugins_url( 'assets/js/helpers.js',  dirname(__FILE__) ) );
     wp_enqueue_script( 'myc-script-1', plugins_url( 'assets/jquery-ui-1.12.1/jquery-ui.min.js',  dirname(__FILE__) ), array( 'jquery' ) );
     wp_register_style( 'myc-style-1',  plugins_url( 'assets/jquery-ui-1.12.1/jquery-ui.min.css', dirname(__FILE__) ) );
+
+    wp_register_script( 'myc-helpers',  plugins_url( 'assets/js/myc-helpers.js',  dirname(__FILE__) ), array( 'jquery' ) );
+    wp_enqueue_script( 'myc-helpers' );
+    
     wp_enqueue_style(  'myc-style-1' );
     wp_register_style( 'myc-style-2',  plugins_url( 'assets/css/myc.css', dirname(__FILE__) ) );
     wp_enqueue_style(  'myc-style-2' );
     wp_enqueue_script( 'jquery-ui-datepicker' );
 }
-add_action( 'admin_enqueue_scripts', 'myc_add_jquery' );
-add_action(    'wp_enqueue_scripts', 'myc_add_jquery' );
+add_action( 'admin_enqueue_scripts', 'myc_add_jquery', 2000 ); // 2000 = late so that myc.css overrides the menu icon styles
+add_action(    'wp_enqueue_scripts', 'myc_add_jquery', 2000 );
 
 /**
  * add custom types
  */
-function myc_add_custom_product_types( $types ) {
+add_filter( 'product_type_selector', function() {
     // Key should be exactly the same as in the class
     return array (
-	'phys_ingredient'  => __( 'Physical Ingredient' ),
-	'abs_ingredient'  => __( 'Abstract Ingredient' ),
-	'recipe'      => __( 'Recipe' ),
-	'provider'    => __( 'Provider' ),
+	/*
+	   'phys_ingredient'  => __( 'Physical Ingredient' ),
+	   'abs_ingredient'  => __( 'Abstract Ingredient' ),
+	   'recipe'      => __( 'Recipe' ),
+	   'provider'    => __( 'Provider' ),
+	 */
 	'meal'        => __( 'Meal' ),
     );
-}
-add_filter( 'product_type_selector', 'myc_add_custom_product_types' );
+});
+
+add_filter( 'woocommerce_product_filters', function( $output ) {
+    return '<select name="product_type" id="dropdown_product_type"><option value="meal" >Meals</option></select>';
+});
 
 function myc_add_data_stores( $stores ) {
     $stores[ 'product-phys-ingredient' ] = 'WC_Product_Phys_Ingredient_Data_Store_CPT';
@@ -51,7 +59,7 @@ add_filter( 'wp_editor_settings', 'set_editor_height' );
 /**
  * Adjust visible tabs for different post types
  */
-function myc_admin_custom_js() {
+add_action('admin_footer', function() {
 
     if ('product' != get_post_type()) {
 	return;
@@ -65,11 +73,14 @@ function myc_admin_custom_js() {
      jQuery('.shipping_options')              .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.linked_product_options')        .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.advanced_options')              .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
+     jQuery('.general_tab').show();
+     jQuery('#general_product_data .pricing').show()
+     
+     jQuery('#post-query-submit').select(); // to select "meals"
  });
 </script>
 <?php
-}
-add_action('admin_footer', 'myc_admin_custom_js');
+});
 
 /**
  * Add a custom product tab.
@@ -304,6 +315,8 @@ add_action( 'admin_menu', function() {
     if ( ! get_term_by( 'slug', 'order_deadline', 'category' ) ) {
 	wp_insert_term( 'order_deadline', 'category', 'order_deadline' );
     }
+    global $menu;
+    $menu['55.5'][0] = __( 'Orders', 'myc' );
 }, 11 );
 
 
