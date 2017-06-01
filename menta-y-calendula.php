@@ -106,12 +106,6 @@ function myc_install() {
 	require_once( dirname( __FILE__ ). '/tests/populate_database.php' );
 
 	populate_product_types   ();
-	populate_abs_ingredients ();
-	populate_phys_ingredients();
-	populate_providers       ();
-	populate_provided_by     ();
-	populate_buy             ();
-	populate_recipes         ();
     }
     return 1;
 }
