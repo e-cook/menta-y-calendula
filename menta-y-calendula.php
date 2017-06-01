@@ -164,7 +164,7 @@ require_once($id . 'data-stores/class-myc-product-recipe-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-provider-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-meal-data-store-cpt.php');
 
-require_once($id . 'class-myc-customize.php');
+require_once($id . 'myc-customize.php');
 
 require_once($id . 'class-myc-lists.php');
 require_once($id . 'myc-phys-ingredient.php');

@@ -82,6 +82,12 @@ add_action('admin_footer', function() {
 <?php
 });
 
+// Allow subscribers to see Private posts and pages
+
+$subRole = get_role( 'subscriber' ); 
+$subRole->add_cap( 'read_private_posts' );
+$subRole->add_cap( 'read_private_pages' );
+
 /**
  * Add a custom product tab.
  */
