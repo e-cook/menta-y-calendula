@@ -3,7 +3,7 @@
    Plugin Name: Menta y Calendula
    Plugin URI:  https://github.org/menta-y-calendula
    Description: Organic Food Preparation and Ordering
-   Version:     20170927
+   Version:     0.9
    Author:      e-cook
    Author URI:  https://github.com/e-cook/menta-y-calendula
    License:     GPLv3
