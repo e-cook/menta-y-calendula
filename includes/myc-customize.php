@@ -3,6 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// post title customization
+add_filter( 'the_title', function( $title ) {
+    return str_replace( 'Private: ', 'Menú: ', str_replace( 'Privat: ', 'Menú: ', $title ) );
+});
+
+
 // add jquery-ui
 
 function myc_add_jquery() {

@@ -1,6 +1,6 @@
 <?php
 /*
-   Plugin Name: Menta y Calendula
+   Plugin Name: Menta i Calendula
    Plugin URI:  https://github.org/menta-y-calendula
    Description: Organic Food Preparation and Ordering
    Version:     0.9
