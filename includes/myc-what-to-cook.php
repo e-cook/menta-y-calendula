@@ -13,7 +13,7 @@ function what_to_cook_page() {
 	<label for="what-to-cook" class="screen-reader-text"><?php _e( 'Select deadline for order' ); ?></label>
 	<select name="d" id="what-to-cook">
 	    <?php
-	    foreach( order_deadlines( 'for_processing' ) as $date ) {
+	    foreach( order_dates_for_processing() as $date ) {
 		printf( "<option value='%s'>%s</option>\n", $date, prettify_date( $date ) );
 	    }
 	    ?>
@@ -30,21 +30,52 @@ add_action( 'admin_footer', function() {?>
      jQuery(document).ready(function() {
 	 // handle date selector
 	 jQuery( '#download-pdf-button' ).hide();
-	 jQuery( '#what-to-cook' ).change( function() {
+	 function wtc() {
+	     var cook_date = jQuery( '#what-to-cook' ).val();
 	     jQuery.post( ajaxurl, {
 		 'action' : 'show_what_to_cook',
-		 'date'   : jQuery( '#what-to-cook' ).val(),
+		 'date'   : cook_date,
 		 '_nonce' : '<?php echo wp_create_nonce( 'what_to_cook' ) ?>'
 	     },
 			  function( response ) {
 			      jQuery( '#table-wrapper' ).html(response);
 			      jQuery( '#download-pdf-button' ).show();
 			  });
-	 });
+	 }
+	 jQuery( '#what-to-cook' ).change( wtc() );
      });
     </script>
 <?php
 });
+
+function process_order_item( $oi_id, $oi_name, $customer, &$meals_of_category, &$table) {
+    $product_id = wc_get_order_item_meta( $oi_id, '_product_id' );
+    $meal_category = '';
+    foreach( wc_get_product_terms( $product_id, 'product_cat' ) as $term ) {
+	$meal_category = $term->name;
+    }
+    if ( $meal_category == '' ) {
+	$meal_category = __( 'other' );
+    }
+    
+    $qty = (int) wc_get_order_item_meta( $oi_id, '_qty' );
+    $var_id = wc_get_order_item_meta( $oi_id, '_variation_id' );
+
+    $meal_name = implode( '|', array( $oi_name, $var_id ) );
+
+    if ( ! isset( $meals_of_category[ $meal_category ] ) ) {
+	$meals_of_category[ $meal_category ] = array();
+    }
+    $meals_of_category[ $meal_category ][] = $meal_name;
+
+    if ( ! isset( $table[ $meal_name ] ) ) {
+	$table[ $meal_name ] = array();
+    }
+    if ( isset( $table[ $meal_name ][ $customer ] ) ) {
+	$qty += (int) $table[ $meal_name ][ $customer ];
+    }
+    $table[ $meal_name ][ $customer ] = $qty;
+}    
 
 function cook_table_data( $date ) {
     /*
@@ -55,7 +86,7 @@ function cook_table_data( $date ) {
        meal |  qty     |  qty |
      */
     $table = array();
-    $meals = array();
+    $meals_of_category = array();
     $delivery_on = array();
     
     global $wpdb;
@@ -68,7 +99,6 @@ function cook_table_data( $date ) {
 	$customer = implode( ' ' , array(
 	    get_post_meta( $order_id, '_billing_first_name', true ),
 	    get_post_meta( $order_id, '_billing_last_name', true ),
-	    //	    get_post_meta( $order_id, '_customer_user',  true ),
 	) );
 
 	$ddate = get_post_meta( $order_id, '_delivery_date', true );
@@ -79,23 +109,16 @@ function cook_table_data( $date ) {
 	
 	foreach( $wpdb->get_results( 'select order_item_id, order_item_name '
 				   . "from {$prefix}woocommerce_order_items "
-				   . 'where order_id=' . $order_id, ARRAY_N ) as $result_order_item ) {
-	    $oi_id = $result_order_item[0];
-	    $oi_name = $result_order_item[1];
-	    $qty = (int) wc_get_order_item_meta( $oi_id, '_qty' );
-	    $var = wc_get_order_item_meta( $oi_id, '_variation_id' );
-	    $meal = implode( '|', array( $oi_name, $var ) );
-	    $meals[ $meal ] = 0;
-	    if ( ! isset( $table[ $meal ] ) ) {
-		$table[ $meal ] = array();
-	    }
-	    if ( isset( $table[ $meal ][ $customer ] ) ) {
-		$qty += (int) $table[ $meal ][ $customer ];
-	    }
-	    $table[ $meal ][ $customer ] = $qty;		
+				   . "where order_id={$order_id}", ARRAY_N ) as $result_order_item ) {
+	    process_order_item( $result_order_item[0], $result_order_item[1], $customer, $meals_of_category, $table );
 	}
     }
-    ksort( $meals );
+    foreach ( array_keys( $meals_of_category ) as $cat ) {
+	$meals = array_unique( $meals_of_category[ $cat ] );
+	ksort( $meals );
+	$meals_of_category[ $cat ] = $meals;
+    }
+    ksort( $meals_of_category );
     ksort( $delivery_on );
     $delivery_on_sorted = array();
     foreach ( $delivery_on as $date => $c ) {
@@ -103,30 +126,18 @@ function cook_table_data( $date ) {
 	ksort( $customers );
 	$delivery_on_sorted[ $date ] = $customers;
     }
-    return array( 'meals' => array_keys( $meals ),
-		  'table' => $table,
-		  'delivery_on' => $delivery_on_sorted,
+    return array( 'meals_of_category' => $meals_of_category,
+		  'table'             => $table,
+		  'delivery_on'       => $delivery_on_sorted,
     );
 }
 
-function cook_table_html( $meals, $table, $delivery_on ) {
+function cook_table_category_html( $cat, $meals, $delivery_on, $table, &$out ) {
     $background_color = '#ffe3bc';
-
-    $out = '<table class="what-to-cook-table">'."\n".'<tr><th><strong>' . __( 'Delivery date', 'myc' ) . '</strong></th>';
-    foreach ( $delivery_on as $date => $customers ) {
-	$out .= '<th colspan="' . sizeof( $customers ) . '" align="center"><strong>' . prettify_date( $date ) .'</strong></th>'; 
-    }
-    $out .= '<th align="center"><strong>' . __( 'Total' ) . "</strong></th></tr>\n";
-
-    $out .= '<tr style="background-color:' . $background_color . ';"><td></td>'; 
-    foreach ( $delivery_on as $date => $customers ) {
-	foreach ( $customers as $c ) {
-	    $out .= "<td><div class='myc-customer-wrap'><div class='myc-customer' align=\"center\"><strong>$c</strong></div></div></td>";
-	    //	    $out .= "<td><div class='myc-customer' align=\"center\"><strong>$c</strong></div></td>";
-	}
-    }
-    $out .= "<td>&nbsp;</td></tr>\n";
-
+    $background_color_categories = '#e9c4f5';
+    
+    $out .= '<tr style="background-color:' . $background_color_categories . ';"><td colspan="3" align="center"><i>' . $cat . "</i></td></tr>\n";
+    
     $mod2 = 0;
     foreach ( $meals as $m ) {
 	if ( 0 == $mod2 ) {
@@ -149,9 +160,31 @@ function cook_table_html( $meals, $table, $delivery_on ) {
 	}
 	$out .= "<td align=\"center\"><strong>$total</strong></td></tr>\n";
     }
+}
+
+function cook_table_html( $meals_of_category, $table, $delivery_on ) {
+    $background_color = '#ffe3bc';
+
+    $out = '<table class="what-to-cook-table">'."\n".'<tr><th><strong>' . __( 'Delivery date', 'myc' ) . '</strong></th>';
+    foreach ( $delivery_on as $date => $customers ) {
+	$out .= '<th colspan="' . sizeof( $customers ) . '" align="center"><strong>' . prettify_date( $date ) .'</strong></th>'; 
+    }
+    $out .= '<th align="center"><strong>' . __( 'Total' ) . "</strong></th></tr>\n";
+
+    $out .= '<tr style="background-color:' . $background_color . ';"><td></td>'; 
+    foreach ( $delivery_on as $date => $customers ) {
+	foreach ( $customers as $c ) {
+	    $out .= "<td><div class='myc-customer-wrap'><div class='myc-customer' align=\"center\"><strong>$c</strong></div></div></td>";
+	}
+    }
+    $out .= "<td>&nbsp;</td></tr>\n";
+
+    foreach( $meals_of_category as $cat => $meals ) {
+	cook_table_category_html( $cat, $meals, $delivery_on, $table, $out );
+    }
     $out .= '</table>';
     return $out;
-}    
+}
 
 function create_pdf( $date, $html ) {
     require_once( dirname(__FILE__) . '/../assets/php/tcpdf/tcpdf_config.php' );
@@ -192,7 +225,7 @@ function create_pdf( $date, $html ) {
 
     $cd   = cook_table_data( $date );
     $html = '<style>' . file_get_contents( dirname(__FILE__) . '/../assets/css/myc.css' ) . '</style>'
-	  . cook_table_html( $cd[ 'meals' ], $cd[ 'table' ], $cd[ 'delivery_on' ] );
+	  . cook_table_html( $cd[ 'meals_of_category' ], $cd[ 'table' ], $cd[ 'delivery_on' ] );
     
     // add a page
     $pdf->AddPage();
@@ -206,10 +239,12 @@ add_action( 'wp_ajax_show_what_to_cook', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'what_to_cook' ) ) {
 	wp_die( "Don't mess with me!" );
     }
-    $date = $_POST[ 'date' ];
-    $cd = cook_table_data( $date );
-    $html = cook_table_html( $cd[ 'meals' ], $cd[ 'table' ], $cd[ 'delivery_on' ] );
-    create_pdf( $date, $html );
-    echo $html;
-    wp_die();
+    if ( isset( $_POST[ 'date' ] ) ) {
+	$date = $_POST[ 'date' ];
+	$cd = cook_table_data( $date );
+	$html = cook_table_html( $cd[ 'meals_of_category' ], $cd[ 'table' ], $cd[ 'delivery_on' ] );
+	create_pdf( $date, $html );
+	echo $html;
+	wp_die();
+    }
 });

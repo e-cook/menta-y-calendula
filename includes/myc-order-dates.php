@@ -13,7 +13,7 @@ function manage_order_deadlines_page() {
 	<p class="form-field _order_deadlines">
 	    <span class="wrap">
 		<?php
-		$table = new MYC_Order_Deadlines( formatted_order_deadlines() );
+		$table = new MYC_Order_Deadlines( formatted_order_deadlines_for_ordering() );
 		$table->prepare_items();
 		$table->display();
 		?>
@@ -114,8 +114,8 @@ add_action( 'woocommerce_after_order_notes', function( $checkout ) {
 
 add_action( 'woocommerce_after_cart_contents', function () {
     echo '<div class="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery') .'</h3>';
-    error_log( 'next_order_deadline: ' . next_order_deadline() );
-    echo '<input type="text" class="datepicker order_date_picker" id="delivery_date" value="' . date( 'M d, Y', strtotime( next_order_deadline() ) ) . '"/>';
+    error_log( 'next_order_deadline: ' . next_order_deadline_for_ordering() );
+    echo '<input type="text" class="datepicker order_date_picker" id="delivery_date" value="' . date( 'M d, Y', strtotime( next_order_deadline_for_ordering() ) ) . '"/>';
     echo '</div>';
 });
 
