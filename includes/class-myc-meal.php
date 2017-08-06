@@ -5,10 +5,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function create_meal() {
 
-    class WC_Product_Meal extends WC_Product_Simple {
+    class WC_Product_Meal extends WC_Product_Variable {
 
 	public function get_type() {
-	    return 'meal';
+	    return 'variable'; //'meal';
+	}
+
+	public function is_type( $type ) {
+	    if ( 'variable' == $type || ( is_array( $type ) && in_array( 'variable', $type ) ) ) {
+		return true;
+	    } else {
+		return parent::is_type( $type );
+	    }
+	}
+	
+	function is_purchasable() {
+	    return true;
 	}
 
 	protected $extra_data = array(
@@ -26,7 +38,6 @@ function create_meal() {
 	public function uses_recipe_lines() {
 	    $items = get_post_meta( $this->get_id(), '_uses_recipe', false );
 	    if ( ! $items || is_wp_error( $items ) ) {
-		error_log( "no items found" );
 		return array();
 	    }
 	    $result = array();

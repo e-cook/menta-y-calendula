@@ -48,9 +48,23 @@ add_filter( 'woocommerce_product_filters', function( $output ) {
 
 function myc_add_data_stores( $stores ) {
     $stores[ 'product-phys-ingredient' ] = 'WC_Product_Phys_Ingredient_Data_Store_CPT';
+    $stores[ 'product-meal' ] = 'WC_Product_Meal_Data_Store_CPT';
     return $stores;
 }
 add_filter( 'woocommerce_data_stores', 'myc_add_data_stores' );
+
+add_action('admin_footer', function() {
+    // modify behavior of attributes to permit meals to show variations
+?>
+    <script type='text/javascript'>
+     jQuery( document ).on( 'woocommerce_added_attribute', function() {
+	 if ('meal' === jQuery( 'select#product-type' ).val() ) {
+	     jQuery( '.enable_variation' ).addClass( 'show_if_meal' ).show();
+	 }
+     });
+    </script>
+<?php 
+});
 
 /**
  * Set editor height
@@ -78,6 +92,7 @@ add_action('admin_footer', function() {
      jQuery('.inventory_options')             .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.shipping_options')              .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.linked_product_options')        .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
+     jQuery('.variations_options')            .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.advanced_options')              .addClass( 'hide_if_provider show_if_meal hide_if_phys_ingredient hide_if_abs_ingredient hide_if_recipe' );
      jQuery('.general_tab').show();
      jQuery('#general_product_data .pricing').show()
@@ -139,6 +154,9 @@ add_filter( 'woocommerce_product_data_tabs', function ( $tabs ) {
 	'target'               => 'uses_recipe_options',
 	'class'                => array( 'hide_if_provider', 'show_if_meal', 'hide_if_phys_ingredient', 'hide_if_recipe' ),
     );
+
+    $tabs[ 'variations' ][ 'class' ][] = 'show_if_meal';
+
     return $tabs;
 });
 
