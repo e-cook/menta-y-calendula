@@ -48,7 +48,7 @@ add_action( 'admin_footer', function() {?>
 <?php
 });
 
-function process_order_item( $oi_id, $oi_name, $customer, &$meals_of_category, &$table) {
+function process_order_item( $oi_id, $meal_name, $delivery_date, $customer, &$meals_of_category, &$table) {
     $product_id = wc_get_order_item_meta( $oi_id, '_product_id' );
     $meal_category = '';
     foreach( wc_get_product_terms( $product_id, 'product_cat' ) as $term ) {
@@ -59,31 +59,37 @@ function process_order_item( $oi_id, $oi_name, $customer, &$meals_of_category, &
     }
     
     $qty = (int) wc_get_order_item_meta( $oi_id, '_qty' );
-    $var_id = wc_get_order_item_meta( $oi_id, '_variation_id' );
-
-    $meal_name = implode( '|', array( $oi_name, $var_id ) );
 
     if ( ! isset( $meals_of_category[ $meal_category ] ) ) {
 	$meals_of_category[ $meal_category ] = array();
     }
     $meals_of_category[ $meal_category ][] = $meal_name;
 
-    if ( ! isset( $table[ $meal_name ] ) ) {
-	$table[ $meal_name ] = array();
+    if ( ! isset( $table[ $delivery_date ] ) ) {
+	$table[ $delivery_date ] = array();
     }
-    if ( isset( $table[ $meal_name ][ $customer ] ) ) {
-	$qty += (int) $table[ $meal_name ][ $customer ];
+    if ( ! isset( $table[ $delivery_date ][ $meal_name ] ) ) {
+	$table[ $delivery_date ][ $meal_name ] = array();
     }
-    $table[ $meal_name ][ $customer ] = $qty;
+    if ( isset( $table[ $delivery_date ][ $meal_name ][ $customer ] ) ) {
+	$qty += (int) $table[ $delivery_date ][ $meal_name ][ $customer ];
+    }
+    $table[ $delivery_date ][ $meal_name ][ $customer ] = $qty;
 }    
 
 function cook_table_data( $date ) {
     /*
        Will make a table
-       xxxxx| customer | cust | cust
-       -----+-------------------------
-       meal |  qty     |  qty |
-       meal |  qty     |  qty |
+
+       | delivery date | date 1 | date 2 |       | date 3 |
+       |---------------+--------+--------+-------+--------|
+       | customer      | cust1  | cust1  | cust2 | cust2  |
+       |---------------+--------+--------+-------+--------|
+       | product 1     | qty    | qty    | qty   | qty    |
+       | product 2     | qty    | qty    | qty   | qty    |
+
+       which is indexed $table[$date][$cust][$product]
+
      */
     $table = array();
     $meals_of_category = array();
@@ -101,16 +107,16 @@ function cook_table_data( $date ) {
 	    get_post_meta( $order_id, '_billing_last_name', true ),
 	) );
 
-	$ddate = get_post_meta( $order_id, '_delivery_date', true );
-	if ( ! isset( $delivery_on[ $ddate ] ) ) {
-	    $delivery_on[ $ddate ] = array();
+	$delivery_date = get_post_meta( $order_id, '_delivery_date', true );
+	if ( ! isset( $delivery_on[ $delivery_date ] ) ) {
+	    $delivery_on[ $delivery_date ] = array();
 	}
-	$delivery_on[ $ddate ][ $customer ] = 0;
-	
+	$delivery_on[ $delivery_date ][ $customer ] = 0;
+
 	foreach( $wpdb->get_results( 'select order_item_id, order_item_name '
 				   . "from {$prefix}woocommerce_order_items "
-				   . "where order_id={$order_id}", ARRAY_N ) as $result_order_item ) {
-	    process_order_item( $result_order_item[0], $result_order_item[1], $customer, $meals_of_category, $table );
+				   . "where order_id={$order_id} and order_item_type='line_item'", ARRAY_N ) as $result_order_item ) {
+	    process_order_item( $result_order_item[0], $result_order_item[1], $delivery_date, $customer, $meals_of_category, $table );
 	}
     }
     foreach ( array_keys( $meals_of_category ) as $cat ) {
@@ -136,7 +142,7 @@ function cook_table_category_html( $cat, $meals, $delivery_on, $table, &$out ) {
     $background_color = '#ffe3bc';
     $background_color_categories = '#e9c4f5';
     
-    $out .= '<tr style="background-color:' . $background_color_categories . ';"><td colspan="3" align="center"><i>' . $cat . "</i></td></tr>\n";
+    $out .= '<tr style="background-color:' . $background_color_categories . ';"><td colspan="100" align="center"><i>' . $cat . "</i></td></tr>\n";
     
     $mod2 = 0;
     foreach ( $meals as $m ) {
@@ -150,9 +156,9 @@ function cook_table_category_html( $cat, $meals, $delivery_on, $table, &$out ) {
 	$total = 0;
 	foreach ( $delivery_on as $date => $customers ) {
 	    foreach ( $customers as $c ) {
-		if( isset( $table[ $m ][ $c ] ) ) { 
-		    $out .= '<td align="center">' . $table[ $m ][ $c ] . '</td>';
-		    $total += $table[ $m ][ $c ];
+		if( isset( $table[ $date ][ $m ][ $c ] ) ) { 
+		    $out .= '<td align="center">' . $table[ $date ][ $m ][ $c ] . '</td>';
+		    $total += $table[ $date ][ $m ][ $c ];
 		} else {
 		    $out .= '<td>&nbsp;</td>';
 		}
@@ -167,7 +173,7 @@ function cook_table_html( $meals_of_category, $table, $delivery_on ) {
 
     $out = '<table class="what-to-cook-table">'."\n".'<tr><th><strong>' . __( 'Delivery date', 'myc' ) . '</strong></th>';
     foreach ( $delivery_on as $date => $customers ) {
-	$out .= '<th colspan="' . sizeof( $customers ) . '" align="center"><strong>' . prettify_date( $date ) .'</strong></th>'; 
+	$out .= '<th colspan="' . sizeof( $customers ) . '" align="center"><strong>' . prettify_date_noyear( $date ) .'</strong></th>'; 
     }
     $out .= '<th align="center"><strong>' . __( 'Total' ) . "</strong></th></tr>\n";
 

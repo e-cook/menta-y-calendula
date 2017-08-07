@@ -77,6 +77,12 @@ add_filter( 'woocommerce_add_to_cart_handler', function( $type, $product ) {
     return ( 'variable_meal' === $product->get_type() ) ? 'variable' : $type;
     }, 10, 2);
 
+// show tags on shop page
+add_action( 'woocommerce_after_shop_loop_item', function() {
+    global $post, $product;
+    echo $product->get_tags( ', ', '<span class="tagged_as">', '.</span>' );
+}, 5);
+
 /**
  * Set editor height
  */

@@ -11,6 +11,10 @@ function prettify_date( $datestr ) {
     return $datestr . ' (' . date( 'D', strtotime( $datestr ) ) . ')';
 }
 
+function prettify_date_noyear( $datestr ) {
+    return date( 'D d M', strtotime( $datestr ) );
+}
+
 function order_deadlines_for_ordering() {
     $id = get_term_by( 'name', 'order_deadline', 'category' )->term_id;
     $raw_dates = get_term_meta( $id )[ 'order_deadline' ];
@@ -27,13 +31,29 @@ function order_deadlines_for_ordering() {
 
 function order_dates_for_processing() {
     $dates = array();
-    foreach( get_posts( array( 'post_type'      => 'shop_order',
-			       'post_status'    => 'wc_processing',
-			       'posts_per_page' => -1,
-			       'date_query'     => array( 'after'     => date( 'Y-m-d', strtotime( 'now' ) ),
-							  'before'    => date( 'Y-m-d', strtotime( 'now + 1 week' ) ),
-							  'inclusive' => true ) ) ) as $post ) {
-	$dates[] = substr( $post->post_date, 0, 10 );
+    /*
+       foreach( get_posts( array( 'post_type'      => 'shop_order',
+       'post_status'    => 'wc_processing',
+       'posts_per_page' => -1,
+       'meta_query'     => array(
+       array( 'key'       => '_delivery_date',
+       'value'     => array( date( 'Y-m-d', strtotime( 'now' ) ),
+       date( 'Y-m-d', strtotime( 'now + 2 week' ) ) ),
+       'type'      => 'date',
+       'compare'   => 'between',
+       'inclusive' => true ) ) ) ) as $post ) {
+       $dates[] = substr( $post->post_date, 0, 10 );
+       }
+     */
+    $term_id = get_term_by( 'slug', 'order_deadline', 'category' )->term_id;
+    $dates = array();
+    $now  = date( 'Y-m-d', strtotime( 'now' ) );
+    $next = date( 'Y-m-d', strtotime( 'now + 2 week' ) );
+    foreach( get_term_meta( $term_id, '', false ) as $date ) {
+	error_log("checking date " . var_export($date,1));
+	if ( $date[0] >= $now && $date[0] <= $next ) {
+	    $dates[] = $date[0];
+	}
     }
     return array_unique( $dates );
 }

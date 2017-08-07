@@ -93,7 +93,7 @@ add_action( 'wp_ajax_delete_order_deadline', function() {
 // add dates to order
 // http://www.portmanteaudesigns.com/blog/2015/02/04/woocommerce-custom-checkout-fields-email-backend/
 
-add_action( 'woocommerce_after_order_notes', function( $checkout ) {
+add_action( 'woocommerce_before_checkout_form', function( $checkout ) {
     echo '<div class="myc_delivery_date_checkout_field"><h2>' . __('Date for Delivery') .'</h2>';
     //    error_log(var_export($checkout,1));
     session_start();
@@ -114,7 +114,6 @@ add_action( 'woocommerce_after_order_notes', function( $checkout ) {
 
 add_action( 'woocommerce_after_cart_contents', function () {
     echo '<div class="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery') .'</h3>';
-    error_log( 'next_order_deadline: ' . next_order_deadline_for_ordering() );
     echo '<input type="text" class="datepicker order_date_picker" id="delivery_date" value="' . date( 'M d, Y', strtotime( next_order_deadline_for_ordering() ) ) . '"/>';
     echo '</div>';
 });
@@ -164,9 +163,6 @@ add_action( 'wp_ajax_set_delivery_date_in_session', function() {
 });
 
 add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    error_log("myc_after_checkout_validation");
-    error_log("data " . var_export($data,1));
-    error_log("errors " . var_export($errors,1));
     session_start();
     if ( ! isset( $_SESSION[ 'delivery_date' ] ) ) {
 	$errors->add( 'validation', __( 'Please enter a valid delivery date for your order', 'myc' ) );
@@ -177,7 +173,6 @@ add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) 
 
 add_action( 'woocommerce_checkout_update_order_meta', function( $order_id, $posted ) {
     session_start();
-    error_log("order_id: $order_id, posted: ". var_export($posted,1));
     $order = wc_get_order( $order_id );
     $order->update_meta_data( '_delivery_date', date( 'Y-m-d', strtotime( $_SESSION[ 'delivery_date' ] ) ) );
     $order->save();
