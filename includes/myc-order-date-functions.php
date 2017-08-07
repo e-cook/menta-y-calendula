@@ -22,7 +22,6 @@ function order_deadlines_for_ordering() {
 	    $dates[] = $date;
 	}
     }
-    error_log("order_deadlines_for_ordering: " . var_export($dates,1));
     return $dates;
 }
 
@@ -58,7 +57,7 @@ function next_order_deadline_for_ordering() {
 }
 
 function valid_delivery_dates() {
-    $vod = array();
+    $vdd = array();
     foreach ( order_deadlines_for_ordering() as $deadline_date ) {
 	$next_monday = date( 'Y-m-d', strtotime( $deadline_date . ' next Monday' ) );
 	foreach ( array( 0, 1, 2, 3 ) as $i ) {
@@ -69,17 +68,17 @@ function valid_delivery_dates() {
 }
 
 function php_array_2_js( $arr ) {
-    $jarr = '[';
+    $js_arr = '[';
     $ct = 0;
     foreach ( $arr as $a ) {
 	if ( $ct > 0 ) {
-	    $jarr .= ',';
+	    $js_arr .= ',';
 	} else {
 	    $ct = 1;
 	}
-	$jarr .= '"' . $a . '"';
+	$js_arr .= '"' . $a . '"';
     }
-    return $jarr . ']';
+    return $js_arr . ']';
 }
 
 

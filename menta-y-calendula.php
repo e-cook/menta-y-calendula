@@ -157,6 +157,7 @@ require_once($id . 'data-stores/class-myc-product-phys-ingredient-data-store-cpt
 require_once($id . 'data-stores/class-myc-product-recipe-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-provider-data-store-cpt.php');
 require_once($id . 'data-stores/class-myc-product-meal-data-store-cpt.php');
+require_once($id . 'data-stores/class-myc-product-variable-meal-data-store-cpt.php');
 
 require_once($id . 'myc-customize.php');
 
