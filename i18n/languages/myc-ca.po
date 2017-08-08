@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-08 09:31+0200\n"
-"PO-Revision-Date: 2017-08-08 09:32+0200\n"
+"POT-Creation-Date: 2017-08-08 14:49+0200\n"
+"PO-Revision-Date: 2017-08-08 14:50+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -132,7 +132,7 @@ msgstr "Última pàgina"
 msgid "Select All"
 msgstr "Seleccionar tot"
 
-#: includes/myc-abs-ingredient.php:18 includes/myc-customize.php:146
+#: includes/myc-abs-ingredient.php:18 includes/myc-customize.php:149
 msgid "Instances"
 msgstr "Instàncies"
 
@@ -140,7 +140,7 @@ msgstr "Instàncies"
 msgid "New instance"
 msgstr "Instància nova"
 
-#: includes/myc-abs-ingredient.php:49 includes/myc-customize.php:158
+#: includes/myc-abs-ingredient.php:49 includes/myc-customize.php:161
 msgid "Total Inventory"
 msgstr "Inventari total"
 
@@ -148,55 +148,67 @@ msgstr "Inventari total"
 msgid "Weekly Price Evolution per product"
 msgstr "Evolució setmanal de preus"
 
-#: includes/myc-customize.php:33
+#: includes/myc-customize.php:38
 msgid "Meal"
 msgstr "Plat"
 
-#: includes/myc-customize.php:34
+#: includes/myc-customize.php:39
 msgid "Variable Meal"
 msgstr "Plat amb variacions"
 
-#: includes/myc-customize.php:134
+#: includes/myc-customize.php:137
 msgid "Provides What"
 msgstr "Suministra quina cosa"
 
-#: includes/myc-customize.php:140
+#: includes/myc-customize.php:143
 msgid "Purchases"
 msgstr "Compres"
 
-#: includes/myc-customize.php:152
+#: includes/myc-customize.php:155
 msgid "Price Evolution"
 msgstr "Evolució de preus"
 
-#: includes/myc-customize.php:164
+#: includes/myc-customize.php:167
 msgid "Composition"
 msgstr "Composició"
 
-#: includes/myc-customize.php:170 includes/myc-meal.php:18
+#: includes/myc-customize.php:173 includes/myc-meal.php:18
 msgid "Recipes"
 msgstr "Receptes"
 
-#: includes/myc-customize.php:253
+#: includes/myc-customize.php:256
 msgid "active"
 msgstr "actiu"
 
-#: includes/myc-customize.php:343
+#: includes/myc-customize.php:257 includes/myc-customize.php:356
+msgid "Visible from"
+msgstr "Visible des de"
+
+#: includes/myc-customize.php:258
+msgid "Visible until"
+msgstr "Visible fins"
+
+#: includes/myc-customize.php:360
+msgid "Visible to"
+msgstr "Visible fins"
+
+#: includes/myc-customize.php:416
 msgid "d/m/Y"
 msgstr "d/m/Y"
 
-#: includes/myc-customize.php:356
+#: includes/myc-customize.php:429
 msgid "Order deadline"
 msgstr "Data limit per a comandes"
 
-#: includes/myc-customize.php:356 includes/myc-order-dates.php:10
+#: includes/myc-customize.php:429 includes/myc-order-dates.php:10
 msgid "Order deadlines"
 msgstr "Dates límits per a comandes"
 
-#: includes/myc-customize.php:357
+#: includes/myc-customize.php:430
 msgid "What to cook"
 msgstr "Què haig de cuinar"
 
-#: includes/myc-customize.php:366
+#: includes/myc-customize.php:439
 msgid "Orders"
 msgstr "Comandes"
 

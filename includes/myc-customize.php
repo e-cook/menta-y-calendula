@@ -30,11 +30,14 @@ add_action(    'wp_enqueue_scripts', 'myc_add_jquery', 2000 );
  * add custom types
  */
 add_filter( 'product_type_selector', function( $def ) {
-    $def['meal'] = __( 'Meal', 'myc' );
-    $def['variable_meal'] = __( 'Variable Meal', 'myc' );
-    return $def;
+    /* $def['meal'] = __( 'Meal', 'myc' );
+     * $def['variable_meal'] = __( 'Variable Meal', 'myc' );
+     * return $def;*/
     // Key should be exactly the same as in the class
-    //    return array (
+    return array (
+	'meal'          => __( 'Meal', 'myc' ),
+	'variable_meal' => __( 'Variable Meal', 'myc' )
+    );
     /*
        'phys_ingredient'  => __( 'Physical Ingredient', 'myc' ),
        'abs_ingredient'  => __( 'Abstract Ingredient', 'myc' ),
@@ -245,12 +248,14 @@ function hide_non_meals_query ( $query ) {
  */
 
 
-// add visibility column in product_posts
+// add visibility columns in product_posts
 
 function add_visiblity_column( $existing_columns ) {
     $offset = 3;
     return array_slice( $existing_columns, 0, $offset, true ) +
-	   array('active' => __( 'active', 'myc' )) +
+	   array('active'       => __( 'active', 'myc' ),
+		 'visible_from' => __( 'Visible from', 'myc'),
+		 'visible_to'   => __( 'Visible until', 'myc' ) ) +
 	   array_slice( $existing_columns, $offset, NULL, true);
 }
 add_action( 'manage_product_posts_columns', 'add_visiblity_column', 12 );
@@ -275,6 +280,13 @@ function render_visibility_column( $column ) {
 	       . 'class="active_button" '
 	       . checked( $currently_visible, 'visible', false )
 	       . '" />';
+	    return;
+	case 'visible_from' :
+	    echo ( 'meal' == substr( $the_product->get_type(), -4 ) ) ? $the_product->get_catalog_visibility_from() : '';
+	    return;
+	case 'visible_to' :
+	    echo ( 'meal' == substr( $the_product->get_type(), -4 ) ) ? $the_product->get_catalog_visibility_to() : '';
+	    return;
     }
 }
 add_action( 'manage_product_posts_custom_column', 'render_visibility_column' );
@@ -336,6 +348,67 @@ function myc_ajax_deactivate_meal() {
 }
 add_action( 'wp_ajax_deactivate_meal' , 'myc_ajax_deactivate_meal' );
 
+
+// visibility
+add_action( 'woocommerce_product_options_pricing', function() {
+    global $post;
+    echo '<p class="form-field">';
+    echo '<label for="visible_from_date">' . __('Visible from', 'myc') . '</label>';
+    echo '<input type="text" class="datepicker visible_from_date_picker" id="visible_from_date" value="' . get_post_meta($post->ID, '_visible_from_date', true) . '"/>';
+    echo '</p>';
+    echo '<p class="form-field">';
+    echo '<label for="visible_to_date">' . __('Visible to', 'myc') . '</label>';
+    echo '<input type="text" class="datepicker visible_to_date_picker" id="visible_to_date" value="' . get_post_meta($post->ID, '_visible_to_date', true) . '"/>';
+    echo '</p>';
+});
+
+add_action( 'admin_footer', function () {?>
+    <script type="text/javascript">
+     jQuery(document).ready(function() {
+	 jQuery( '.visible_from_date_picker' ).datepicker({
+	     onSelect: function() {
+		 jQuery.post( ajaxurl, {
+		     post_id: woocommerce_admin_meta_boxes.post_id,
+		     action: 'myc_set_visible_from_date',
+		     from_date: jQuery( this ).datepicker("getDate"),
+		     _nonce: '<?php echo wp_create_nonce( 'myc_set_visible_from_date' ) ?>'
+		 });
+	     },
+	     dateFormat: "yy-mm-dd"
+	 });
+	 jQuery( '.visible_to_date_picker' ).datepicker({
+	     onSelect: function() {
+		 jQuery.post( ajaxurl, {
+		     'post_id': woocommerce_admin_meta_boxes.post_id,
+		     'action': 'myc_set_visible_to_date',
+		     'to_date': jQuery( this ).datepicker("getDate"),
+		     '_nonce': '<?php echo wp_create_nonce( 'myc_set_visible_to_date' ) ?>'
+		 });
+	     },
+	     dateFormat: "yy-mm-dd"
+	 });
+     });
+    </script>
+<?php
+});
+
+add_action( 'wp_ajax_myc_set_visible_from_date', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_set_visible_from_date' ) ) {
+	wp_die( "Don't mess with me!" );
+    }
+    update_post_meta( wc_get_product( $_POST[ 'post_id' ] )->get_id(), 
+		      '_visible_from_date' , 
+		      date( 'Y-m-d', strtotime( $_POST[ 'from_date' ] ) ) );
+});
+
+add_action( 'wp_ajax_myc_set_visible_to_date', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_set_visible_to_date' ) ) {
+	wp_die( "Don't mess with me!" );
+    }
+    update_post_meta( wc_get_product( $_POST[ 'post_id' ] )->get_id(), 
+		      '_visible_to_date' , 
+		      date( 'Y-m-d', strtotime( $_POST[ 'to_date' ] ) ) );
+});
 
 
 // date format

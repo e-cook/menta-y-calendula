@@ -12,6 +12,6 @@ add_action('plugins_loaded', function () {
      * @author   MYC
      */
     class WC_Product_Meal_Data_Store_CPT extends WC_Product_Data_Store_CPT implements WC_Object_Data_Store_Interface {
-	
+
     }
 });
