@@ -83,7 +83,7 @@ add_filter( 'woocommerce_add_to_cart_handler', function( $type, $product ) {
 // show tags on shop page
 add_action( 'woocommerce_after_shop_loop_item', function() {
     global $product;
-    echo get_product_tag_list( $product->get_id(), ', ', '<span class="tagged_as">', '.</span>' );
+    echo wc_get_product_tag_list( $product->get_id(), ', ', '<span class="tagged_as">', '.</span>' );
 }, 5);
 
 /**
