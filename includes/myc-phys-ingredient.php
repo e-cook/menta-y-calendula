@@ -14,14 +14,14 @@ function render_latest_purchases() {
 <div id='purchases_options' class='panel woocommerce_options_panel'>
     <div class="options_group">
 	<p class="form-field _select_provider">
-	    <h4><?php echo __( 'Provider' )?></h4>
+	    <h4><?php echo __( 'Provider', 'myc' )?></h4>
 	    <form id="provider-select" class="category-select" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get">
 		<?php wp_dropdown_categories( 'show_count=1&hierarchical=1' ); ?>
 	    </form>
 	</p>
 	<p class="form-field _latest_purchases">
 	    <span class="wrap">
-		<h4 for="_latest_purchases"><?= __( 'Latest Purchases' )?></h4>
+		<h4 for="_latest_purchases"><?= __( 'Latest Purchases', 'myc' )?></h4>
 		<?php
 		$table = new MYC_Latest_Purchases( $product->latest_purchases() );
 		$table->prepare_items();
@@ -33,33 +33,33 @@ function render_latest_purchases() {
 	    <?php echo __( 'New purchase', 'woocommerce' ); 
 	    woocommerce_wp_text_input( array(
 		'id'		=> '_purchase_date',
-		'label'	        => __( 'Date' ),
+		'label'	        => __( 'Date', 'myc' ),
 		'desc_tip'	=> 'true',
-		'description'	=> __( 'When did you buy this?' ),
+		'description'	=> __( 'When did you buy this?', 'myc' ),
 		'type' 	        => 'text',
 	    ) );
 	    
 	    woocommerce_wp_text_input( array(
 		'id'		=> '_purchase_qty',
-		'label'	        => __( 'Quantity' ),
+		'label'	        => __( 'Quantity', 'myc' ),
 		'desc_tip'	=> 'true',
-		'description'	=> __( 'How much did you buy?' ),
+		'description'	=> __( 'How much did you buy?', 'myc' ),
 		'type' 	        => 'text',
 	    ) );
 
 	    woocommerce_wp_text_input( array(
 		'id'		=> '_purchase_price',
-		'label'	        => __( 'Price' ),
+		'label'	        => __( 'Price', 'myc' ),
 		'desc_tip'	=> 'true',
-		'description'	=> __( 'How much did you pay in total?' ),
+		'description'	=> __( 'How much did you pay in total?', 'myc' ),
 		'type' 	        => 'text',
 	    ) );
 
 	    //		$myc_save_purchase_nonce = wp_create_nonce("save-purchase");
 	    //		$link  = admin_url("admin-ajax.php?action=save_purchase&post_id={$post->ID}&nonce=$myc_save_purchase_nonce");
-	    //		echo '<a class="save-purchase-btn" data-save_purchase_nonce="' . $myc_save_purchase_nonce . '" data-post_id="' . $post->ID . '" href="' . $link . '">' . __( 'Save purchase' ) . '</a>';
-	    //  echo '<a href="#ajaxthing" class="save-purchase-btn" data-post_id="' . $post->ID . '">' . __( 'Save purchase' ) . '</a>';
-	    //		echo '<button class="woocommerce-Button button" name="save-purchase-btn" value="' . esc_attr( $product->get_id() ) . '">' . __( 'Save purchase' ) . '</button>';
+	    //		echo '<a class="save-purchase-btn" data-save_purchase_nonce="' . $myc_save_purchase_nonce . '" data-post_id="' . $post->ID . '" href="' . $link . '">' . __( 'Save purchase', 'myc' ) . '</a>';
+	    //  echo '<a href="#ajaxthing" class="save-purchase-btn" data-post_id="' . $post->ID . '">' . __( 'Save purchase', 'myc' ) . '</a>';
+	    //		echo '<button class="woocommerce-Button button" name="save-purchase-btn" value="' . esc_attr( $product->get_id() ) . '">' . __( 'Save purchase', 'myc' ) . '</button>';
 
 	    ?>
 	</p>

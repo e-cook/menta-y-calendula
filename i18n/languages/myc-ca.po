@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Menta i Calendula\n"
+"POT-Creation-Date: 2017-08-08 09:31+0200\n"
+"PO-Revision-Date: 2017-08-08 09:32+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.3\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: i18n/languages\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: includes/class-myc-lists.php:74 includes/class-myc-lists.php:263
+#: includes/myc-phys-ingredient.php:36
+msgid "Date"
+msgstr "Data"
+
+#: includes/class-myc-lists.php:75 includes/class-myc-lists.php:117
+#: includes/class-myc-lists.php:227 includes/myc-phys-ingredient.php:44
+#: includes/myc-recipe.php:38
+msgid "Quantity"
+msgstr "Quantitat"
+
+#: includes/class-myc-lists.php:76
+msgid "Paid"
+msgstr "Pagat"
+
+#: includes/class-myc-lists.php:77 includes/class-myc-lists.php:265
+msgid "Unit Price"
+msgstr "Preu Unitat"
+
+#: includes/class-myc-lists.php:116 includes/class-myc-lists.php:191
+#: includes/class-myc-lists.php:226 includes/class-myc-lists.php:264
+#: includes/class-myc-lists.php:302 includes/myc-recipe.php:30
+msgid "Ingredient"
+msgstr "Ingredient"
+
+#: includes/class-myc-lists.php:154
+msgid "Recipe"
+msgstr "Recepte"
+
+#: includes/class-myc-lists.php:338
+msgid "Order Deadline"
+msgstr "Data limit per comanda"
+
+#: includes/class-myc-lists.php:355
+msgid "Delete"
+msgstr "Esborrar"
+
+#: includes/class-wp-list-table.php:162
+msgid "List View"
+msgstr "Veure com a llista"
+
+#: includes/class-wp-list-table.php:163
+msgid "Excerpt View"
+msgstr "Veure com a extracte"
+
+#: includes/class-wp-list-table.php:334
+msgid "No items found."
+msgstr "Cap item trobat."
+
+#: includes/class-wp-list-table.php:461
+msgid "Select bulk action"
+msgstr "Selecciona acció en bult"
+
+#: includes/class-wp-list-table.php:463
+msgid "Bulk Actions"
+msgstr "Accions en bult"
+
+#: includes/class-wp-list-table.php:473
+msgid "Apply"
+msgstr "Aplicar"
+
+#: includes/class-wp-list-table.php:523 includes/class-wp-list-table.php:1324
+msgid "Show more details"
+msgstr "Més detall"
+
+#: includes/class-wp-list-table.php:586
+msgid "Filter by date"
+msgstr "Filtrar per data"
+
+#: includes/class-wp-list-table.php:588
+msgid "All dates"
+msgstr "Totes les dates"
+
+#: includes/class-wp-list-table.php:601
+#, php-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#: includes/class-wp-list-table.php:660 includes/class-wp-list-table.php:672
+#: includes/class-wp-list-table.php:685
+msgid "No comments"
+msgstr "Sense comentari"
+
+#: includes/class-wp-list-table.php:672
+msgid "No approved comments"
+msgstr "Sense comentaris aprovats"
+
+#: includes/class-wp-list-table.php:685
+msgid "No pending comments"
+msgstr "Sense comentaris pendents"
+
+#: includes/class-wp-list-table.php:798
+msgid "First page"
+msgstr "Primera pàgina"
+
+#: includes/class-wp-list-table.php:808
+msgid "Previous page"
+msgstr "Pàgina anterior"
+
+#: includes/class-wp-list-table.php:815 includes/class-wp-list-table.php:818
+msgid "Current Page"
+msgstr "Pàgina actual"
+
+#: includes/class-wp-list-table.php:831
+msgid "Next page"
+msgstr "Pàgina següent"
+
+#: includes/class-wp-list-table.php:841
+msgid "Last page"
+msgstr "Última pàgina"
+
+#: includes/class-wp-list-table.php:1069
+msgid "Select All"
+msgstr "Seleccionar tot"
+
+#: includes/myc-abs-ingredient.php:18 includes/myc-customize.php:146
+msgid "Instances"
+msgstr "Instàncies"
+
+#: includes/myc-abs-ingredient.php:27
+msgid "New instance"
+msgstr "Instància nova"
+
+#: includes/myc-abs-ingredient.php:49 includes/myc-customize.php:158
+msgid "Total Inventory"
+msgstr "Inventari total"
+
+#: includes/myc-abs-ingredient.php:74
+msgid "Weekly Price Evolution per product"
+msgstr "Evolució setmanal de preus"
+
+#: includes/myc-customize.php:33
+msgid "Meal"
+msgstr "Plat"
+
+#: includes/myc-customize.php:34
+msgid "Variable Meal"
+msgstr "Plat amb variacions"
+
+#: includes/myc-customize.php:134
+msgid "Provides What"
+msgstr "Suministra quina cosa"
+
+#: includes/myc-customize.php:140
+msgid "Purchases"
+msgstr "Compres"
+
+#: includes/myc-customize.php:152
+msgid "Price Evolution"
+msgstr "Evolució de preus"
+
+#: includes/myc-customize.php:164
+msgid "Composition"
+msgstr "Composició"
+
+#: includes/myc-customize.php:170 includes/myc-meal.php:18
+msgid "Recipes"
+msgstr "Receptes"
+
+#: includes/myc-customize.php:253
+msgid "active"
+msgstr "actiu"
+
+#: includes/myc-customize.php:343
+msgid "d/m/Y"
+msgstr "d/m/Y"
+
+#: includes/myc-customize.php:356
+msgid "Order deadline"
+msgstr "Data limit per a comandes"
+
+#: includes/myc-customize.php:356 includes/myc-order-dates.php:10
+msgid "Order deadlines"
+msgstr "Dates límits per a comandes"
+
+#: includes/myc-customize.php:357
+msgid "What to cook"
+msgstr "Què haig de cuinar"
+
+#: includes/myc-customize.php:366
+msgid "Orders"
+msgstr "Comandes"
+
+#: includes/myc-meal.php:27
+msgid "Add Recipe"
+msgstr "Recepte nou"
+
+#: includes/myc-order-dates.php:23
+msgid "Add Order Deadline"
+msgstr "Nova data limit per a comandes"
+
+#: includes/myc-order-dates.php:25
+msgid "Save date"
+msgstr "Guardar data"
+
+#: includes/myc-order-dates.php:97 includes/myc-order-dates.php:102
+#: includes/myc-order-dates.php:116
+msgid "Date for Delivery"
+msgstr "Data per a entrega"
+
+#: includes/myc-order-dates.php:168
+msgid "Please enter a valid delivery date for your order"
+msgstr "Si us plau, entri una data vàlida per la seva comanda"
+
+#: includes/myc-order-dates.php:170
+msgid "The delivery date for your order must lie in the future"
+msgstr "La data per a la seva comanda ha de ser al futur"
+
+#: includes/myc-phys-ingredient.php:17
+msgid "Provider"
+msgstr "Proveïdor"
+
+#: includes/myc-phys-ingredient.php:24
+msgid "Latest Purchases"
+msgstr "Últimes compres"
+
+#: includes/myc-phys-ingredient.php:33
+msgid "New purchase"
+msgstr "Nova compra"
+
+#: includes/myc-phys-ingredient.php:38
+msgid "When did you buy this?"
+msgstr "Quan ho vas comprar?"
+
+#: includes/myc-phys-ingredient.php:46
+msgid "How much did you buy?"
+msgstr "Quina quantitat vas comprar?"
+
+#: includes/myc-phys-ingredient.php:52
+msgid "Price"
+msgstr "Preu"
+
+#: includes/myc-phys-ingredient.php:54
+msgid "How much did you pay in total?"
+msgstr "Quant vas pagar?"
+
+#: includes/myc-provider.php:18
+msgid "Physical Ingredients"
+msgstr "Ingredients físics"
+
+#: includes/myc-provider.php:27
+msgid "Add Ingredient"
+msgstr "Ingredient nou"
+
+#: includes/myc-recipe.php:18
+msgid "Ingredients"
+msgstr "Ingredients"
+
+#: includes/myc-recipe.php:27
+msgid "New ingredient"
+msgstr "Ingredient nou"
+
+#: includes/myc-recipe.php:32
+msgid "Which ingredient"
+msgstr "Quin ingredient"
+
+#: includes/myc-recipe.php:40
+msgid "How much?"
+msgstr "Quant?"
+
+#: includes/myc-what-to-cook.php:10
+msgid "For the orders with deadline on"
+msgstr "Per a les comandes amb data límit"
+
+#: includes/myc-what-to-cook.php:13
+msgid "Select deadline for order"
+msgstr "Selecciona data límit per a comanda"
+
+#: includes/myc-what-to-cook.php:22
+msgid "You need to cook"
+msgstr "Has de cuinar"
+
+#: includes/myc-what-to-cook.php:22
+msgid "Download pdf"
+msgstr "Baixar pdf"
+
+#: includes/myc-what-to-cook.php:58
+msgid "other"
+msgstr "altres"
+
+#: includes/myc-what-to-cook.php:174
+msgid "Delivery date"
+msgstr "Data d'entrega"
+
+#: includes/myc-what-to-cook.php:178
+msgid "Total"
+msgstr "Total"

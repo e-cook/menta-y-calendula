@@ -19,7 +19,7 @@ function what_to_cook_page() {
 	    ?>
 	</select>
     </div>
-    <h2><?php echo __( 'You need to cook', 'myc' ); ?>: &nbsp;&nbsp;<a id="download-pdf-button" href="<?php echo wp_upload_dir()[ 'url' ] . '/cook.pdf' ?>">(<?php echo __( 'Download pdf' )?>)</a>
+    <h2><?php echo __( 'You need to cook', 'myc' ); ?>: &nbsp;&nbsp;<a id="download-pdf-button" href="<?php echo wp_upload_dir()[ 'url' ] . '/cook.pdf' ?>">(<?php echo __( 'Download pdf', 'myc' )?>)</a>
     </h2>
     <div id="table-wrapper"></div>
 <?php
@@ -55,7 +55,7 @@ function process_order_item( $oi_id, $meal_name, $delivery_date, $customer, &$me
 	$meal_category = $term->name;
     }
     if ( $meal_category == '' ) {
-	$meal_category = __( 'other' );
+	$meal_category = __( 'other', 'myc' );
     }
     
     $qty = (int) wc_get_order_item_meta( $oi_id, '_qty' );
@@ -175,7 +175,7 @@ function cook_table_html( $meals_of_category, $table, $delivery_on ) {
     foreach ( $delivery_on as $date => $customers ) {
 	$out .= '<th colspan="' . sizeof( $customers ) . '" align="center"><strong>' . prettify_date_noyear( $date ) .'</strong></th>'; 
     }
-    $out .= '<th align="center"><strong>' . __( 'Total' ) . "</strong></th></tr>\n";
+    $out .= '<th align="center"><strong>' . __( 'Total', 'myc' ) . "</strong></th></tr>\n";
 
     $out .= '<tr style="background-color:' . $background_color . ';"><td></td>'; 
     foreach ( $delivery_on as $date => $customers ) {

@@ -71,10 +71,10 @@ class MYC_Latest_Purchases extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'purchase_date' => __( 'Date' ),
-	    'qty_unit'      => __( 'Quantity' ),
-	    'price_paid'    => __( 'Paid' ),
-	    'unit_price'    => __( 'Unit Price'),
+	    'purchase_date' => __( 'Date', 'myc' ),
+	    'qty_unit'      => __( 'Quantity', 'myc' ),
+	    'price_paid'    => __( 'Paid', 'myc' ),
+	    'unit_price'    => __( 'Unit Price', 'myc'),
 	);
     }
 
@@ -113,8 +113,8 @@ class MYC_Recipe_Lines extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'ingredient' => __( 'Ingredient' ),
-	    'qty_unit'   => __( 'Quantity' ),
+	    'ingredient' => __( 'Ingredient', 'myc' ),
+	    'qty_unit'   => __( 'Quantity', 'myc' ),
 	);
     }
 
@@ -151,7 +151,7 @@ class MYC_Uses_Recipe_Lines extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'recipe' => __( 'Recipe' ),
+	    'recipe' => __( 'Recipe', 'myc' ),
 	);
     }
 
@@ -188,7 +188,7 @@ class MYC_Instances extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'phys_ingredient_id' => __( 'Ingredient' ),
+	    'phys_ingredient_id' => __( 'Ingredient', 'myc' ),
 	);
     }
 
@@ -223,8 +223,8 @@ class MYC_Total_Inventory extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'phys_ingredient_id' => __( 'Ingredient' ),
-	    'qty'                => __( 'Quantity' ),
+	    'phys_ingredient_id' => __( 'Ingredient', 'myc' ),
+	    'qty'                => __( 'Quantity', 'myc' ),
 	);
     }
 
@@ -260,9 +260,9 @@ class MYC_Total_Purchases extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'date'               => __( 'Date' ),
-	    'phys_ingredient_id' => __( 'Ingredient' ),
-	    'unit_price'         => __( 'Unit Price' ),
+	    'date'               => __( 'Date', 'myc' ),
+	    'phys_ingredient_id' => __( 'Ingredient', 'myc' ),
+	    'unit_price'         => __( 'Unit Price', 'myc' ),
 	);
     }
 
@@ -299,7 +299,7 @@ class MYC_Provides_Lines extends NoNonce_Table {
     
     public function get_columns() {
 	return array(
-	    'ingredient' => __( 'Ingredient' ),
+	    'ingredient' => __( 'Ingredient', 'myc' ),
 	);
     }
 
@@ -352,7 +352,7 @@ class MYC_Order_Deadlines extends NoNonce_Table {
         switch( $column_name ) {
             case 'order_deadline':
 		$action = array( 'delete' => '<button class="delete_order_deadline button" date="' . substr( $item[$column_name], 0, 10 ) 
-					 . '">' . __( 'Delete' ) . '</button>' );
+					 . '">' . __( 'Delete', 'myc' ) . '</button>' );
                 return sprintf('%1$s %2$s', $item[ $column_name ], $this->row_actions( $action ) );
             default:
                 return print_r( $item, true ) ;

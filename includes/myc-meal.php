@@ -15,7 +15,7 @@ function render_uses_recipe_lines() {
     <div class="options_group">
 	<p class="form-field _uses_recipe_lines">
 	    <span class="wrap">
-		<h4 for="_uses_recipe_lines"><?= __( 'Recipes' )?></h4>
+		<h4 for="_uses_recipe_lines"><?= __( 'Recipes', 'myc' )?></h4>
 		<?php
 		$table = new MYC_Uses_Recipe_Lines( $product->uses_recipe_lines() );
 		$table->prepare_items();
@@ -24,7 +24,7 @@ function render_uses_recipe_lines() {
 	    </span>
 	</p>
 	<p class="form-field _new_recipe">
-	    <h4><?php echo __( 'Add Recipe' );?></h4>
+	    <h4><?php echo __( 'Add Recipe', 'myc' );?></h4>
 	    <form id="recipe-select" class="category-select" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get">
 		<?php wp_dropdown_categories( 'show_count=1&hierarchical=1' ); ?>
 	    </form>

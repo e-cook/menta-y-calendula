@@ -30,18 +30,18 @@ add_action(    'wp_enqueue_scripts', 'myc_add_jquery', 2000 );
  * add custom types
  */
 add_filter( 'product_type_selector', function( $def ) {
-    $def['meal'] = __( 'Meal' );
-    $def['variable_meal'] = __( 'Variable Meal' );
+    $def['meal'] = __( 'Meal', 'myc' );
+    $def['variable_meal'] = __( 'Variable Meal', 'myc' );
     return $def;
     // Key should be exactly the same as in the class
     //    return array (
     /*
-       'phys_ingredient'  => __( 'Physical Ingredient' ),
-       'abs_ingredient'  => __( 'Abstract Ingredient' ),
-       'recipe'      => __( 'Recipe' ),
-       'provider'    => __( 'Provider' ),
+       'phys_ingredient'  => __( 'Physical Ingredient', 'myc' ),
+       'abs_ingredient'  => __( 'Abstract Ingredient', 'myc' ),
+       'recipe'      => __( 'Recipe', 'myc' ),
+       'provider'    => __( 'Provider', 'myc' ),
      */
-    //	'meal'        => __( 'Meal' ),
+    //	'meal'        => __( 'Meal', 'myc' ),
     //  );
 });
 
@@ -75,7 +75,7 @@ add_action( 'woocommerce_meal_add_to_cart', 'woocommerce_simple_add_to_cart', 30
 add_action( 'woocommerce_variable_meal_add_to_cart', 'woocommerce_variable_add_to_cart', 30 );
 add_filter( 'woocommerce_add_to_cart_handler', function( $type, $product ) {
     return ( 'variable_meal' === $product->get_type() ) ? 'variable' : $type;
-    }, 10, 2);
+}, 10, 2);
 
 // show tags on shop page
 add_action( 'woocommerce_after_shop_loop_item', function() {
@@ -131,43 +131,43 @@ $subRole->add_cap( 'read_private_pages' );
  */
 add_filter( 'woocommerce_product_data_tabs', function ( $tabs ) {
     $tabs['provides'] = array(
-	'label'                => __( 'Provides What' ),
+	'label'                => __( 'Provides What', 'myc' ),
 	'target'               => 'provides_options',
 	'class'                => array( 'show_if_provider', 'hide_if_meal', 'hide_if_variable_meal', 'hide_if_phys_ingredient', 'hide_if_abs_ingredient', 'hide_if_recipe' ),
     );
 
     $tabs['purchases'] = array(
-	'label'                => __( 'Purchases' ),
+	'label'                => __( 'Purchases', 'myc' ),
 	'target'               => 'purchases_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'hide_if_variable_meal', 'show_if_phys_ingredient', 'hide_if_abs_ingredient', 'hide_if_recipe' ),
     );
 
     $tabs['instances'] = array(
-	'label'                => __( 'Instances' ),
+	'label'                => __( 'Instances', 'myc' ),
 	'target'               => 'instances_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'hide_if_variable_meal', 'hide_if_phys_ingredient', 'show_if_abs_ingredient', 'hide_if_recipe' ),
     );
 
     $tabs['total_purchases'] = array(
-	'label'                => __( 'Price Evolution' ),
+	'label'                => __( 'Price Evolution', 'myc' ),
 	'target'               => 'total_purchases_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'hide_if_variable_meal', 'hide_if_phys_ingredient', 'show_if_abs_ingredient', 'hide_if_recipe' ),
     );
 
     $tabs['total_inventory'] = array(
-	'label'                => __( 'Total Inventory' ),
+	'label'                => __( 'Total Inventory', 'myc' ),
 	'target'               => 'total_inventory_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'hide_if_variable_meal', 'hide_if_phys_ingredient', 'show_if_abs_ingredient', 'hide_if_recipe' ),
     );
 
     $tabs['composition'] = array(
-	'label'                => __( 'Composition' ),
+	'label'                => __( 'Composition', 'myc' ),
 	'target'               => 'composition_options',
 	'class'                => array( 'hide_if_provider', 'hide_if_meal', 'hide_if_variable_meal', 'hide_if_phys_ingredient', 'hide_if_abs_ingredient', 'show_if_recipe' ),
     );
 
     $tabs['uses_recipe'] = array(
-	'label'                => __( 'Recipes' ),
+	'label'                => __( 'Recipes', 'myc' ),
 	'target'               => 'uses_recipe_options',
 	'class'                => array( 'hide_if_provider', 'show_if_meal', 'show_if_variable_meal', 'hide_if_phys_ingredient', 'hide_if_recipe' ),
     );
@@ -250,7 +250,7 @@ function hide_non_meals_query ( $query ) {
 function add_visiblity_column( $existing_columns ) {
     $offset = 3;
     return array_slice( $existing_columns, 0, $offset, true ) +
-	   array('active' => __('active')) +
+	   array('active' => __( 'active', 'myc' )) +
 	   array_slice( $existing_columns, $offset, NULL, true);
 }
 add_action( 'manage_product_posts_columns', 'add_visiblity_column', 12 );

@@ -15,7 +15,7 @@ function render_provides() {
     <div class="options_group">
 	<p class="form-field _provides">
 	    <span class="wrap">
-		<h4 for="_provides"><?= __( 'Physical Ingredients' )?></h4>
+		<h4 for="_provides"><?= __( 'Physical Ingredients', 'myc' )?></h4>
 		<?php
 		$table = new MYC_Provides_Lines( $product->provides_lines() );
 		$table->prepare_items();
@@ -24,7 +24,7 @@ function render_provides() {
 	    </span>
 	</p>
 	<p class="form-field _provides_phys_ingredients">
-	    <h4><?php echo __( 'Add Ingredient' );?></h4>
+	    <h4><?php echo __( 'Add Ingredient', 'myc' );?></h4>
 	    <form id="provides-ingredient-select" class="category-select" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get">
 		<?php wp_dropdown_categories( 'show_count=1&hierarchical=1' ); ?>
 	    </form>

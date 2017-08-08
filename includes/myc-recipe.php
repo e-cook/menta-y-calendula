@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-exit;
+    exit;
 }
 
 add_action( 'woocommerce_product_data_panels', 'render_recipe_lines' );
@@ -15,7 +15,7 @@ function render_recipe_lines() {
     <div class="options_group">
 	<p class="form-field _recipe_lines">
 	    <span class="wrap">
-		<h4 for="_recipe_lines"><?= __( 'Ingredients' )?></h4>
+		<h4 for="_recipe_lines"><?= __( 'Ingredients', 'myc' )?></h4>
 		<?php
 		$table = new MYC_Recipe_Lines( $product->recipe_lines() );
 		$table->prepare_items();
@@ -24,20 +24,20 @@ function render_recipe_lines() {
 	    </span>
 	</p>
 	<p class="form-field _new_ingredient">
-	    <?php echo __( 'New ingredient' ); 
+	    <?php echo __( 'New ingredient', 'myc' ); 
 	    woocommerce_wp_text_input( array(
 		'id'		=> '_recipe_ingredient',
-		'label'	        => __( 'Ingredient' ),
+		'label'	        => __( 'Ingredient', 'myc' ),
 		'desc_tip'	=> 'true',
-		'description'	=> __( 'Which ingredient' ),
+		'description'	=> __( 'Which ingredient', 'myc' ),
 		'type' 	        => 'text',
 	    ) );
 	    
 	    woocommerce_wp_text_input( array(
 		'id'		=> '_recipe_qty',
-		'label'	        => __( 'Quantity' ),
+		'label'	        => __( 'Quantity', 'myc' ),
 		'desc_tip'	=> 'true',
-		'description'	=> __( 'How much?' ),
+		'description'	=> __( 'How much?', 'myc' ),
 		'type' 	        => 'text',
 	    ) );
 	    ?>

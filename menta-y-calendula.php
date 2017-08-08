@@ -9,7 +9,7 @@
    License:     GPLv3
    License URI: https://www.gnu.org/licenses/gpl-3.0.html
    Text Domain: en
-   Domain Path: /languages
+   Domain Path: /i18n/languages
 
    This file is part of Menta y Calendula.
 
@@ -34,7 +34,10 @@ global $myc_db_version;
 global $myc_all_db_versions;
 $myc_all_db_versions = array( '0.1' );
 
-load_plugin_textdomain( 'menta-y-calendula', false, basename( dirname( __FILE__ ) ) . '/languages' );
+add_action( 'init', function() {
+    load_plugin_textdomain( 'myc', false, plugin_basename( dirname( __FILE__ ) ) . '/i18n/languages/' );
+});
+
 
 function myc_install_0_1() {
     global $wpdb;

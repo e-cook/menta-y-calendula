@@ -20,9 +20,9 @@ function manage_order_deadlines_page() {
 	    </span>
 	</p>
 	<p class="form-field _new_order_deadline">
-	    <h4><?php echo __( 'Add Order Deadline' );?></h4>
+	    <h4><?php echo __( 'Add Order Deadline', 'myc' );?></h4>
 	    <input type="text" class="datepicker order_date_picker" id="new_order_deadline" />
-	    <button class="button" id="save-date-button"><?php echo __( 'Save date' )?></button>
+	    <button class="button" id="save-date-button"><?php echo __( 'Save date', 'myc' )?></button>
 	</p>
     </div>
 <?php
@@ -94,7 +94,7 @@ add_action( 'wp_ajax_delete_order_deadline', function() {
 // http://www.portmanteaudesigns.com/blog/2015/02/04/woocommerce-custom-checkout-fields-email-backend/
 
 add_action( 'woocommerce_before_checkout_form', function( $checkout ) {
-    echo '<div class="myc_delivery_date_checkout_field"><h2>' . __('Date for Delivery') .'</h2>';
+    echo '<div class="myc_delivery_date_checkout_field"><h2>' . __('Date for Delivery', 'myc') .'</h2>';
     //    error_log(var_export($checkout,1));
     session_start();
     woocommerce_form_field( 'delivery_date_checkout', array(
@@ -113,7 +113,7 @@ add_action( 'woocommerce_before_checkout_form', function( $checkout ) {
 });
 
 add_action( 'woocommerce_after_cart_contents', function () {
-    echo '<div class="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery') .'</h3>';
+    echo '<div class="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery', 'myc') .'</h3>';
     echo '<input type="text" class="datepicker order_date_picker" id="delivery_date" value="' . date( 'M d, Y', strtotime( next_order_deadline_for_ordering() ) ) . '"/>';
     echo '</div>';
 });
