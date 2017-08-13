@@ -3,6 +3,19 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Redirect to login if not logged in and accessing shop or products
+add_action( 'parse_request', function( $query ) {
+    $req = $query->request;
+    if ( is_user_logged_in() !== true && 
+	 ( stripos( $req, 'shop' )     !== false ||
+	   stripos( $req, 'cart' )     !== false ||
+	   stripos( $req, 'checkout' ) !== false ||
+	   stripos( $req, 'account' )  !== false ||
+	   stripos( $req, 'product' )  !== false ) ) {
+	auth_redirect();
+    }
+}, 1 );
+
 // post title customization
 add_filter( 'the_title', function( $title ) {
     return str_replace( 'Private: ', 'Menú: ', str_replace( 'Privat: ', 'Menú: ', $title ) );
@@ -438,6 +451,3 @@ add_action( 'admin_menu', function() {
     global $menu;
     $menu['55.5'][0] = __( 'Orders', 'myc' );
 }, 11 );
-
-
-
