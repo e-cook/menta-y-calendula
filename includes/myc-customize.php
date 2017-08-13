@@ -7,11 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'parse_request', function( $query ) {
     $req = $query->request;
     if ( is_user_logged_in() !== true && 
-	 ( stripos( $req, 'shop' )     !== false ||
-	   stripos( $req, 'cart' )     !== false ||
-	   stripos( $req, 'checkout' ) !== false ||
-	   stripos( $req, 'account' )  !== false ||
-	   stripos( $req, 'product' )  !== false ||
+	 ( stripos( $req, 'shop' )        !== false ||
+	   stripos( $req, 'cart' )        !== false ||
+	   stripos( $req, 'checkout' )    !== false ||
+	   stripos( $req, 'account' )     !== false ||
+	   stripos( $req, 'product' )     !== false ||
+	   stripos( $req, 'espai-soci' )  !== false ||
 	   isset( $query->query_vars['s'] ) ) ) {
 	auth_redirect();
     }
