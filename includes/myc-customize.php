@@ -11,7 +11,8 @@ add_action( 'parse_request', function( $query ) {
 	   stripos( $req, 'cart' )     !== false ||
 	   stripos( $req, 'checkout' ) !== false ||
 	   stripos( $req, 'account' )  !== false ||
-	   stripos( $req, 'product' )  !== false ) ) {
+	   stripos( $req, 'product' )  !== false ||
+	   isset( $query->query_vars['s'] ) ) ) {
 	auth_redirect();
     }
 }, 1 );
