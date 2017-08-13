@@ -453,3 +453,19 @@ add_action( 'admin_menu', function() {
     global $menu;
     $menu['55.5'][0] = __( 'Orders', 'myc' );
 }, 11 );
+
+add_filter( 'get_pages', function( $items, $menu ) {
+    $filtered = array();
+    foreach ( $items as $item ) {
+	if ( is_user_logged_in() === true ||
+	     ( stripos( $item->post_name, 'cart' )       !== false &&
+	       stripos( $item->post_name, 'checkout' )   !== false &&
+	       stripos( $item->post_name, 'account' )    !== false &&
+	       stripos( $item->post_name, 'shop' )       !== false &&
+	       stripos( $item->post_name, 'product' )    !== false &&
+	       stripos( $item->post_name, 'espai-soci' ) !== false ) ) {
+	    $filtered[] = $item;
+	}
+    }
+    return $filtered;
+}, 20, 2);
