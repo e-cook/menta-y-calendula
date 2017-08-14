@@ -43,18 +43,9 @@ function create_meal() {
 	    return $result;
 	}
 
-	public function get_catalog_visibility_from() {
-	    $pm = get_post_meta( $this->get_id(), '_visible_from', false );
-	    return ( isset( $pm[0] ) && sizeof( $pm[0] ) > 0 ? $pm[0] : '' );
-	}
-
 	public function get_catalog_visibility_to() {
 	    $pm = get_post_meta( $this->get_id(), '_visible_to', false );
 	    return ( isset( $pm[0] ) && sizeof( $pm[0] ) > 0 ? $pm[0] : '' );
-	}
-
-	public function set_catalog_visibility_from( $from_date ) {
-	    update_post_meta( $this->get_id(), '_visible_from', $from_date );
 	}
 
 	public function set_catalog_visibility_to( $to_date ) {
@@ -108,18 +99,9 @@ function create_meal() {
 	    return $result;
 	}
 
-	public function get_catalog_visibility_from() {
-	    $pm = get_post_meta( $this->get_id(), '_visible_from_date', false );
-	    return ( isset( $pm[0] ) && sizeof( $pm[0] ) > 0 ? $pm[0] : '' );
-	}
-
 	public function get_catalog_visibility_to() {
 	    $pm = get_post_meta( $this->get_id(), '_visible_to_date', false );
 	    return ( isset( $pm[0] ) && sizeof( $pm[0] ) > 0 ? $pm[0] : '' );
-	}
-
-	public function set_catalog_visibility_from( $from_date ) {
-	    update_post_meta( $this->get_id(), '_visible_from_date', $from_date );
 	}
 
 	public function set_catalog_visibility_to( $to_date ) {
