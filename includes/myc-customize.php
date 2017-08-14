@@ -100,6 +100,13 @@ add_filter( 'woocommerce_add_to_cart_handler', function( $type, $product ) {
     return ( 'variable_meal' === $product->get_type() ) ? 'variable' : $type;
 }, 10, 2);
 
+// show continue shopping button on cart page
+add_action( 'woocommerce_cart_coupon', function() {?>
+</div>
+<div class="coupon">
+    <a class="button wc-backward" href="<?php echo esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ); ?>"> <?php _e( 'Return to shop', 'woocommerce' ) ?> </a>
+<?php });
+
 // show tags on shop page
 add_action( 'woocommerce_after_shop_loop_item', function() {
     global $product;
