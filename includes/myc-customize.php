@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Redirect to login if not logged in and accessing shop or products
+// this and the next function adapted from http://wordpress.org/plugins/redirect-to-login-if-not-logged-in/ by Daan Kortenbach
 add_action( 'parse_request', function( $query ) {
     $req = $query->request;
     if ( is_user_logged_in() !== true && 
@@ -12,11 +13,15 @@ add_action( 'parse_request', function( $query ) {
 	   stripos( $req, 'checkout' )    !== false ||
 	   stripos( $req, 'account' )     !== false ||
 	   stripos( $req, 'product' )     !== false ||
-	   stripos( $req, 'espai-soci' )  !== false ||
-	   isset( $query->query_vars['s'] ) ) ) {
+	   stripos( $req, 'espai-soci' )  !== false ) ) {
 	auth_redirect();
     }
 }, 1 );
+
+// Strips '?loggedout=true' from redirect url after login.
+add_filter( 'login_url', function( $login_url ) {
+    return str_replace( '%3Floggedout%3Dtrue', '', $login_url );
+}, 1, 1 );
 
 // post title customization
 add_filter( 'the_title', function( $title ) {
@@ -216,6 +221,13 @@ function hide_non_meals_query ( $query ) {
     $query->query_vars[ 'tax_query' ] = $query->tax_query->queries;
 }
 //add_action( 'pre_get_posts', 'hide_non_meals_query', 10, 2 );
+
+// filter search results if not logged in
+add_action( 'pre_get_posts', function( $query ) {
+    if ( $query->is_search && !is_user_logged_in() ) {
+	$query->set( 'post_type', array( 'post', 'page' ) );
+    }
+});
 
 /*
    // Bulk action change visibility
