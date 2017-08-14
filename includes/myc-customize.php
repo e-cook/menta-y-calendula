@@ -227,6 +227,17 @@ add_action( 'pre_get_posts', function( $query ) {
     if ( $query->is_search && !is_user_logged_in() ) {
 	$query->set( 'post_type', array( 'post', 'page' ) );
     }
+    if ( $query->get( 'post_type' ) == 'product' && !is_admin() ) {
+	$meta_query = $query->get( 'meta_query' );
+	$now = date( 'Y-m-d', strtotime( 'now' ) );
+	$meta_query[] = array( 'key'     => '_visible_from_date',
+			       'value'   => $now,
+			       'compare' => '<=' );
+	$meta_query[] = array( 'key'     => '_visible_to_date',
+			       'value'   => $now,
+			       'compare' => '>=' );
+	$query->set( 'meta_query', $meta_query );
+    }
 });
 
 /*
