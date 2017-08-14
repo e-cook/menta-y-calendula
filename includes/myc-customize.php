@@ -240,6 +240,11 @@ add_action( 'pre_get_posts', function( $query ) {
     }
 });
 
+// number of items per page
+add_filter( 'loop_shop_per_page', function( $cols ) {
+    return 50;
+}, 20);
+
 /*
    // Bulk action change visibility
 
