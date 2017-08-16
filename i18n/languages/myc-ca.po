@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-10 09:08+0200\n"
-"PO-Revision-Date: 2017-08-10 09:09+0200\n"
+"POT-Creation-Date: 2017-08-16 22:57+0200\n"
+"PO-Revision-Date: 2017-08-16 22:58+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -132,7 +132,7 @@ msgstr "Última pàgina"
 msgid "Select All"
 msgstr "Seleccionar tot"
 
-#: includes/myc-abs-ingredient.php:18 includes/myc-customize.php:149
+#: includes/myc-abs-ingredient.php:18 includes/myc-customize.php:176
 msgid "Instances"
 msgstr "Instàncies"
 
@@ -140,7 +140,7 @@ msgstr "Instàncies"
 msgid "New instance"
 msgstr "Instància nova"
 
-#: includes/myc-abs-ingredient.php:49 includes/myc-customize.php:161
+#: includes/myc-abs-ingredient.php:49 includes/myc-customize.php:188
 msgid "Total Inventory"
 msgstr "Inventari total"
 
@@ -148,67 +148,67 @@ msgstr "Inventari total"
 msgid "Weekly Price Evolution per product"
 msgstr "Evolució setmanal de preus"
 
-#: includes/myc-customize.php:38
+#: includes/myc-customize.php:58
 msgid "Meal"
 msgstr "Plat"
 
-#: includes/myc-customize.php:39
+#: includes/myc-customize.php:59
 msgid "Variable Meal"
 msgstr "Plat amb variacions"
 
-#: includes/myc-customize.php:137
+#: includes/myc-customize.php:107
+msgid "Return to shop"
+msgstr "Torna a la botiga"
+
+#: includes/myc-customize.php:164
 msgid "Provides What"
 msgstr "Suministra quina cosa"
 
-#: includes/myc-customize.php:143
+#: includes/myc-customize.php:170
 msgid "Purchases"
 msgstr "Compres"
 
-#: includes/myc-customize.php:155
+#: includes/myc-customize.php:182
 msgid "Price Evolution"
 msgstr "Evolució de preus"
 
-#: includes/myc-customize.php:167
+#: includes/myc-customize.php:194
 msgid "Composition"
 msgstr "Composició"
 
-#: includes/myc-customize.php:173 includes/myc-meal.php:18
+#: includes/myc-customize.php:200 includes/myc-meal.php:18
 msgid "Recipes"
 msgstr "Receptes"
 
-#: includes/myc-customize.php:256
+#: includes/myc-customize.php:303
 msgid "active"
 msgstr "actiu"
 
-#: includes/myc-customize.php:257 includes/myc-customize.php:356
-msgid "Visible from"
-msgstr "Visible des de"
-
-#: includes/myc-customize.php:258
+#: includes/myc-customize.php:304
 msgid "Visible until"
 msgstr "Visible fins"
 
-#: includes/myc-customize.php:360
+#: includes/myc-customize.php:399
 msgid "Visible to"
 msgstr "Visible fins"
 
-#: includes/myc-customize.php:416
+#: includes/myc-customize.php:435
 msgid "d/m/Y"
 msgstr "d/m/Y"
 
-#: includes/myc-customize.php:429
+#: includes/myc-customize.php:448
 msgid "Order deadline"
 msgstr "Data limit per a comandes"
 
-#: includes/myc-customize.php:429 includes/myc-order-dates.php:10
+#: includes/myc-customize.php:448 includes/myc-order-dates.php:10
 msgid "Order deadlines"
 msgstr "Dates límits per a comandes"
 
-#: includes/myc-customize.php:430
+#: includes/myc-customize.php:449
 msgid "What to cook"
 msgstr "Què haig de cuinar"
 
-#: includes/myc-customize.php:439
+#: includes/myc-customize.php:458
 msgid "Orders"
 msgstr "Comandes"
 
@@ -224,18 +224,13 @@ msgstr "Nova data limit per a comandes"
 msgid "Save date"
 msgstr "Guardar data"
 
-#: includes/myc-order-dates.php:97 includes/myc-order-dates.php:102
-#: includes/myc-order-dates.php:116
+#: includes/myc-order-dates.php:98 includes/myc-order-dates.php:103
 msgid "Date for Delivery"
 msgstr "Data per a entrega"
 
-#: includes/myc-order-dates.php:168
-msgid "Please enter a valid delivery date for your order"
-msgstr "Si us plau, entri una data vàlida per la seva comanda"
-
-#: includes/myc-order-dates.php:170
-msgid "The delivery date for your order must lie in the future"
-msgstr "La data per a la seva comanda ha de ser al futur"
+#: includes/myc-order-dates.php:104
+msgid "Select date for delivery"
+msgstr "Selecciona data límit per a entrega"
 
 #: includes/myc-phys-ingredient.php:17
 msgid "Provider"
@@ -316,3 +311,12 @@ msgstr "Data d'entrega"
 #: includes/myc-what-to-cook.php:178
 msgid "Total"
 msgstr "Total"
+
+#~ msgid "Visible from"
+#~ msgstr "Visible des de"
+
+#~ msgid "Please enter a valid delivery date for your order"
+#~ msgstr "Si us plau, entri una data vàlida per la seva comanda"
+
+#~ msgid "The delivery date for your order must lie in the future"
+#~ msgstr "La data per a la seva comanda ha de ser al futur"

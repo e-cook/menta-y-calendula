@@ -93,42 +93,33 @@ add_action( 'wp_ajax_delete_order_deadline', function() {
 // add dates to order
 // http://www.portmanteaudesigns.com/blog/2015/02/04/woocommerce-custom-checkout-fields-email-backend/
 
-add_action( 'woocommerce_before_checkout_form', function( $checkout ) {
-    echo '<div class="myc_delivery_date_checkout_field"><h2>' . __('Date for Delivery', 'myc') .'</h2>';
-    //    error_log(var_export($checkout,1));
-    session_start();
-    woocommerce_form_field( 'delivery_date_checkout', array(
+
+add_action( 'woocommerce_checkout_before_customer_details', function() {
+    echo '<div id="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery', 'myc') .'</h3>';
+    woocommerce_form_field( 'delivery_date', array(
 	'type'       => 'text',
+	'class'      => array('myc-delivery-date-class form-row-wide'),
+	'id'         => 'delivery-date-datepicker',
 	'label'      => __('Date for Delivery', 'myc'),
-	'placeholder'=> _x('Date for Delivery', 'placeholder', 'myc'),
+	'placeholder'=> __('Select date for delivery', 'myc'),
 	'required'   => true,
-	'class'      => array('form-row-wide'),
-	'input_class'=> array('order_date_picker'),
-	'clear'      => true,
-    ), isset( $_SESSION[ 'delivery_date' ] )
-			  ? $_SESSION[ 'delivery_date' ]
-			  : '' );
+	//	'input_class'=> array('order_date_picker'),
+    ), '' );
 
     echo '</div>';
 });
 
-add_action( 'woocommerce_after_cart_contents', function () {
-    echo '<div class="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery', 'myc') .'</h3>';
-    echo '<input type="text" class="datepicker order_date_picker" id="delivery_date" value="' . date( 'M d, Y', strtotime( next_order_deadline_for_ordering() ) ) . '"/>';
-    echo '</div>';
-});
+add_action( 'woocommerce_checkout_update_order_meta', function( $order_id, $posted ) {
+    error_log( 'POST: ' . var_export($_POST,1));
+    if ( $_POST[ 'delivery_date' ] ) {
+	update_post_meta( $order_id, '_delivery_date', date( 'Y-m-d', strtotime( $_POST[ 'delivery_date' ] ) ) );
+    }
+}, 10, 2 );
 
 add_action( 'wp_footer', function () {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
-	 jQuery( '.order_date_picker' ).datepicker({
-	     onSelect: function() {
-		 jQuery.post( ajaxurl, {
-		     'action': 'set_delivery_date_in_session',
-		     'delivery_date': jQuery( this ).val(),
-		     '_nonce': '<?php echo wp_create_nonce( 'set_delivery_date_in_session' ) ?>'
-		 });
-	     },
+	 jQuery( '#delivery-date-datepicker' ).datepicker({
 	     beforeShowDay: function( date ) {
 		 var d = date.getDate();
 		 if (d<10) {
@@ -152,29 +143,15 @@ add_action( 'wp_footer', function () {?>
     </script>
 <?php
 });
-
-add_action( 'wp_ajax_set_delivery_date_in_session', function() {
-    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'set_delivery_date_in_session' ) ) {
-	wp_die( "Don't mess with me!" );
-    }
-    session_start();
-    $_SESSION[ 'delivery_date' ] = $_POST[ 'delivery_date' ];
-    wp_die();
-});
-
-add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    session_start();
-    if ( ! isset( $_SESSION[ 'delivery_date' ] ) ) {
-	$errors->add( 'validation', __( 'Please enter a valid delivery date for your order', 'myc' ) );
-    } elseif( strtotime( $_SESSION[ 'delivery_date' ] ) < strtotime( 'now' ) ) {
-	$errors->add( 'validation', __( 'The delivery date for your order must lie in the future', 'myc' ) );
-    }
-}, 10, 2 );
-
-add_action( 'woocommerce_checkout_update_order_meta', function( $order_id, $posted ) {
-    session_start();
-    $order = wc_get_order( $order_id );
-    $order->update_meta_data( '_delivery_date', date( 'Y-m-d', strtotime( $_SESSION[ 'delivery_date' ] ) ) );
-    $order->save();
-}, 10, 2 );
+/*
+   add_filter( 'woocommerce_checkout_fields', function( $fields ) {
+   $fields[] = array( '_delivery_date' => array(
+   'type'         => 'text',
+   'label'        => __( 'Delivery date', 'myc' ),
+   'required'     => true,
+   'placeholder'  => esc_attr__( 'Delivery date', 'myc' ),
+   ) );
+   return $fields;
+   });
+ */
 
