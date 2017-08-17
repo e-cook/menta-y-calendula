@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
 "POT-Creation-Date: 2017-08-16 22:57+0200\n"
-"PO-Revision-Date: 2017-08-16 22:58+0200\n"
+"PO-Revision-Date: 2017-08-17 10:51+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -226,11 +226,11 @@ msgstr "Guardar data"
 
 #: includes/myc-order-dates.php:98 includes/myc-order-dates.php:103
 msgid "Date for Delivery"
-msgstr "Data per a entrega"
+msgstr "Data d'entrega"
 
 #: includes/myc-order-dates.php:104
 msgid "Select date for delivery"
-msgstr "Selecciona data límit per a entrega"
+msgstr "Selecciona data d'entrega"
 
 #: includes/myc-phys-ingredient.php:17
 msgid "Provider"
