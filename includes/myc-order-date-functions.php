@@ -29,33 +29,20 @@ function order_deadlines_for_ordering() {
     return $dates;
 }
 
-function order_dates_for_processing() {
+function order_deadlines_for_processing() {
     $dates = array();
-    /*
-       foreach( get_posts( array( 'post_type'      => 'shop_order',
-       'post_status'    => 'wc_processing',
-       'posts_per_page' => -1,
-       'meta_query'     => array(
-       array( 'key'       => '_delivery_date',
-       'value'     => array( date( 'Y-m-d', strtotime( 'now' ) ),
-       date( 'Y-m-d', strtotime( 'now + 2 week' ) ) ),
-       'type'      => 'date',
-       'compare'   => 'between',
-       'inclusive' => true ) ) ) ) as $post ) {
-       $dates[] = substr( $post->post_date, 0, 10 );
-       }
-     */
     $term_id = get_term_by( 'slug', 'order_deadline', 'category' )->term_id;
     $dates = array();
     $now  = date( 'Y-m-d', strtotime( 'now' ) );
     $next = date( 'Y-m-d', strtotime( 'now + 2 week' ) );
-    foreach( get_term_meta( $term_id, '', false ) as $date ) {
-	error_log("checking date " . var_export($date,1));
-	if ( $date[0] >= $now && $date[0] <= $next ) {
-	    $dates[] = $date[0];
+    foreach( get_term_meta( $term_id, '', false )[ 'order_deadline' ] as $date ) {
+	if ( $date >= $now && $date <= $next ) {
+	    $dates[] = $date;
 	}
     }
-    return array_unique( $dates );
+    $dates = array_unique( $dates );
+    sort( $dates );
+    return $dates;
 }
 
 function formatted_order_deadlines_for_ordering() {
@@ -85,6 +72,11 @@ function valid_delivery_dates() {
 	}
     }
     return $vdd;
+}
+
+function last_delivery_date( $datestr ) {
+    $next_monday = date( 'Y-m-d', strtotime( $datestr . ' next Monday' ) );
+    return date( 'Y-m-d', strtotime( $next_monday . " + 3 days" ) );
 }
 
 function php_array_2_js( $arr ) {

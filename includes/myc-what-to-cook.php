@@ -13,7 +13,7 @@ function what_to_cook_page() {
 	<label for="what-to-cook" class="screen-reader-text"><?php _e( 'Select deadline for order' ); ?></label>
 	<select name="d" id="what-to-cook">
 	    <?php
-	    foreach( order_dates_for_processing() as $date ) {
+	    foreach( order_deadlines_for_processing() as $date ) {
 		printf( "<option value='%s'>%s</option>\n", $date, prettify_date( $date ) );
 	    }
 	    ?>
@@ -100,7 +100,7 @@ function cook_table_data( $date ) {
     foreach( $wpdb->get_results( 'SELECT post_id '
 			       . "FROM {$prefix}postmeta "
 			       . 'WHERE meta_key="_delivery_date" '
-			       . 'AND meta_value BETWEEN "' . $date . '" AND "' . date( 'Y-m-d', strtotime( $date . ' + 6 days' ) ) . '"', ARRAY_N ) as $result_order ) {
+			       . 'AND meta_value BETWEEN "' . $date . '" AND "' . last_delivery_date( $date ) . '"', ARRAY_N ) as $result_order ) {
 	$order_id = $result_order[0];
 	$customer = implode( ' ' , array(
 	    get_post_meta( $order_id, '_billing_first_name', true ),
