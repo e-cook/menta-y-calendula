@@ -99,7 +99,7 @@ function cook_table_data( $date ) {
     $prefix = $wpdb->prefix;
     foreach( $wpdb->get_results( 'SELECT post_id '
 			       . "FROM {$prefix}postmeta "
-			       . 'WHERE meta_key="_delivery_date" '
+			       . 'WHERE meta_key="_shipping_delivery_date" '
 			       . 'AND meta_value BETWEEN "' . $date . '" AND "' . last_delivery_date( $date ) . '"', ARRAY_N ) as $result_order ) {
 	$order_id = $result_order[0];
 	$customer = implode( ' ' , array(

@@ -436,8 +436,17 @@ function myc_custom_delivery_date_format( $post ) {
 }
 add_filter( 'woocommerce_admin_delivery_date_format' , 'myc_custom_delivery_date_format' );
 
+// show delivery date in admin screen for order
+add_filter( 'woocommerce_admin_shipping_fields', function( $fields ) {
+    $fields[ 'delivery_date' ] = array(
+	'label' => __( 'Delivery date', 'myc' ),
+	'show'  => true,
+    );
+    return $fields;
+});
 
-// menu
+
+// Menu
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 require_once( dirname(__FILE__) . '/myc-order-dates.php' );
@@ -448,8 +457,8 @@ add_action( 'admin_menu', function() {
 	add_submenu_page( 'woocommerce', __( 'Order deadline', 'myc' ), __( 'Order deadlines', 'myc' ), 'manage_woocommerce', 'manage_order_deadlines', 'manage_order_deadlines_page' );
 	add_submenu_page( 'woocommerce', __( 'What to cook', 'myc' ), __( 'What to cook', 'myc' ), 'manage_woocommerce', 'what_to_cook', 'what_to_cook_page' );
     }
-    if ( ! get_term_by( 'slug', 'delivery_date', 'category' ) ) {
-	wp_insert_term( 'delivery_date', 'category', 'delivery_date' );
+    if ( ! get_term_by( 'slug', 'shipping_delivery_date', 'category' ) ) {
+	wp_insert_term( 'shipping_delivery_date', 'category', 'shipping_delivery_date' );
     }
     if ( ! get_term_by( 'slug', 'order_deadline', 'category' ) ) {
 	wp_insert_term( 'order_deadline', 'category', 'order_deadline' );
@@ -468,8 +477,8 @@ add_filter( 'get_pages', function( $items, $menu ) {
 	       stripos( $item->post_name, 'shop' )       !== false &&
 	       stripos( $item->post_name, 'product' )    !== false &&
 	       stripos( $item->post_name, 'espai-soci' ) !== false ) ) {
-	    $filtered[] = $item;
-	}
-    }
-    return $filtered;
+		   $filtered[] = $item;
+	       }
+}
+return $filtered;
 }, 20, 2);

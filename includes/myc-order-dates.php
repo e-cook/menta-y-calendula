@@ -114,7 +114,7 @@ add_action( 'woocommerce_checkout_process', function() {
 
 add_action( 'woocommerce_checkout_update_order_meta', function( $order_id, $posted ) {
     if ( $_POST[ 'delivery_date' ] ) {
-	update_post_meta( $order_id, '_delivery_date', date( 'Y-m-d', strtotime( $_POST[ 'delivery_date' ] ) ) );
+	update_post_meta( $order_id, '_shipping_delivery_date', date( 'Y-m-d', strtotime( $_POST[ 'delivery_date' ] ) ) );
     }
 }, 10, 2 );
 
