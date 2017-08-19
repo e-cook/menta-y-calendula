@@ -91,8 +91,6 @@ add_action( 'wp_ajax_delete_order_deadline', function() {
 
 
 // add dates to order
-// http://www.portmanteaudesigns.com/blog/2015/02/04/woocommerce-custom-checkout-fields-email-backend/
-
 
 add_action( 'woocommerce_checkout_before_customer_details', function() {
     echo '<div id="myc_delivery_date_checkout_field"><h3>' . __('Date for Delivery', 'myc') .'</h3>';
@@ -103,14 +101,18 @@ add_action( 'woocommerce_checkout_before_customer_details', function() {
 	'label'      => __('Date for Delivery', 'myc'),
 	'placeholder'=> __('Select date for delivery', 'myc'),
 	'required'   => true,
-	//	'input_class'=> array('order_date_picker'),
     ), '' );
 
     echo '</div>';
 });
 
+add_action( 'woocommerce_checkout_process', function() {
+    if ( ! $_POST[ 'delivery_date' ] ) {
+	wc_add_notice( __( 'Please enter a delivery date', 'myc' ), 'error' );
+    }
+});
+
 add_action( 'woocommerce_checkout_update_order_meta', function( $order_id, $posted ) {
-    error_log( 'POST: ' . var_export($_POST,1));
     if ( $_POST[ 'delivery_date' ] ) {
 	update_post_meta( $order_id, '_delivery_date', date( 'Y-m-d', strtotime( $_POST[ 'delivery_date' ] ) ) );
     }
@@ -143,15 +145,4 @@ add_action( 'wp_footer', function () {?>
     </script>
 <?php
 });
-/*
-   add_filter( 'woocommerce_checkout_fields', function( $fields ) {
-   $fields[] = array( '_delivery_date' => array(
-   'type'         => 'text',
-   'label'        => __( 'Delivery date', 'myc' ),
-   'required'     => true,
-   'placeholder'  => esc_attr__( 'Delivery date', 'myc' ),
-   ) );
-   return $fields;
-   });
- */
 

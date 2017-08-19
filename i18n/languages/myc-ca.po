@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-16 22:57+0200\n"
-"PO-Revision-Date: 2017-08-17 10:51+0200\n"
+"POT-Creation-Date: 2017-08-19 09:55+0200\n"
+"PO-Revision-Date: 2017-08-19 09:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -224,13 +224,17 @@ msgstr "Nova data limit per a comandes"
 msgid "Save date"
 msgstr "Guardar data"
 
-#: includes/myc-order-dates.php:98 includes/myc-order-dates.php:103
+#: includes/myc-order-dates.php:96 includes/myc-order-dates.php:101
 msgid "Date for Delivery"
 msgstr "Data d'entrega"
 
-#: includes/myc-order-dates.php:104
+#: includes/myc-order-dates.php:102
 msgid "Select date for delivery"
 msgstr "Selecciona data d'entrega"
+
+#: includes/myc-order-dates.php:111
+msgid "Please enter a delivery date"
+msgstr "Si us plau, entri una data vàlida per a la entrega de la seva comanda"
 
 #: includes/myc-phys-ingredient.php:17
 msgid "Provider"
@@ -314,9 +318,6 @@ msgstr "Total"
 
 #~ msgid "Visible from"
 #~ msgstr "Visible des de"
-
-#~ msgid "Please enter a valid delivery date for your order"
-#~ msgstr "Si us plau, entri una data vàlida per la seva comanda"
 
 #~ msgid "The delivery date for your order must lie in the future"
 #~ msgstr "La data per a la seva comanda ha de ser al futur"
