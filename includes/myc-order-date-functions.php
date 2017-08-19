@@ -8,7 +8,7 @@ function canonicalize_date( $datestr ) {
 }
 
 function prettify_date( $datestr ) {
-    return $datestr . ' (' . date( 'D', strtotime( $datestr ) ) . ')';
+    return wc_format_datetime( new WC_DateTime( $datestr ), 'D, j \d\e F \d\e Y' );
 }
 
 function prettify_date_noyear( $datestr ) {
