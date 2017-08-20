@@ -15,6 +15,11 @@ function create_meal() {
 	    return true;
 	}
 
+	function is_visible() {
+	    return 'visible' === $this->get_catalog_visibility() &&
+		   get_post_meta( $this->get_id(), '_visible_to_date' )[0] > date( 'Y-m-d', strtotime( 'now' ) );
+	}
+	
 	protected $extra_data = array(
 	    'uses_recipe' => array(),
 	);
@@ -71,6 +76,11 @@ function create_meal() {
 	    return true;
 	}
 
+	function is_visible() {
+	    return 'visible' === $this->get_catalog_visibility() &&
+		   get_post_meta( $this->get_id(), '_visible_to_date' )[0] > date( 'Y-m-d', strtotime( 'now' ) );
+	}
+	
 	protected $extra_data = array(
 	    'uses_recipe' => array(),
 	);
