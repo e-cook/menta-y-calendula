@@ -430,6 +430,14 @@ add_action( 'wp_ajax_myc_set_visible_to_date', function() {
 });
 
 
+// think about visibility date when displaying related products
+add_filter( 'woocommerce_product_related_posts_query', function( $query ) {
+    global $wpdb;
+    $query[ 'where' ] .= ' AND p.ID IN ( SELECT post_id FROM ' . $wpdb->prefix . 'postmeta '
+		      . 'WHERE meta_key = "_visible_to_date" AND meta_value >= "' . date( 'Y-m-d', strtotime( 'now' ) ) . '" )';
+    return $query;
+});
+
 // date format
 function myc_custom_delivery_date_format( $post ) {
     return get_post_time( __( 'd/m/Y', 'woocommerce' ), $post );

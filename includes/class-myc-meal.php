@@ -15,10 +15,15 @@ function create_meal() {
 	    return true;
 	}
 
+	/*
 	function is_visible() {
+	    $vtd = get_post_meta( $this->get_id(), '_visible_to_date' );
+	    error_log($this->get_id() . "; " . var_export($vtd,1));
 	    return 'visible' === $this->get_catalog_visibility() &&
-		   get_post_meta( $this->get_id(), '_visible_to_date' )[0] > date( 'Y-m-d', strtotime( 'now' ) );
+		   isset($vtd[0]) &&
+		   $vtd[0] > date( 'Y-m-d', strtotime( 'now' ) );
 	}
+	 */
 	
 	protected $extra_data = array(
 	    'uses_recipe' => array(),
@@ -75,12 +80,15 @@ function create_meal() {
 	function is_purchasable() {
 	    return true;
 	}
-
+/*
 	function is_visible() {
+	    $vtd = get_post_meta( $this->get_id(), '_visible_to_date' );
+	    error_log($this->get_id() . "; " . var_export($vtd,1));
 	    return 'visible' === $this->get_catalog_visibility() &&
-		   get_post_meta( $this->get_id(), '_visible_to_date' )[0] > date( 'Y-m-d', strtotime( 'now' ) );
+		   isset($vtd[0]) &&
+		   $vtd[0] > date( 'Y-m-d', strtotime( 'now' ) );
 	}
-	
+*/	
 	protected $extra_data = array(
 	    'uses_recipe' => array(),
 	);
