@@ -517,10 +517,12 @@ function recent_product_comment_id( $user_id, $product_id ) {
 }
 
 add_action( 'wp_ajax_myc_read_order_comments', function() {
+    error_log("in wp_ajax_myc_read_order_comments");
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_read_order_comments' ) ) {
 	wp_die( "Don't mess with me!" );
     }
     global $current_user;
+    error_log("verified nonce");
 
     $props_of = array();
     foreach( $_POST[ 'product_ids' ] as $product_id ) {
