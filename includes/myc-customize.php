@@ -371,25 +371,23 @@ function toggle_activity_js() {?>
 }
 add_action( 'admin_footer', 'toggle_activity_js' );
 
-function myc_ajax_activate_meal() {
+add_action( 'wp_ajax_activate_meal', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'active' ) ) {
 	wp_die( "Don't mess with me!" );
     }
     $prod = wc_get_product( $_POST[ 'post_id' ] );
     $prod->set_catalog_visibility( 'visible' );
     $prod->save();
-}
-add_action( 'wp_ajax_activate_meal' , 'myc_ajax_activate_meal' );
+});
 
-function myc_ajax_deactivate_meal() {
+add_action( 'wp_ajax_deactivate_meal', function() {
     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'active' ) ) {
 	wp_die( "Don't mess with me!" );
     }
     $prod = wc_get_product( $_POST[ 'post_id' ] );
     $prod->set_catalog_visibility( 'hidden' );
     $prod->save();
-}
-add_action( 'wp_ajax_deactivate_meal' , 'myc_ajax_deactivate_meal' );
+});
 
 
 // visibility
@@ -434,7 +432,7 @@ add_action( 'wp_ajax_myc_set_visible_to_date', function() {
 add_filter( 'woocommerce_product_related_posts_query', function( $query ) {
     global $wpdb;
     $query[ 'where' ] .= ' AND p.ID IN ( SELECT post_id FROM ' . $wpdb->prefix . 'postmeta '
-		      . 'WHERE meta_key = "_visible_to_date" AND meta_value >= "' . date( 'Y-m-d', strtotime( 'now' ) ) . '" )';
+		       . 'WHERE meta_key = "_visible_to_date" AND meta_value >= "' . date( 'Y-m-d', strtotime( 'now' ) ) . '" )';
     return $query;
 });
 
@@ -485,8 +483,100 @@ add_filter( 'get_pages', function( $items, $menu ) {
 	       stripos( $item->post_name, 'shop' )       !== false &&
 	       stripos( $item->post_name, 'product' )    !== false &&
 	       stripos( $item->post_name, 'espai-soci' ) !== false ) ) {
-		   $filtered[] = $item;
-	       }
-}
-return $filtered;
+	    $filtered[] = $item;
+	}
+    }
+    return $filtered;
 }, 20, 2);
+
+
+// product reviews
+function props_of ( $data ) {
+    // make an array ( product_id => ( property_name => value ) )
+    $props_of = array();
+    foreach( $data as $input ) {
+	list( $property_name, $product_id ) = explode( '-', $input[ 'name' ] );
+	if ( ! isset( $props_of[ $product_id ] ) ) {
+	    $props_of[ $product_id ] = array();
+	}
+	$props_of[ $product_id ][ $property_name ] = $input[ 'value' ];
+    }
+    return $props_of;
+}
+
+function recent_product_comment_id( $user_id, $product_id ) {
+    global $wpdb;
+    return $wpdb->get_var( $wpdb->prepare("
+	SELECT comment_ID FROM $wpdb->comments
+	WHERE comment_post_ID = %d
+	AND user_id = %d
+        AND comment_date >= '%s'
+	AND comment_approved = '1'
+        AND comment_parent = 0
+    ", $product_id, $user_id, date( 'Y-m-d', strtotime( '1 week ago' ) ) ) );
+}
+
+add_action( 'wp_ajax_myc_read_order_comments', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_read_order_comments' ) ) {
+	wp_die( "Don't mess with me!" );
+    }
+    global $current_user;
+
+    $props_of = array();
+    foreach( $_POST[ 'product_ids' ] as $product_id ) {
+	$comment_id = recent_product_comment_id( $current_user->ID, $product_id );
+	$props_of[ $product_id ] = array(
+	    'comment_content'   => get_comment( $comment_id )->comment_content,
+	    'star'              => get_comment_meta( $comment_id, 'rating', true ),
+	    'repeat'            => get_comment_meta( $comment_id, 'would_repeat', true ),
+	    'variation'         => get_comment_meta( $comment_id, 'suggested_variation', true ),
+	);
+    }
+    wp_die( json_encode( $props_of ) );
+});
+
+add_action( 'wp_ajax_myc_write_order_comments', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_write_order_comments' ) ) {
+	wp_die( "Don't mess with me!" );
+    }
+
+    global $current_user;
+
+    foreach( props_of( $_POST[ 'data' ] ) as $product_id => $props ) {
+	$comment_id = recent_product_comment_id( $current_user->ID, $product_id );
+
+	if ( null === $comment_id ) {
+	    $comment_id = wp_insert_comment( array(
+		'comment_post_ID'      => $product_id,
+		'comment_author'       => $current_user->user_login,
+		'comment_author_email' => $current_user->user_email,
+		'comment_author_url'   => $current_user->user_url,
+		'comment_content'      => $props[ 'comment_content' ],
+		'comment_agent'        => 'Menta i Calendula',
+		'comment_type'         => 'order_note',
+		'comment_parent'       => 0,
+		'comment_approved'     => 1,
+		'user_id'              => $current_user->ID,
+	    ) );
+	} else {
+	    wp_update_comment( array(
+		'comment_ID' => $comment_id,
+		'comment_content' => $props[ 'comment_content' ],
+	    ) );
+	}
+
+	if ( isset( $props[ 'star' ] ) ) {
+	    update_comment_meta( $comment_id, 'rating', $props[ 'star' ] );
+	}
+
+	if ( isset( $props[ 'repeat' ] ) ) {
+	    update_comment_meta( $comment_id, 'would_repeat', 1 );
+	} else {
+	    update_comment_meta( $comment_id, 'would_repeat', 0 );
+	}
+
+	if ( isset( $props[ 'variation' ] ) ) {
+	    update_comment_meta( $comment_id, 'suggested_variation', $props[ 'variation' ] );
+	}
+    }
+});

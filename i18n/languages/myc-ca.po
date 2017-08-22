@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-19 09:55+0200\n"
-"PO-Revision-Date: 2017-08-19 09:56+0200\n"
+"POT-Creation-Date: 2017-08-22 14:14+0200\n"
+"PO-Revision-Date: 2017-08-22 14:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -188,29 +188,41 @@ msgstr "actiu"
 msgid "Visible until"
 msgstr "Visible fins"
 
-#: includes/myc-customize.php:399
+#: includes/myc-customize.php:397
 msgid "Visible to"
 msgstr "Visible fins"
 
-#: includes/myc-customize.php:435
+#: includes/myc-customize.php:441
 msgid "d/m/Y"
 msgstr "d/m/Y"
 
-#: includes/myc-customize.php:448
+#: includes/myc-customize.php:448 includes/myc-what-to-cook.php:174
+msgid "Delivery date"
+msgstr "Data d'entrega"
+
+#: includes/myc-customize.php:463
 msgid "Order deadline"
 msgstr "Data limit per a comandes"
 
-#: includes/myc-customize.php:448 includes/myc-order-dates.php:10
+#: includes/myc-customize.php:463 includes/myc-order-dates.php:10
 msgid "Order deadlines"
 msgstr "Dates límits per a comandes"
 
-#: includes/myc-customize.php:449
+#: includes/myc-customize.php:464
 msgid "What to cook"
 msgstr "Què haig de cuinar"
 
-#: includes/myc-customize.php:458
+#: includes/myc-customize.php:473
 msgid "Orders"
 msgstr "Comandes"
+
+#: includes/myc-customize.php:510
+msgid "I would like to repeat this dish."
+msgstr "M'agradaria repetir aquest plat."
+
+#: includes/myc-customize.php:513
+msgid "A variation could be:"
+msgstr "Una possible variació seria:"
 
 #: includes/myc-meal.php:27
 msgid "Add Recipe"
@@ -307,10 +319,6 @@ msgstr "Baixar pdf"
 #: includes/myc-what-to-cook.php:58
 msgid "other"
 msgstr "altres"
-
-#: includes/myc-what-to-cook.php:174
-msgid "Delivery date"
-msgstr "Data d'entrega"
 
 #: includes/myc-what-to-cook.php:178
 msgid "Total"
