@@ -489,6 +489,12 @@ add_filter( 'get_pages', function( $items, $menu ) {
     return $filtered;
 }, 20, 2);
 
+add_filter( 'woocommerce_account_menu_items', function( $items ) {
+    unset( $items[ 'downloads' ] );
+    $items[ 'orders' ] = __( 'Orders and Comments', 'myc' );
+    return $items;
+});
+
 
 // product reviews
 function props_of ( $data ) {
