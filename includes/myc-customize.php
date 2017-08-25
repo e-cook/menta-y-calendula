@@ -592,9 +592,9 @@ add_action( 'wp_ajax_myc_write_order_comments', function() {
 add_filter( 'woocommerce_email_classes', function ( $email_classes ) {
     require_once( 'class-myc-email.php' );
     return array( 
-	'MYC_Customer_Order_Now_Email'      => new MYC_Customer_Order_Now_Email(), 
+	'MYC_User_Order_Now_Email'      => new MYC_User_Order_Now_Email(), 
 	'MYC_Coopes_Order_Now_Email'      => new MYC_Coopes_Order_Now_Email(), 
-	'MYC_Customer_Order_Reminder_Email' => new MYC_Customer_Order_Reminder_Email(),
+	'MYC_User_Order_Reminder_Email' => new MYC_User_Order_Reminder_Email(),
 	'MYC_Coopes_Order_Reminder_Email' => new MYC_Coopes_Order_Reminder_Email(),
     ) + $email_classes;
 });
@@ -608,10 +608,10 @@ add_action( 'admin_footer', function () {?>
 		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_coopes_order_now_email') ?>'
 	     });
 	 });
-	 jQuery( '#woocommerce_myc_customer_order_now_email_send_now' ).removeClass('input-text regular-input').click( function() {
+	 jQuery( '#woocommerce_myc_user_order_now_email_send_now' ).removeClass('input-text regular-input').click( function() {
 	     jQuery.post( ajaxurl, {
-		 action: 'myc_trigger_customer_order_now_email',
-		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_customer_order_now_email') ?>'
+		 action: 'myc_trigger_user_order_now_email',
+		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_user_order_now_email') ?>'
 	     });
 	 });
      });
@@ -621,15 +621,26 @@ add_action( 'admin_footer', function () {?>
 
 
 
-add_action ( 'wp_ajax_myc_trigger_customer_order_now_email', function() {
-    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_customer_order_now_email' ) ) {
+add_action ( 'wp_ajax_myc_trigger_user_order_now_email', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_user_order_now_email' ) ) {
 	wp_die( "Don't mess with me!" );
     }
     require_once( 'class-myc-email.php' );
-    MYC_Order_Now_Email::trigger( 'customer' );
+    $e = new MYC_Order_Now_Email();
+    $e->trigger( 'user' );
 });
+
+add_action ( 'wp_ajax_myc_trigger_coopes_order_now_email', function() {
+    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_coopes_order_now_email' ) ) {
+	wp_die( "Don't mess with me!" );
+    }
+    require_once( 'class-myc-email.php' );
+    $e = new MYC_Order_Now_Email();
+    $e->trigger( 'coope' );
+});
+
 /*
-   do_action( 'myc_send_customer_order_now_mail' );
+   do_action( 'myc_send_user_order_now_mail' );
    global $wpdb;
    $orderable_product_ids = $wpdb->get_results( "SELECT post_id from {$wpdb->postmeta} WHERE meta_key = '_visible_to_date' AND meta_value >= " . date( 'Y-m-d', strtotime( 'now' ) ) );
    foreach ( $orderable_product_ids as $id ) {
