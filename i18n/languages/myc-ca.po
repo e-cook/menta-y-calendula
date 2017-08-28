@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-25 15:22+0200\n"
-"PO-Revision-Date: 2017-08-25 15:37+0200\n"
+"POT-Creation-Date: 2017-08-28 09:29+0200\n"
+"PO-Revision-Date: 2017-08-28 09:30+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -18,7 +18,6 @@ msgstr ""
 "X-Poedit-SearchPath-1: .\n"
 
 #: includes/class-myc-email.php:13 includes/class-myc-email.php:15
-#: includes/class-myc-email.php:16
 msgid "Order Now Email"
 msgstr "Ja es pot fer la comanda"
 
@@ -28,38 +27,27 @@ msgid ""
 "order"
 msgstr "Correus d'avis de comanda avisen als usuaris que poden fer la comanda"
 
-#: includes/class-myc-email.php:75 includes/class-myc-email.php:256
+#: includes/class-myc-email.php:16
+msgid "You can now order"
+msgstr "Ja podeu fer la comanda"
+
+#: includes/class-myc-email.php:66 includes/class-myc-email.php:189
 msgid "Enable this email notification"
 msgstr "Activar aquesta notificació de correu"
 
-#: includes/class-myc-email.php:79
+#: includes/class-myc-email.php:70
 msgid "Send now"
 msgstr "Envia ara"
 
-#: includes/class-myc-email.php:81
+#: includes/class-myc-email.php:72
 msgid "Send this email notification"
 msgstr "Envia aquesta notificació de correu"
 
-#: includes/class-myc-email.php:82
+#: includes/class-myc-email.php:73
 msgid "Send"
 msgstr "Envia"
 
-#: includes/class-myc-email.php:85 includes/class-myc-email.php:141
-#: includes/class-myc-email.php:163 includes/class-myc-email.php:260
-#: includes/class-myc-email.php:310 includes/class-myc-email.php:333
-msgid "Recipient(s)"
-msgstr "Recipient(s)"
-
-#: includes/class-myc-email.php:87 includes/class-myc-email.php:262
-#, php-format
-msgid ""
-"Enter recipients (comma separated) for this email. Defaults to <code>%s</"
-"code>."
-msgstr ""
-"Entri els recipients del correu, separats per comes. Per defecte, serà <code>"
-"%s</code>."
-
-#: includes/class-myc-email.php:94 includes/class-myc-email.php:269
+#: includes/class-myc-email.php:78 includes/class-myc-email.php:195
 #, php-format
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
@@ -68,7 +56,7 @@ msgstr ""
 "Això controla el assumpte del correu. Deixa en blanc per a deixar el "
 "assumpte per defecte: <code>%s</code>."
 
-#: includes/class-myc-email.php:101 includes/class-myc-email.php:276
+#: includes/class-myc-email.php:85 includes/class-myc-email.php:202
 #, php-format
 msgid ""
 "This controls the main heading contained within the email notification. "
@@ -77,68 +65,44 @@ msgstr ""
 "Això controla la capçalera principal dins del cos del correu. Deixa en blanc "
 "per a deixar la capçalera per defecte: <code>%s</code>."
 
-#: includes/class-myc-email.php:133 includes/class-myc-email.php:134
-#: includes/class-myc-email.php:135
+#: includes/class-myc-email.php:116 includes/class-myc-email.php:117
 msgid "User Order Now Email"
 msgstr "Avisar als usuaris que poden fer la comanda"
 
-#: includes/class-myc-email.php:143 includes/class-myc-email.php:312
-msgid "Enter recipients (comma separated) for this email. Defaults to {users}."
-msgstr ""
-"Entri els recipients del correu, separats per comes. Per defecte, seran tots "
-"els {usuaris}."
+#: includes/class-myc-email.php:118
+msgid "user"
+msgstr "usuari"
 
-#: includes/class-myc-email.php:143 includes/class-myc-email.php:145
-#: includes/class-myc-email.php:219 includes/class-myc-email.php:312
-#: includes/class-myc-email.php:314
-msgid "{users}"
-msgstr "{usuaris}"
-
-#: includes/class-myc-email.php:155 includes/class-myc-email.php:156
-#: includes/class-myc-email.php:157
+#: includes/class-myc-email.php:127 includes/class-myc-email.php:128
 msgid "Coopes Order Now Email"
 msgstr "Avisar a les coopes que poden fer la comanda"
 
-#: includes/class-myc-email.php:165 includes/class-myc-email.php:335
-msgid ""
-"Enter recipients (comma separated) for this email. Defaults to {coopes}."
-msgstr ""
-"Entri els recipients del correu, separats per comes. Per defecte, seran "
-"totes les {coopes}."
+#: includes/class-myc-email.php:129
+msgid "coope"
+msgstr "coope"
 
-#: includes/class-myc-email.php:165 includes/class-myc-email.php:167
-#: includes/class-myc-email.php:335 includes/class-myc-email.php:337
-msgid "{coopes}"
-msgstr "{coopes}"
-
-#: includes/class-myc-email.php:177 includes/class-myc-email.php:179
-#: includes/class-myc-email.php:180
+#: includes/class-myc-email.php:139 includes/class-myc-email.php:141
 msgid "Order Reminder Email"
 msgstr "Recorda fer la comanda"
 
-#: includes/class-myc-email.php:178
+#: includes/class-myc-email.php:140
 msgid ""
 "Order Reminder Emails are sent on Tuesdays at 14:00 to remind users to place "
 "their order"
 msgstr "Correus recordatoris es envien els dimarts a les 14:00 als usuaris"
 
-#: includes/class-myc-email.php:302 includes/class-myc-email.php:303
-#: includes/class-myc-email.php:304
+#: includes/class-myc-email.php:142
+msgid "Dont forget to order!"
+msgstr "No oblideu de fer la comanda!"
+
+#: includes/class-myc-email.php:228 includes/class-myc-email.php:229
 msgid "User Order Reminder Email"
-msgstr "Recorda als usuaris que han de fer la comanda"
+msgstr "Recorda als usuaris que han de fer la comanda (automàtic)"
 
-#: includes/class-myc-email.php:316
-msgid "user"
-msgstr "usuari"
-
-#: includes/class-myc-email.php:325 includes/class-myc-email.php:326
-#: includes/class-myc-email.php:327
+#: includes/class-myc-email.php:239 includes/class-myc-email.php:240
+#: includes/class-myc-email.php:241
 msgid "Coopes Order Reminder Email"
-msgstr "Recorda a les coopes que han de fer la comanda"
-
-#: includes/class-myc-email.php:339
-msgid "coope"
-msgstr "coope"
+msgstr "Recorda a les coopes que han de fer la comanda (automàtic)"
 
 #: includes/class-myc-lists.php:74 includes/class-myc-lists.php:263
 #: includes/myc-phys-ingredient.php:36
@@ -442,6 +406,34 @@ msgstr "altres"
 #: includes/myc-what-to-cook.php:178
 msgid "Total"
 msgstr "Total"
+
+#~ msgid "{users}"
+#~ msgstr "{usuaris}"
+
+#~ msgid "Recipient(s)"
+#~ msgstr "Recipient(s)"
+
+#~ msgid ""
+#~ "Enter recipients (comma separated) for this email. Defaults to <code>%s</"
+#~ "code>."
+#~ msgstr ""
+#~ "Entri els recipients del correu, separats per comes. Per defecte, serà "
+#~ "<code>%s</code>."
+
+#~ msgid ""
+#~ "Enter recipients (comma separated) for this email. Defaults to {users}."
+#~ msgstr ""
+#~ "Entri els recipients del correu, separats per comes. Per defecte, seran "
+#~ "tots els {usuaris}."
+
+#~ msgid ""
+#~ "Enter recipients (comma separated) for this email. Defaults to {coopes}."
+#~ msgstr ""
+#~ "Entri els recipients del correu, separats per comes. Per defecte, seran "
+#~ "totes les {coopes}."
+
+#~ msgid "{coopes}"
+#~ msgstr "{coopes}"
 
 #~ msgid "I would like to repeat this dish."
 #~ msgstr "M'agradaria repetir aquest plat."

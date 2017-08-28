@@ -13,7 +13,8 @@ class MYC_Order_Now_Email extends WC_Email {
 	$this->title = __( 'Order Now Email', 'myc' );
 	$this->description = __( 'Order Now Emails are sent by you to advise users that they may place their order', 'myc' );
 	$this->heading = __( 'Order Now Email', 'myc' );
-	$this->subject = __( 'Order Now Email', 'myc' );
+	$this->subject = __( 'You can now order', 'myc' );
+	$this->target = '';
 	
 	// these define the locations of the templates that this email should use
 	$this->template_html  = 'emails/admin-order-now.php';
@@ -22,29 +23,28 @@ class MYC_Order_Now_Email extends WC_Email {
 	parent::__construct();
     }
 
+
     /**
      * Determine if the email should actually be sent and setup email merge variables
      *
      * @param int $order_id
      */
-    public function trigger( $target ) {
-
-	// replace variables in the subject/headings
-	//	$this->find[] = '{' . $target . '}';
-	//	$this->replace[] = __( '{' . $target . '}', 'myc' );
-
+    public function trigger() {
 	global $wpdb;
-	$recipients = $wpdb->get_col( "SELECT u.user_email FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id=u.id WHERE um.meta_key='{$wpdb->prefix}capabilities' AND um.meta_value='" . serialize( array( __( $target, 'myc' ) => true ) ) . "'" );
-	// woohoo, send the email!
-	//	$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-		error_log( "sending " . var_export(array( $recipients, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() ),1));
+	$query = "SELECT u.user_email FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id=u.id WHERE um.meta_key='{$wpdb->prefix}capabilities' AND um.meta_value='" . serialize( array( __( $this->target, 'myc' ) => true ) ) . "'";
+
+	$this->recipient = implode( ',', $wpdb->get_col( $query ) );
+
+	require_once( dirname(__FILE__) . '/../../woocommerce/includes/libraries/class-emogrifier.php' );
+	$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
 
     public function get_content_html() {
 	ob_start();
 	wc_get_template( $this->template_html, array(
-	    'order'         => $this->object,
-	    'email_heading' => $this->get_heading()
+	    'email'         => $this->object,
+	    'email_heading' => $this->get_heading(),
+	    'target_tag'    => ( 'user' === $this->target ? 'per_individuals' : 'per_coopes' )
 	) );
 	return ob_get_clean();
     }
@@ -110,15 +110,13 @@ class MYC_User_Order_Now_Email extends MYC_Order_Now_Email {
 
 	// Trigger on "send" event
 	//	add_action( 'woocommerce_order_status_failed_to_processing_notification',  array( $this, 'trigger' ) );
-
+	
 	parent::__construct();
-
 	$this->id = 'myc_user_order_now_email';
 	$this->title = __( 'User Order Now Email', 'myc' );
 	$this->heading = __( 'User Order Now Email', 'myc' );
-	$this->subject = __( 'User Order Now Email', 'myc' );
+	$this->target = __( 'user', 'myc' );
     }
-
 } // end MYC_User_Order_Now_Email
 
 class MYC_Coopes_Order_Now_Email extends MYC_Order_Now_Email {
@@ -128,8 +126,9 @@ class MYC_Coopes_Order_Now_Email extends MYC_Order_Now_Email {
 	$this->id = 'myc_coopes_order_now_email';
 	$this->title = __( 'Coopes Order Now Email', 'myc' );
 	$this->heading = __( 'Coopes Order Now Email', 'myc' );
-	$this->subject = __( 'Coopes Order Now Email', 'myc' );
+	$this->target = __( 'coope', 'myc' );
     }
+
 } // end MYC_Coopes_Order_Now_Email
 
 class MYC_Order_Reminder_Email extends WC_Email {
@@ -140,7 +139,7 @@ class MYC_Order_Reminder_Email extends WC_Email {
 	$this->title = __( 'Order Reminder Email', 'myc' );
 	$this->description = __( 'Order Reminder Emails are sent on Tuesdays at 14:00 to remind users to place their order', 'myc' );
 	$this->heading = __( 'Order Reminder Email', 'myc' );
-	$this->subject = __( 'Order Reminder Email', 'myc' );
+	$this->subject = __( 'Dont forget to order!', 'myc' );
 	
 	// these define the locations of the templates that this email should use
 	$this->template_html  = 'emails/admin-reminder-to-order.php';
@@ -153,44 +152,22 @@ class MYC_Order_Reminder_Email extends WC_Email {
 	parent::__construct();
     }
 
-    /**
-     * Determine if the email should actually be sent and setup email merge variables
-     *
-     * @param int $order_id
-     */
-    public function trigger( $order_id ) {
-	
-	// bail if no order ID is present
-	if ( ! $order_id )
-	    return;
-	
-	// setup order object
-	$this->object = new WC_Order( $order_id );
-	
-	// bail if shipping method is not expedited
-	if ( ! in_array( $this->object->get_shipping_method(), array( 'Three Day Shipping', 'Next Day Shipping' ) ) )
-	    return;
-	
-	// replace variables in the subject/headings
-	$this->find[] = __( '{users}', 'myc' );
-	$this->replace[] = 'THE_USERS';
-	
-	$this->find[] = '{order_number}';
-	$this->replace[] = $this->object->get_order_number();
-	
-	if ( ! $this->is_enabled() || ! $this->get_recipient() )
-	    return;
-	
-	// woohoo, send the email!
-	//	$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-	error_log( "sending ", var_export(array( $recipients, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() ),1));
+    public function trigger() {
+	global $wpdb;
+	$query = "SELECT u.user_email FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id=u.id WHERE um.meta_key='{$wpdb->prefix}capabilities' AND um.meta_value='" . serialize( array( __( $this->target, 'myc' ) => true ) ) . "'";
+
+	$this->recipient = implode( ',', $wpdb->get_col( $query ) );
+
+	require_once( dirname(__FILE__) . '/../../woocommerce/includes/libraries/class-emogrifier.php' );
+	$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
 
     public function get_content_html() {
 	ob_start();
-	woocommerce_get_template( $this->template_html, array(
-	    'order'         => $this->object,
-	    'email_heading' => $this->get_heading()
+	wc_get_template( $this->template_html, array(
+	    'email'         => $this->object,
+	    'email_heading' => $this->get_heading(),
+	    'target_tag'    => ( 'user' === $this->target ? 'per_individuals' : 'per_coopes' )
 	) );
 	return ob_get_clean();
     }
@@ -250,7 +227,7 @@ class MYC_User_Order_Reminder_Email extends MYC_Order_Reminder_Email {
 	$this->id = 'myc_user_order_reminder_email';
 	$this->title = __( 'User Order Reminder Email', 'myc' );
 	$this->heading = __( 'User Order Reminder Email', 'myc' );
-	$this->subject = __( 'User Order Reminder Email', 'myc' );
+	$this->target = 'user';
     }
 } // end MYC_User_Order_Reminder_Email
 
@@ -262,5 +239,6 @@ class MYC_Coopes_Order_Reminder_Email extends MYC_Order_Reminder_Email {
 	$this->title = __( 'Coopes Order Reminder Email', 'myc' );
 	$this->heading = __( 'Coopes Order Reminder Email', 'myc' );
 	$this->subject = __( 'Coopes Order Reminder Email', 'myc' );
+	$this->target = 'coope';
     }
 } // end MYC_Coopes_Order_Reminder_Email
