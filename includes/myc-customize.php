@@ -606,12 +606,24 @@ add_action( 'admin_footer', function () {?>
 	     jQuery.post( ajaxurl, {
 		 action: 'myc_trigger_coopes_order_now_email',
 		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_coopes_order_now_email') ?>'
+	     }, function ( response ) {
+		 if ( '1' == response ) {
+		     alert( "<?php _e( 'The coopes have been successfully notified', 'myc' ); ?>" );
+		 } else {
+		     alert( "<?php _e( 'There was a problem notifying the coopes', 'myc' ) ?>" );
+		 }
 	     });
 	 });
 	 jQuery( '#woocommerce_myc_user_order_now_email_send_now' ).removeClass( 'input-text regular-input disabled' ).click( function() {
 	     jQuery.post( ajaxurl, {
 		 action: 'myc_trigger_user_order_now_email',
 		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_user_order_now_email') ?>'
+	     }, function ( response ) {
+		 if ( '1' == response ) {
+		     alert( "<?php _e( 'The users have been successfully notified', 'myc' ) ?>" );
+		 } else {
+		     alert( "<?php _e( 'There was a problem notifying the users', 'myc' ) ?>" );
+		 }
 	     });
 	 });
 	 jQuery( '#woocommerce_myc_user_order_now_email_subject' ).change( function() {
@@ -639,7 +651,7 @@ add_action ( 'wp_ajax_myc_trigger_user_order_now_email', function() {
     }
     require_once( 'class-myc-email.php' );
     $e = new MYC_User_Order_Now_Email();
-    $e->trigger();
+    wp_die( $e->trigger() );
 });
 
 add_action ( 'wp_ajax_myc_trigger_coopes_order_now_email', function() {
@@ -648,5 +660,5 @@ add_action ( 'wp_ajax_myc_trigger_coopes_order_now_email', function() {
     }
     require_once( 'class-myc-email.php' );
     $e = new MYC_Coopes_Order_Now_Email();
-    $e->trigger();
+    wp_die( $e->trigger() );
 });

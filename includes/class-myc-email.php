@@ -36,7 +36,7 @@ class MYC_Order_Now_Email extends WC_Email {
 	$this->recipient = implode( ',', $wpdb->get_col( $query ) );
 
 	require_once( dirname(__FILE__) . '/../../woocommerce/includes/libraries/class-emogrifier.php' );
-	$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+	return $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
 
     public function get_content_html() {
@@ -159,7 +159,7 @@ class MYC_Order_Reminder_Email extends WC_Email {
 	$this->recipient = implode( ',', $wpdb->get_col( $query ) );
 
 	require_once( dirname(__FILE__) . '/../../woocommerce/includes/libraries/class-emogrifier.php' );
-	$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+	return $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
 
     public function get_content_html() {

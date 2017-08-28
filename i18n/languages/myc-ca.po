@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-28 09:29+0200\n"
-"PO-Revision-Date: 2017-08-28 09:30+0200\n"
+"POT-Creation-Date: 2017-08-28 10:50+0200\n"
+"PO-Revision-Date: 2017-08-28 11:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -306,6 +306,22 @@ msgstr "Comandes"
 #: includes/myc-customize.php:494
 msgid "Orders and Comments"
 msgstr "Comandes i Valoracions"
+
+#: includes/myc-customize.php:611
+msgid "The coopes have been successfully notified"
+msgstr "S'han notificat les coopes amb èxit"
+
+#: includes/myc-customize.php:613
+msgid "There was a problem notifying the coopes"
+msgstr "Hi ha hagut un problema amb la notificació de les coopes"
+
+#: includes/myc-customize.php:623
+msgid "The users have been successfully notified"
+msgstr "S'han notificat els usuaris amb èxit"
+
+#: includes/myc-customize.php:625
+msgid "There was a problem notifying the users"
+msgstr "Hi ha hagut un problema amb la notificació dels usuaris"
 
 #: includes/myc-meal.php:27
 msgid "Add Recipe"
