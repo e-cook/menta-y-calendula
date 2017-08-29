@@ -231,16 +231,36 @@ function hide_non_meals_query ( $query ) {
 
 // filter search results if not logged in
 add_action( 'pre_get_posts', function( $query ) {
+    global $wpdb;
+    
     if ( $query->is_search && !is_user_logged_in() ) {
 	$query->set( 'post_type', array( 'post', 'page' ) );
     }
+
     if ( $query->get( 'post_type' ) == 'product' && !is_admin() ) {
-	$meta_query = $query->get( 'meta_query' );
-	$now = date( 'Y-m-d', strtotime( 'now' ) );
-	$meta_query[] = array( 'key'     => '_visible_to_date',
-			       'value'   => $now,
-			       'compare' => '>=' );
-	$query->set( 'meta_query', $meta_query );
+	$query->meta_query[] = array( 'key'     => '_visible_to_date',
+				      'value'   => date( 'Y-m-d', strtotime( 'now' ) ),
+				      'compare' => '>=' );
+    }
+
+    $capabilities = get_user_meta( get_current_user_id(), "{$wpdb->prefix}capabilities", true );
+
+    if ( isset( $capabilities[ __( 'user', 'myc' ) ] ) ) {
+	$query->tax_query->queries[] = array(
+	    'taxonomy' => 'product_tag',
+	    'field'    => 'slug',
+	    'terms'    => 'per_usuaris',
+	);
+	$query->query_vars['tax_query'] = $query->tax_query->queries;
+    }
+
+    if ( isset( $capabilities[ __( 'coope', 'myc' ) ] ) ) {
+	$query->tax_query->queries[] = array(
+	    'taxonomy' => 'product_tag',
+	    'field'    => 'slug',
+	    'terms'    => 'per_coopes',
+	);
+	$query->query_vars['tax_query'] = $query->tax_query->queries;
     }
 });
 
@@ -428,11 +448,23 @@ add_action( 'wp_ajax_myc_set_visible_to_date', function() {
 });
 
 
-// think about visibility date when displaying related products
+// think about visibility date and user type when displaying related products
 add_filter( 'woocommerce_product_related_posts_query', function( $query ) {
     global $wpdb;
-    $query[ 'where' ] .= ' AND p.ID IN ( SELECT post_id FROM ' . $wpdb->prefix . 'postmeta '
+    $query[ 'where' ] .= " AND p.ID IN ( SELECT post_id FROM {$wpdb->prefix}postmeta "
 		       . 'WHERE meta_key = "_visible_to_date" AND meta_value >= "' . date( 'Y-m-d', strtotime( 'now' ) ) . '" )';
+    
+    $capabilities = get_user_meta( get_current_user_id(), "{$wpdb->prefix}capabilities", true );
+    if ( isset( $capabilities[ __( 'user', 'myc' ) ] ) ||
+	 isset( $capabilities[ __( 'coope', 'myc' ) ] )) {
+	$slug = isset( $capabilities[ __( 'user', 'myc' ) ] ) ? 'per_individuals' : 'per_coopes';
+	$term_id = $wpdb->get_var( "SELECT term_id FROM {$wpdb->prefix}terms WHERE slug='{$slug}' LIMIT 1" );
+
+	$products_of_tag = $wpdb->get_col( "SELECT tr.object_id FROM {$wpdb->prefix}term_relationships tr INNER JOIN {$wpdb->prefix}term_taxonomy t USING (term_taxonomy_id) WHERE t.taxonomy = 'product_tag' AND t.term_id = '{$term_id}'" );
+
+	$query[ 'where' ] .= " AND p.ID IN (" . implode( ',', $products_of_tag ) . ')';
+    }
+
     return $query;
 });
 
