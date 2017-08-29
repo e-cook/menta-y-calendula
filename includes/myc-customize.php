@@ -232,7 +232,6 @@ function hide_non_meals_query ( $query ) {
 // filter search results if not logged in
 add_action( 'pre_get_posts', function( $query ) {
     global $wpdb;
-    
     if ( $query->is_search && !is_user_logged_in() ) {
 	$query->set( 'post_type', array( 'post', 'page' ) );
     }
@@ -245,7 +244,9 @@ add_action( 'pre_get_posts', function( $query ) {
 
     $capabilities = get_user_meta( get_current_user_id(), "{$wpdb->prefix}capabilities", true );
 
-    if ( isset( $capabilities[ __( 'user', 'myc' ) ] ) ) {
+    if ( isset( $capabilities[ __( 'user', 'myc' ) ] ) &&
+	 $query->get( 'post_type' ) != 'nav_menu_item' ) {
+
 	$query->tax_query->queries[] = array(
 	    'taxonomy' => 'product_tag',
 	    'field'    => 'slug',
@@ -254,7 +255,9 @@ add_action( 'pre_get_posts', function( $query ) {
 	$query->query_vars['tax_query'] = $query->tax_query->queries;
     }
 
-    if ( isset( $capabilities[ __( 'coope', 'myc' ) ] ) ) {
+    if ( isset( $capabilities[ __( 'coope', 'myc' ) ] )  &&
+	 $query->get( 'post_type' ) != 'nav_menu_item' ) {
+
 	$query->tax_query->queries[] = array(
 	    'taxonomy' => 'product_tag',
 	    'field'    => 'slug',
@@ -262,6 +265,7 @@ add_action( 'pre_get_posts', function( $query ) {
 	);
 	$query->query_vars['tax_query'] = $query->tax_query->queries;
     }
+
 });
 
 // number of items per page
@@ -691,6 +695,7 @@ add_action ( 'wp_ajax_myc_trigger_coopes_order_now_email', function() {
 	wp_die( "Don't mess with me!" );
     }
     require_once( 'class-myc-email.php' );
+    error_log("requiring");
     $e = new MYC_Coopes_Order_Now_Email();
     wp_die( $e->trigger() );
 });
