@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-08-31 15:31+0200\n"
-"PO-Revision-Date: 2017-08-31 15:31+0200\n"
+"POT-Creation-Date: 2017-09-01 00:19+0200\n"
+"PO-Revision-Date: 2017-09-01 00:20+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -31,24 +31,30 @@ msgstr "Correus d'avis de comanda avisen als usuaris que poden fer la comanda"
 msgid "Week 8 Summer"
 msgstr "Setmana 8 Estiu"
 
-#: includes/class-myc-email.php:69 includes/class-myc-email.php:198
+#: includes/class-myc-email.php:49 includes/class-myc-email.php:120
+#: includes/myc-customize.php:247 includes/myc-customize.php:462
+#: includes/myc-customize.php:464
+msgid "user"
+msgstr "usuari"
+
+#: includes/class-myc-email.php:68 includes/class-myc-email.php:197
 msgid "Enable this email notification"
 msgstr "Activar aquesta notificació de correu"
 
-#: includes/class-myc-email.php:73
+#: includes/class-myc-email.php:72
 msgid "Send now"
 msgstr "Envia ara"
 
-#: includes/class-myc-email.php:75
+#: includes/class-myc-email.php:74
 msgid "Send this email notification"
 msgstr "Envia aquesta notificació de correu"
 
-#: includes/class-myc-email.php:76 includes/class-myc-email.php:124
-#: includes/class-myc-email.php:138
+#: includes/class-myc-email.php:75 includes/class-myc-email.php:123
+#: includes/class-myc-email.php:137
 msgid "Send"
 msgstr "Envia"
 
-#: includes/class-myc-email.php:81 includes/class-myc-email.php:204
+#: includes/class-myc-email.php:80 includes/class-myc-email.php:203
 #, php-format
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
@@ -57,7 +63,7 @@ msgstr ""
 "Això controla el assumpte del correu. Deixa en blanc per a deixar el "
 "assumpte per defecte: <code>%s</code>."
 
-#: includes/class-myc-email.php:88 includes/class-myc-email.php:211
+#: includes/class-myc-email.php:87 includes/class-myc-email.php:210
 #, php-format
 msgid ""
 "This controls the main heading contained within the email notification. "
@@ -66,45 +72,40 @@ msgstr ""
 "Això controla la capçalera principal dins del cos del correu. Deixa en blanc "
 "per a deixar la capçalera per defecte: <code>%s</code>."
 
-#: includes/class-myc-email.php:119 includes/class-myc-email.php:120
-#: includes/class-myc-email.php:122
+#: includes/class-myc-email.php:118 includes/class-myc-email.php:119
+#: includes/class-myc-email.php:121
 msgid "User Order Now Email"
 msgstr "Avisar als usuaris que poden fer la comanda"
 
-#: includes/class-myc-email.php:121 includes/myc-customize.php:247
-#: includes/myc-customize.php:462 includes/myc-customize.php:464
-msgid "user"
-msgstr "usuari"
-
-#: includes/class-myc-email.php:134 includes/class-myc-email.php:135
+#: includes/class-myc-email.php:133 includes/class-myc-email.php:134
 msgid "Coopes Order Now Email"
 msgstr "Avisar a les coopes que poden fer la comanda"
 
-#: includes/class-myc-email.php:136 includes/myc-customize.php:258
+#: includes/class-myc-email.php:135 includes/myc-customize.php:258
 #: includes/myc-customize.php:463
 msgid "coope"
 msgstr "coope"
 
-#: includes/class-myc-email.php:148 includes/class-myc-email.php:150
+#: includes/class-myc-email.php:147 includes/class-myc-email.php:149
 msgid "Order Reminder Email"
 msgstr "Recorda fer la comanda"
 
-#: includes/class-myc-email.php:149
+#: includes/class-myc-email.php:148
 msgid ""
 "Order Reminder Emails are sent on Tuesdays at 14:00 to remind users to place "
 "their order"
 msgstr "Correus recordatoris es envien els dimarts a les 14:00 als usuaris"
 
-#: includes/class-myc-email.php:151
+#: includes/class-myc-email.php:150
 msgid "Dont forget to order!"
 msgstr "No oblideu de fer la comanda!"
 
-#: includes/class-myc-email.php:237 includes/class-myc-email.php:238
+#: includes/class-myc-email.php:236 includes/class-myc-email.php:237
 msgid "User Order Reminder Email"
 msgstr "Recorda als usuaris que han de fer la comanda (automàtic)"
 
-#: includes/class-myc-email.php:248 includes/class-myc-email.php:249
-#: includes/class-myc-email.php:250
+#: includes/class-myc-email.php:247 includes/class-myc-email.php:248
+#: includes/class-myc-email.php:249
 msgid "Coopes Order Reminder Email"
 msgstr "Recorda a les coopes que han de fer la comanda (automàtic)"
 

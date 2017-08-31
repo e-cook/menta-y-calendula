@@ -46,7 +46,7 @@ class MYC_Order_Now_Email extends WC_Email {
 	wc_get_template( $this->template_html, array(
 	    'email'         => $this->object,
 	    'email_heading' => $this->get_heading(),
-	    'target_tag'    => ( 'user' === $this->target ? 'per_individuals' : 'per_coopes' )
+	    'target_tag'    => ( __( 'user', 'myc' ) === $this->target ? 'per_individuals' : 'per_coopes' )
 	) );
 	return ob_get_clean();
     }
