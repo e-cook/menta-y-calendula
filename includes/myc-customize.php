@@ -236,10 +236,10 @@ add_action( 'pre_get_posts', function( $query ) {
 	$query->set( 'post_type', array( 'post', 'page' ) );
     }
 
-    if ( $query->get( 'post_type' ) == 'product' && !is_admin() ) {
-	$query->meta_query[] = array( 'key'     => '_visible_to_date',
-				      'value'   => date( 'Y-m-d', strtotime( 'now' ) ),
-				      'compare' => '>=' );
+    if ( ( $query->get( 'post_type' ) == 'product' && !is_admin() ) ) {
+	$query->set( 'meta_query' , array( array( 'key'     => '_visible_to_date',
+						  'value'   => date( 'Y-m-d', strtotime( 'now' ) ),
+						  'compare' => '>=' ) ) );
     }
 
     $capabilities = get_user_meta( get_current_user_id(), "{$wpdb->prefix}capabilities", true );
@@ -695,7 +695,6 @@ add_action ( 'wp_ajax_myc_trigger_coopes_order_now_email', function() {
 	wp_die( "Don't mess with me!" );
     }
     require_once( 'class-myc-email.php' );
-    error_log("requiring");
     $e = new MYC_Coopes_Order_Now_Email();
     wp_die( $e->trigger() );
 });

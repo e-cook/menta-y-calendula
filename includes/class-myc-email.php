@@ -9,20 +9,22 @@ class MYC_Order_Now_Email extends WC_Email {
 
     public function __construct() {
 	
-	$this->id = 'myc_order_now_email';
 	$this->title = __( 'Order Now Email', 'myc' );
 	$this->description = __( 'Order Now Emails are sent by you to advise users that they may place their order', 'myc' );
-	$this->heading = __( 'Order Now Email', 'myc' );
-	$this->subject = __( 'You can now order', 'myc' );
+	$this->subject = __( 'Order Now Email', 'myc' );
+	$this->heading = __( 'Week 8 Summer', 'myc' );
 	$this->target = '';
 	
 	// these define the locations of the templates that this email should use
 	$this->template_html  = 'emails/admin-order-now.php';
 	$this->template_plain = 'emails/plain/admin-order-now.php';
-	
+
 	parent::__construct();
     }
 
+    public function process_admin_options() {
+	parent::process_admin_options();
+    }
 
     /**
      * Determine if the email should actually be sent and setup email merge variables
@@ -116,6 +118,10 @@ class MYC_User_Order_Now_Email extends MYC_Order_Now_Email {
 	$this->title = __( 'User Order Now Email', 'myc' );
 	$this->heading = __( 'User Order Now Email', 'myc' );
 	$this->target = __( 'user', 'myc' );
+	$this->subject = __( 'User Order Now Email', 'myc' );
+	$this->init_settings();
+	$this->settings['send_now'] = __( 'Send', 'myc' );
+	add_action( 'woocommerce_update_options_email_' . $this->id, array( $this, 'process_admin_options' ) );
     }
 } // end MYC_User_Order_Now_Email
 
@@ -127,6 +133,9 @@ class MYC_Coopes_Order_Now_Email extends MYC_Order_Now_Email {
 	$this->title = __( 'Coopes Order Now Email', 'myc' );
 	$this->heading = __( 'Coopes Order Now Email', 'myc' );
 	$this->target = __( 'coope', 'myc' );
+	$this->init_settings();
+	$this->settings['send_now'] = __( 'Send', 'myc' );
+	add_action( 'woocommerce_update_options_email_' . $this->id, array( $this, 'process_admin_options' ) );
     }
 
 } // end MYC_Coopes_Order_Now_Email
@@ -135,7 +144,6 @@ class MYC_Order_Reminder_Email extends WC_Email {
 
     public function __construct() {
 	
-	$this->id = 'myc_order_reminder_email';
 	$this->title = __( 'Order Reminder Email', 'myc' );
 	$this->description = __( 'Order Reminder Emails are sent on Tuesdays at 14:00 to remind users to place their order', 'myc' );
 	$this->heading = __( 'Order Reminder Email', 'myc' );
