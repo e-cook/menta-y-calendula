@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-09-01 11:26+0200\n"
-"PO-Revision-Date: 2017-09-01 11:26+0200\n"
+"POT-Creation-Date: 2017-09-01 12:45+0200\n"
+"PO-Revision-Date: 2017-09-01 12:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -31,38 +31,36 @@ msgstr "Correus d'avis de comanda avisen als usuaris que poden fer la comanda"
 msgid "Week 8 Summer"
 msgstr "Setmana 8 Estiu"
 
-#: includes/class-myc-email.php:49 includes/class-myc-email.php:126
-#: includes/myc-customize.php:247 includes/myc-customize.php:462
-#: includes/myc-customize.php:464
-msgid "user"
-msgstr "usuari"
-
-#: includes/class-myc-email.php:66 includes/class-myc-email.php:201
-msgid "Enable/Disable"
-msgstr "Activar/Desactivar"
-
-#: includes/class-myc-email.php:68 includes/class-myc-email.php:203
-msgid "Enable this email notification"
-msgstr "Activar aquesta notificació de correu"
-
-#: includes/class-myc-email.php:72
-msgid "Send now"
-msgstr "Envia ara"
-
-#: includes/class-myc-email.php:74
-msgid "Send this email notification"
-msgstr "Envia aquesta notificació de correu"
-
-#: includes/class-myc-email.php:75 includes/class-myc-email.php:129
-#: includes/class-myc-email.php:143
+#: includes/class-myc-email.php:27 includes/class-myc-email.php:77
+#: includes/class-myc-email.php:78 includes/class-myc-email.php:132
+#: includes/class-myc-email.php:146 includes/class-myc-email.php:164
+#: includes/class-myc-email.php:187
 msgid "Send"
 msgstr "Envia"
 
-#: includes/class-myc-email.php:78 includes/class-myc-email.php:207
+#: includes/class-myc-email.php:51 includes/class-myc-email.php:129
+#: includes/class-myc-email.php:161 includes/myc-customize.php:247
+#: includes/myc-customize.php:462 includes/myc-customize.php:464
+msgid "user"
+msgstr "usuari"
+
+#: includes/class-myc-email.php:68
+msgid "Enable/Disable"
+msgstr "Activar/Desactivar"
+
+#: includes/class-myc-email.php:70
+msgid "Enable this email notification"
+msgstr "Activar aquesta notificació de correu"
+
+#: includes/class-myc-email.php:74
+msgid "Send now"
+msgstr "Envia ara"
+
+#: includes/class-myc-email.php:81
 msgid "Subject"
 msgstr "Assumpte"
 
-#: includes/class-myc-email.php:80 includes/class-myc-email.php:209
+#: includes/class-myc-email.php:83
 #, php-format
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
@@ -71,11 +69,11 @@ msgstr ""
 "Això controla el assumpte del correu. Deixa en blanc per a deixar el "
 "assumpte per defecte: <code>%s</code>."
 
-#: includes/class-myc-email.php:85 includes/class-myc-email.php:214
+#: includes/class-myc-email.php:88
 msgid "Email Heading"
 msgstr "Capçalera dins del correu"
 
-#: includes/class-myc-email.php:87 includes/class-myc-email.php:216
+#: includes/class-myc-email.php:90
 #, php-format
 msgid ""
 "This controls the main heading contained within the email notification. "
@@ -84,52 +82,52 @@ msgstr ""
 "Això controla la capçalera principal dins del cos del correu. Deixa en blanc "
 "per a deixar la capçalera per defecte: <code>%s</code>."
 
-#: includes/class-myc-email.php:92
+#: includes/class-myc-email.php:95
 msgid "Email intro"
 msgstr "Text introductori"
 
-#: includes/class-myc-email.php:94
+#: includes/class-myc-email.php:97
 msgid "Introductory text before list of products"
 msgstr "Text introductori abans de la llista de plats"
 
-#: includes/class-myc-email.php:98 includes/class-myc-email.php:221
+#: includes/class-myc-email.php:101
 msgid "Email type"
 msgstr "Tipus de correu"
 
-#: includes/class-myc-email.php:124 includes/class-myc-email.php:125
-#: includes/class-myc-email.php:127
+#: includes/class-myc-email.php:127 includes/class-myc-email.php:128
+#: includes/class-myc-email.php:130
 msgid "User Order Now Email"
 msgstr "Avisar als usuaris que poden fer la comanda"
 
-#: includes/class-myc-email.php:139 includes/class-myc-email.php:140
+#: includes/class-myc-email.php:142 includes/class-myc-email.php:143
 msgid "Coopes Order Now Email"
 msgstr "Avisar a les coopes que poden fer la comanda"
 
-#: includes/class-myc-email.php:141 includes/myc-customize.php:258
-#: includes/myc-customize.php:463
+#: includes/class-myc-email.php:144 includes/class-myc-email.php:184
+#: includes/myc-customize.php:258 includes/myc-customize.php:463
 msgid "coope"
 msgstr "coope"
 
-#: includes/class-myc-email.php:153 includes/class-myc-email.php:155
-msgid "Order Reminder Email"
-msgstr "Recorda fer la comanda"
+#: includes/class-myc-email.php:157 includes/class-myc-email.php:159
+msgid "User Order Reminder Email"
+msgstr "Recorda als usuaris que han de fer la comanda (automàtic)"
 
-#: includes/class-myc-email.php:154
+#: includes/class-myc-email.php:158
 msgid ""
 "Order Reminder Emails are sent on Tuesdays at 14:00 to remind users to place "
 "their order"
 msgstr "Correus recordatoris es envien els dimarts a les 14:00 als usuaris"
 
-#: includes/class-myc-email.php:156
+#: includes/class-myc-email.php:160
 msgid "Dont forget to order!"
 msgstr "No oblideu de fer la comanda!"
 
-#: includes/class-myc-email.php:242 includes/class-myc-email.php:243
-msgid "User Order Reminder Email"
-msgstr "Recorda als usuaris que han de fer la comanda (automàtic)"
+#: includes/class-myc-email.php:171 includes/class-myc-email.php:194
+msgid "Use this button to send the mail manually"
+msgstr "Fes servir aquest botó per a enviar el recordatori de manera manual"
 
-#: includes/class-myc-email.php:253 includes/class-myc-email.php:254
-#: includes/class-myc-email.php:255
+#: includes/class-myc-email.php:181 includes/class-myc-email.php:182
+#: includes/class-myc-email.php:183
 msgid "Coopes Order Reminder Email"
 msgstr "Recorda a les coopes que han de fer la comanda (automàtic)"
 
@@ -336,21 +334,13 @@ msgstr "Comandes"
 msgid "Orders and Comments"
 msgstr "Comandes i Valoracions"
 
-#: includes/myc-customize.php:647
-msgid "The coopes have been successfully notified"
-msgstr "S'han notificat les coopes amb èxit"
+#: includes/myc-customize.php:650
+msgid "The "
+msgstr "Els "
 
-#: includes/myc-customize.php:649
-msgid "There was a problem notifying the coopes"
-msgstr "Hi ha hagut un problema amb la notificació de les coopes"
-
-#: includes/myc-customize.php:659
-msgid "The users have been successfully notified"
-msgstr "S'han notificat els usuaris amb èxit"
-
-#: includes/myc-customize.php:661
-msgid "There was a problem notifying the users"
-msgstr "Hi ha hagut un problema amb la notificació dels usuaris"
+#: includes/myc-customize.php:652
+msgid "There was a problem notifying the "
+msgstr "Hi ha hagut un problema amb la notificació "
 
 #: includes/myc-meal.php:27
 msgid "Add Recipe"
@@ -451,6 +441,21 @@ msgstr "altres"
 #: includes/myc-what-to-cook.php:178
 msgid "Total"
 msgstr "Total"
+
+#~ msgid "The coopes have been successfully notified"
+#~ msgstr "S'han notificat les coopes amb èxit"
+
+#~ msgid "There was a problem notifying the coopes"
+#~ msgstr "Hi ha hagut un problema amb la notificació de les coopes"
+
+#~ msgid "The users have been successfully notified"
+#~ msgstr "S'han notificat els usuaris amb èxit"
+
+#~ msgid "Send this email notification"
+#~ msgstr "Envia aquesta notificació de correu"
+
+#~ msgid "Order Reminder Email"
+#~ msgstr "Recorda fer la comanda"
 
 #~ msgid "You can now order"
 #~ msgstr "Ja podeu fer la comanda"

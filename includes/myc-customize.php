@@ -628,9 +628,9 @@ add_action( 'wp_ajax_myc_write_order_comments', function() {
 add_filter( 'woocommerce_email_classes', function ( $email_classes ) {
     require_once( 'class-myc-email.php' );
     return array( 
-	'MYC_User_Order_Now_Email'      => new MYC_User_Order_Now_Email(), 
+	'MYC_Users_Order_Now_Email'      => new MYC_Users_Order_Now_Email(), 
 	'MYC_Coopes_Order_Now_Email'      => new MYC_Coopes_Order_Now_Email(), 
-	'MYC_User_Order_Reminder_Email' => new MYC_User_Order_Reminder_Email(),
+	'MYC_Users_Order_Reminder_Email' => new MYC_Users_Order_Reminder_Email(),
 	'MYC_Coopes_Order_Reminder_Email' => new MYC_Coopes_Order_Reminder_Email(),
     ) + $email_classes;
 });
@@ -638,63 +638,43 @@ add_filter( 'woocommerce_email_classes', function ( $email_classes ) {
 add_action( 'admin_footer', function () {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
-	 jQuery( '#woocommerce_myc_coopes_order_now_email_send_now' ).removeClass( 'input-text regular-input disabled' ).click( function() {
+	 <?php 
+	 foreach ( array( 'now', 'reminder' ) as $when ) {
+	     foreach ( array( 'user', 'coope' ) as $entity ) {?>
+	 jQuery( '#woocommerce_myc_<?php echo $entity;?>s_order_<?php echo $when; ?>_email_send_now' ).removeClass( 'input-text regular-input disabled' ).click( function() {
 	     jQuery.post( ajaxurl, {
-		 action: 'myc_trigger_coopes_order_now_email',
-		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_coopes_order_now_email') ?>'
+		 action: 'myc_trigger_<?php echo $entity;?>s_order_<?php echo $when; ?>_email',
+		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_' . $entity . 's_order_' . $when . '_email') ?>'
 	     }, function ( response ) {
 		 if ( '1' == response ) {
-		     alert( "<?php _e( 'The coopes have been successfully notified', 'myc' ); ?>" );
+		     alert( "<?php _e( 'The ' . $entity . 's have been successfully notified', 'myc' ); ?>" );
 		 } else {
-		     alert( "<?php _e( 'There was a problem notifying the coopes', 'myc' ) ?>" );
+		     alert( "<?php _e( 'There was a problem notifying the ' . $entity .'s', 'myc' ) ?>" + response );
 		 }
 	     });
 	 });
-	 jQuery( '#woocommerce_myc_user_order_now_email_send_now' ).removeClass( 'input-text regular-input disabled' ).click( function() {
-	     jQuery.post( ajaxurl, {
-		 action: 'myc_trigger_user_order_now_email',
-		 _nonce: '<?php echo wp_create_nonce( 'myc_trigger_user_order_now_email') ?>'
-	     }, function ( response ) {
-		 if ( '1' == response ) {
-		     alert( "<?php _e( 'The users have been successfully notified', 'myc' ) ?>" );
-		 } else {
-		     alert( "<?php _e( 'There was a problem notifying the users', 'myc' ) ?>" );
-		 }
-	     });
+<?php 
+	 foreach ( array( 'subject', 'heading', 'email_intro' ) as $what ) {?>
+	 jQuery( '#woocommerce_myc_<?php echo $entity; ?>s_order_<?php echo $when; ?>_email_<?php echo $what; ?>' ).change( function() {
+	     jQuery( '#woocommerce_myc_<?php echo $entity; ?>s_order_<?php echo $when; ?>_email_send_now' ).addClass( 'disabled' );
 	 });
-	 jQuery( '#woocommerce_myc_user_order_now_email_subject' ).change( function() {
-	     jQuery( '#woocommerce_myc_user_order_now_email_send_now' ).addClass( 'disabled' );
-	 });
-	 jQuery( '#woocommerce_myc_user_order_now_email_heading' ).change( function() {
-	     jQuery( '#woocommerce_myc_user_order_now_email_send_now' ).addClass( 'disabled' );
-	 });
-	 jQuery( '#woocommerce_myc_coopes_order_now_email_subject' ).change( function() {
-	     jQuery( '#woocommerce_myc_coopes_order_now_email_send_now' ).addClass( 'disabled' );
-	 });
-	 jQuery( '#woocommerce_myc_coopes_order_now_email_heading' ).change( function() {
-	     jQuery( '#woocommerce_myc_coopes_order_now_email_send_now' ).addClass( 'disabled' );
-	 });
+     <?php } } }?>
      });
     </script>
 <?php
 });
 
+foreach ( array( 'now', 'reminder' ) as $when ) {
+    foreach ( array( 'user', 'coope' ) as $entity ) {
+	add_action ( 'wp_ajax_myc_trigger_' . $entity . 's_order_' . $when . '_email', function() use ( $when, $entity ) {
+	    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_' . $entity . 's_order_' . $when . '_email' ) ) {
+		wp_die( "Don't mess with me!" );
+	    }
+	    require_once( 'class-myc-email.php' );
+	    $the_class = 'MYC_' . ucwords( $entity ) . 's_Order_' . ucwords( $when ) . '_Email';
+	    $e = new $the_class;
+	    wp_die( $e->trigger() );
+	});
 
-
-add_action ( 'wp_ajax_myc_trigger_user_order_now_email', function() {
-    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_user_order_now_email' ) ) {
-	wp_die( "Don't mess with me!" );
     }
-    require_once( 'class-myc-email.php' );
-    $e = new MYC_User_Order_Now_Email();
-    wp_die( $e->trigger() );
-});
-
-add_action ( 'wp_ajax_myc_trigger_coopes_order_now_email', function() {
-    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_coopes_order_now_email' ) ) {
-	wp_die( "Don't mess with me!" );
-    }
-    require_once( 'class-myc-email.php' );
-    $e = new MYC_Coopes_Order_Now_Email();
-    wp_die( $e->trigger() );
-});
+}
