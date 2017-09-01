@@ -46,6 +46,7 @@ class MYC_Order_Now_Email extends WC_Email {
 	wc_get_template( $this->template_html, array(
 	    'email'         => $this->object,
 	    'email_heading' => $this->get_heading(),
+	    'email_intro'   => $this->settings[ 'email_intro' ],
 	    'target_tag'    => ( __( 'user', 'myc' ) === $this->target ? 'per_individuals' : 'per_coopes' )
 	) );
 	return ob_get_clean();
@@ -63,7 +64,7 @@ class MYC_Order_Now_Email extends WC_Email {
     public function init_form_fields() {
  	$this->form_fields = array(
 	    'enabled'    => array(
-		'title'   => 'Enable/Disable',
+		'title'   => __( 'Enable/Disable', 'myc' ),
 		'type'    => 'checkbox',
 		'label'   => __( 'Enable this email notification', 'myc' ),
 		'default' => 'yes'
@@ -71,25 +72,32 @@ class MYC_Order_Now_Email extends WC_Email {
 	    'send_now'    => array(
 		'title'   => __( 'Send now', 'myc' ),
 		'type'    => 'button',
-		'label'   => __( 'Send this email notification', 'myc' ),
+		'description'   => '',
+		'placeholder' => __( 'Send', 'myc' ),
 		'default' => __( 'Send', 'myc' )
 	    ),
 	    'subject'    => array(
-		'title'       => 'Subject',
+		'title'       => __( 'Subject', 'myc' ),
 		'type'        => 'text',
 		'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'myc' ), $this->subject ),
 		'placeholder' => '',
 		'default'     => ''
 	    ),
 	    'heading'    => array(
-		'title'       => 'Email Heading',
+		'title'       => __( 'Email Heading', 'myc' ),
 		'type'        => 'text',
 		'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'myc' ), $this->heading ),
 		'placeholder' => '',
 		'default'     => ''
 	    ),
+	    'email_intro' => array(
+		'title'        => __( 'Email intro', 'myc' ),
+		'type'         => 'textarea',
+		'description'  => __( 'Introductory text before list of products', 'myc' ),
+		'default'      => ''
+	    ),
 	    'email_type' => array(
-		'title'       => 'Email type',
+		'title'       => __( 'Email type', 'myc' ),
 		'type'        => 'select',
 		'description' => 'Choose which format of email to send.',
 		'default'     => 'html',
@@ -192,27 +200,27 @@ class MYC_Order_Reminder_Email extends WC_Email {
     public function init_form_fields() {
  	$this->form_fields = array(
 	    'enabled'    => array(
-		'title'   => 'Enable/Disable',
+		'title'   => __( 'Enable/Disable', 'myc' ),
 		'type'    => 'checkbox',
 		'label'   => __( 'Enable this email notification', 'myc' ),
 		'default' => 'yes'
 	    ),
 	    'subject'    => array(
-		'title'       => 'Subject',
+		'title'       => __( 'Subject', 'myc' ),
 		'type'        => 'text',
 		'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'myc' ), $this->subject ),
 		'placeholder' => '',
 		'default'     => ''
 	    ),
 	    'heading'    => array(
-		'title'       => 'Email Heading',
+		'title'       => __( 'Email Heading', 'myc' ),
 		'type'        => 'text',
 		'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'myc' ), $this->heading ),
 		'placeholder' => '',
 		'default'     => ''
 	    ),
 	    'email_type' => array(
-		'title'       => 'Email type',
+		'title'       => __( 'Email type', 'myc' ),
 		'type'        => 'select',
 		'description' => 'Choose which format of email to send.',
 		'default'     => 'html',
