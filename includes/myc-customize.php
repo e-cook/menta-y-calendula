@@ -653,16 +653,21 @@ add_action( 'admin_footer', function () {?>
 		 }
 	     });
 	 });
-<?php 
-	 foreach ( array( 'subject', 'heading', 'email_intro' ) as $what ) {?>
+		 <?php 
+		 foreach ( array( 'subject', 'heading', 'email_intro' ) as $what ) {?>
 	 jQuery( '#woocommerce_myc_<?php echo $entity; ?>s_order_<?php echo $when; ?>_email_<?php echo $what; ?>' ).change( function() {
 	     jQuery( '#woocommerce_myc_<?php echo $entity; ?>s_order_<?php echo $when; ?>_email_send_now' ).addClass( 'disabled' );
 	 });
-     <?php } } }?>
+		 <?php } } }?>
      });
     </script>
 <?php
 });
+
+$dummy_translations = array(
+    __( 'The users have been successfully notified', 'myc' ),
+    __( 'The coopes have been successfully notified', 'myc' ),
+);
 
 foreach ( array( 'now', 'reminder' ) as $when ) {
     foreach ( array( 'user', 'coope' ) as $entity ) {
