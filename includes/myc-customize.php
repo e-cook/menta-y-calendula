@@ -13,7 +13,7 @@ add_action( 'parse_request', function( $query ) {
 	   stripos( $req, 'checkout' )    !== false ||
 	   stripos( $req, 'account' )     !== false ||
 	   stripos( $req, 'product' )     !== false ||
-	   stripos( $req, 'espai-soci' )  !== false ) ) {
+	   stripos( $req, 'espai-soci' )  !== false && stripos( $req, 'que-es' ) === false ) ) {
 	auth_redirect();
     }
 }, 1 );
@@ -321,14 +321,13 @@ add_filter( 'loop_shop_per_page', function( $cols ) {
 
 // add visibility columns in product_posts
 
-function add_visiblity_column( $existing_columns ) {
+add_action( 'manage_product_posts_columns', function( $existing_columns ) {
     $offset = 3;
     return array_slice( $existing_columns, 0, $offset, true ) +
 	   array('active'       => __( 'active', 'myc' ),
 		 'visible_to'   => __( 'Visible until', 'myc' ) ) +
 	   array_slice( $existing_columns, $offset, NULL, true);
-}
-add_action( 'manage_product_posts_columns', 'add_visiblity_column', 12 );
+}, 12 );
 
 function render_visibility_column( $column ) {
     global $post, $the_product;
@@ -417,15 +416,52 @@ add_action( 'wp_ajax_deactivate_meal', function() {
 // visibility
 add_action( 'woocommerce_product_options_pricing', function() {
     global $post;
+    woocommerce_wp_text_input( array(
+	'id'          => '_sale_price',
+	'value'       => $product_object->get_sale_price( 'edit' ),
+	'data_type'   => 'price',
+	'label'       => __( 'Sale price', 'woocommerce' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+	'description' => '<a href="#" class="sale_schedule">' . __( 'Schedule', 'woocommerce' ) . '</a>',
+    ) );
     echo '<p class="form-field">';
     echo '<label for="visible_to_date">' . __('Visible to', 'myc') . '</label>';
     echo '<input type="text" class="datepicker visible_to_date_picker" id="visible_to_date" value="' . get_post_meta($post->ID, '_visible_to_date', true) . '"/>';
     echo '</p>';
 });
 
+add_action( 'woocommerce_product_bulk_edit_start', function() {?>
+    <div class="inline-edit-group">
+	<label class="alignleft">
+	    <span class="title"><?php _e( 'Visible until', 'myc' ); ?></span>
+	    <span class="input-text-wrap">
+		<select class="change_weight change_to" name="change_visibility_to">
+		    <?php
+		    $options = array(
+			'' 	=> __( '— No change —', 'woocommerce' ),
+			'1' => __( 'Change to:', 'woocommerce' ),
+		    );
+		    foreach ( $options as $key => $value ) {
+			echo '<option value="' . esc_attr( $key ) . '">' . $value . '</option>';
+		    }
+		    ?>
+		</select>
+	    </span>
+	</label>
+	<label class="change-input">
+	    <input type="text" name="_visible_to" class="text weight" placeholder="<?php echo date( 'Y-m-d', strtotime( 'next Thursday' ) ); ?>" value="">
+	</label>
+    </div>
+<?php 
+});
+
 add_action( 'admin_footer', function () {?>
     <script type="text/javascript">
      jQuery(document).ready(function() {
+	 jQuery( '#the-list' ).on( 'click', '.editinline', function() {
+	     var post_id = $( this ).closest( 'tr' ).attr( 'id' );
+	     alert( "post_id: " + post_id );
+	 });
+
 	 jQuery( '.visible_to_date_picker' ).datepicker({
 	     onSelect: function() {
 		 jQuery.post( ajaxurl, {
@@ -683,3 +719,4 @@ foreach ( array( 'now', 'reminder' ) as $when ) {
 
     }
 }
+
