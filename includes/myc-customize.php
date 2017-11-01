@@ -418,7 +418,7 @@ add_action( 'woocommerce_product_options_pricing', function() {
     global $post;
     woocommerce_wp_text_input( array(
 	'id'          => '_sale_price',
-	'value'       => $product_object->get_sale_price( 'edit' ),
+	'value'       => wc_get_product( $post->ID )->get_sale_price( 'edit' ),
 	'data_type'   => 'price',
 	'label'       => __( 'Sale price', 'woocommerce' ) . ' (' . get_woocommerce_currency_symbol() . ')',
 	'description' => '<a href="#" class="sale_schedule">' . __( 'Schedule', 'woocommerce' ) . '</a>',
