@@ -235,11 +235,18 @@ add_action( 'pre_get_posts', function( $query ) {
     if ( $query->is_search && !is_user_logged_in() ) {
 	$query->set( 'post_type', array( 'post', 'page' ) );
     }
-
-    if ( ( $query->get( 'post_type' ) == 'product' && !is_admin() ) ) {
-	$query->set( 'meta_query' , array( array( 'key'     => '_visible_to_date',
-						  'value'   => date( 'Y-m-d', strtotime( 'now' ) ),
-						  'compare' => '>=' ) ) );
+    if ( $query->get( 'post_type' ) == 'product' ) {
+	if ( !is_admin() ) { // hide products with wrong _visible_to_date
+	    $query->set( 'meta_query' , array( array( 'key'     => '_visible_to_date',
+						      'value'   => date( 'Y-m-d', strtotime( 'now' ) ),
+						      'compare' => '>=' ) ) );
+	} else { // order table by modification date by default
+	    if ( $query->get( 'orderby' ) == '' ||
+		 $query->get( 'orderby' ) == 'post_date' ) {
+		$query->set( 'orderby', 'post_modified' );
+		$query->set( 'order', 'DESC' );
+	    }
+	}
     }
 
     $capabilities = get_user_meta( get_current_user_id(), "{$wpdb->prefix}capabilities", true );
@@ -326,7 +333,7 @@ add_action( 'manage_product_posts_columns', function( $existing_columns ) {
     return array_slice( $existing_columns, 0, $offset, true ) +
 	   array('active'       => __( 'active', 'myc' ),
 		 'visible_to'   => __( 'Visible until', 'myc' ) ) +
-	   array_slice( $existing_columns, $offset, NULL, true);
+	   array_slice( $existing_columns, $offset + 1, NULL, true); // +1 removes SKU
 }, 12 );
 
 function render_visibility_column( $column ) {
@@ -340,19 +347,25 @@ function render_visibility_column( $column ) {
 	return;
     }
 
+    $id = $the_product->get_id();
+
     switch ( $column ) {
 	case 'active' :
-	    $id = '_active_' . $the_product->get_id();
+	    $active_id = '_active_' . $id;
 	    $myc_active_nonce = wp_create_nonce( 'active' );
 	    $currently_visible = $the_product->get_catalog_visibility();
-	    echo '<input type="checkbox" name="' . $id . '" id="' . $id . '" '
+	    echo '<input type="checkbox" name="' . $active_id . '" id="' . $active_id . '" '
 	       . 'class="active_button" '
 	       . checked( $currently_visible, 'visible', false )
 	       . '" />';
 	    return;
 	case 'visible_to' :
-	    echo ( 'meal' == substr( $the_product->get_type(), -4 ) ) ? $the_product->get_catalog_visibility_to() : '';
-	    return;
+	    if ( 'meal' == substr( $the_product->get_type(), -4 ) ) {
+		$visible_id = '_visible_to_date_' . $id;
+		echo '<input type="text" size="8" class="datepicker visible_to_date_picker" id="' . $visible_id . '" post_id="' . $id . '" value="' . $the_product->get_catalog_visibility_to()  . '"/>';
+		return;
+	    
+	    }
     }
 }
 add_action( 'manage_product_posts_custom_column', 'render_visibility_column' );
@@ -425,7 +438,7 @@ add_action( 'woocommerce_product_options_pricing', function() {
     ) );
     echo '<p class="form-field">';
     echo '<label for="visible_to_date">' . __('Visible to', 'myc') . '</label>';
-    echo '<input type="text" class="datepicker visible_to_date_picker" id="visible_to_date" value="' . get_post_meta($post->ID, '_visible_to_date', true) . '"/>';
+    echo '<input type="text" class="datepicker visible_to_date_picker" id="visible_to_date" post_id="' . $post->ID . '" value="' . get_post_meta($post->ID, '_visible_to_date', true) . '"/>';
     echo '</p>';
 });
 
@@ -464,10 +477,11 @@ add_action( 'admin_footer', function () {?>
 
 	 jQuery( '.visible_to_date_picker' ).datepicker({
 	     onSelect: function() {
+		 var post_id = jQuery(this).attr("post_id");
 		 jQuery.post( ajaxurl, {
-		     'post_id': woocommerce_admin_meta_boxes.post_id,
+		     'post_id': post_id, //woocommerce_admin_meta_boxes.post_id,
 		     'action': 'myc_set_visible_to_date',
-		     'to_date': jQuery( this ).datepicker("getDate"),
+		     'to_date': jQuery( this ).datepicker( { dateFormat: 'yyyy-mm-dd' } ).val(), //"getDate"),
 		     '_nonce': '<?php echo wp_create_nonce( 'myc_set_visible_to_date' ) ?>'
 		 });
 	     },
@@ -697,26 +711,26 @@ add_action( 'admin_footer', function () {?>
 		 <?php } } }?>
      });
     </script>
-<?php
-});
+	 <?php
+	 });
 
-$dummy_translations = array(
-    __( 'The users have been successfully notified', 'myc' ),
-    __( 'The coopes have been successfully notified', 'myc' ),
-);
+	 $dummy_translations = array(
+	     __( 'The users have been successfully notified', 'myc' ),
+	     __( 'The coopes have been successfully notified', 'myc' ),
+	 );
 
-foreach ( array( 'now', 'reminder' ) as $when ) {
-    foreach ( array( 'user', 'coope' ) as $entity ) {
-	add_action ( 'wp_ajax_myc_trigger_' . $entity . 's_order_' . $when . '_email', function() use ( $when, $entity ) {
-	    if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_' . $entity . 's_order_' . $when . '_email' ) ) {
-		wp_die( "Don't mess with me!" );
-	    }
-	    require_once( 'class-myc-email.php' );
-	    $the_class = 'MYC_' . ucwords( $entity ) . 's_Order_' . ucwords( $when ) . '_Email';
-	    $e = new $the_class;
-	    wp_die( $e->trigger() );
-	});
+	 foreach ( array( 'now', 'reminder' ) as $when ) {
+	     foreach ( array( 'user', 'coope' ) as $entity ) {
+		 add_action ( 'wp_ajax_myc_trigger_' . $entity . 's_order_' . $when . '_email', function() use ( $when, $entity ) {
+		     if ( ! wp_verify_nonce( $_POST[ '_nonce' ], 'myc_trigger_' . $entity . 's_order_' . $when . '_email' ) ) {
+			 wp_die( "Don't mess with me!" );
+		     }
+		     require_once( 'class-myc-email.php' );
+		     $the_class = 'MYC_' . ucwords( $entity ) . 's_Order_' . ucwords( $when ) . '_Email';
+		     $e = new $the_class;
+		     wp_die( $e->trigger() );
+		 });
 
-    }
-}
+	     }
+	 }
 
