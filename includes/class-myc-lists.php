@@ -35,6 +35,17 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class NoNonce_Table extends WP_List_Table {
+    public function __construct() {
+	if ( ! is_admin() ) {
+	    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	    require_once( ABSPATH . 'wp-admin/includes/screen.php' );
+	    require_once( ABSPATH . 'wp-admin/includes/class-wp-screen.php' );
+	    require_once( ABSPATH . 'wp-admin/includes/template.php' );
+	    $GLOBALS['hook_suffix'] = '';
+	}
+	parent::__construct();
+    }
+
     protected function display_tablenav( $which ) {
 	/*
 	   if ( 'top' === $which ) {
@@ -358,4 +369,52 @@ class MYC_Order_Deadlines extends NoNonce_Table {
                 return print_r( $item, true ) ;
         }
     }
+}
+
+class MYC_Cash_Transactions extends NoNonce_Table {
+
+    protected $_lines;
+    
+    public function __construct( $lines ) {
+	parent::__construct();
+	$this->_lines = $lines;
+    }
+    
+    public function get_columns() {
+	return array(
+	    'id' => __( 'Id', 'myc' ),
+	    'date'   => __( 'Date', 'myc' ),
+	    'balance_before' => __( 'Balance before', 'myc' ),
+	    'money_qty' => __( 'Euros', 'myc' ),
+	    'balance_after' => __( 'Balance after', 'myc' ),
+	    'transaction_type' => __( 'Transaction Type', 'myc' ), // 10 hrs web maintenance @ 22 euros/hr | Order #222 (with link)
+	);
+    }
+
+    public function prepare_items() {
+	$columns = $this->get_columns();
+	$hidden = array();
+	$sortable = array();
+	$this->_column_headers = array($columns, $hidden, $sortable);
+	$this->items = $this->_lines;
+    }
+
+    public function column_default( $item, $column_name )
+    {
+        switch( $column_name ) {
+            case 'id':
+            case 'date':
+	    case 'transaction_type':
+		return $item[ $column_name ];
+
+	    case 'balance_before':
+	    case 'money_qty':
+	    case 'balance_after':
+		return number_format((float)$item[ $column_name ], 2, '.', '');
+
+            default:
+		return print_r( $item, true ) ;
+        }
+    }
+    
 }

@@ -364,7 +364,7 @@ function render_visibility_column( $column ) {
 		$visible_id = '_visible_to_date_' . $id;
 		echo '<input type="text" size="8" class="datepicker visible_to_date_picker" id="' . $visible_id . '" post_id="' . $id . '" value="' . $the_product->get_catalog_visibility_to()  . '"/>';
 		return;
-	    
+		
 	    }
     }
 }
@@ -555,6 +555,15 @@ add_action( 'admin_menu', function() {
     if ( ! get_term_by( 'slug', 'order_deadline', 'category' ) ) {
 	wp_insert_term( 'order_deadline', 'category', 'order_deadline' );
     }
+    if ( ! get_term_by( 'slug', 'deposit_type', 'category' ) ) {
+	$term_data = wp_insert_term( 'deposit_type', 'category', 'deposit_type' );
+	add_term_meta( $term_data[ 'term_id' ], 'deposit_type', json_encode( array(
+	    'description' => 'cash',
+	    'rate' => 1 )));
+	add_term_meta( $term_data[ 'term_id' ], 'deposit_type', json_encode( array(
+	    'description' => 'web maintenance',
+	    'rate' => 10 )));
+    }
     global $menu;
     $menu['55.5'][0] = __( 'Orders', 'myc' );
 }, 11 );
@@ -580,6 +589,7 @@ add_filter( 'woocommerce_account_menu_items', function( $items ) {
     $items[ 'orders' ] = __( 'Orders and Comments', 'myc' );
     return $items;
 });
+
 
 
 // product reviews
@@ -734,3 +744,26 @@ add_action( 'admin_footer', function () {?>
 	     }
 	 }
 
+	 function get_last_balance( $user_id ) {
+	     global $wpdb;
+	     $data = json_decode($wpdb->get_var( "SELECT meta_value FROM {$wpdb->usermeta} WHERE user_id={$user_id} AND meta_key = 'cash_transaction' ORDER BY umeta_id DESC LIMIT 1" ), true);
+	     if ( 0 === sizeof($data) ) {
+		 return 0;
+	     } else return $data[ 'balance_after' ];
+	 }
+
+	 // process payment
+	 add_action( 'woocommerce_checkout_order_processed', function( $order_id, $posted_data, $order ) {
+	     $user_id = get_current_user_id();
+	     $last_balance = get_last_balance( $user_id );
+	     $total = $order->get_total();
+
+	     add_user_meta( $user_id, 'cash_transaction', json_encode( array( 
+		 'id' => $order_id,
+		 'date' => date( 'Y-m-d', strtotime('now') ),
+		 'balance_before' => $last_balance,
+		 'money_qty' => $total,
+		 'balance_after' => $last_balance - $total,
+		 'transaction_type' => __( 'Order', 'myc' ) . ' #' . $order_id
+	     ) ) );
+	 }, 10, 3);

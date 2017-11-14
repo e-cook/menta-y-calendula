@@ -170,6 +170,7 @@ require_once($id . 'myc-abs-ingredient.php');
 require_once($id . 'myc-recipe.php');
 require_once($id . 'myc-meal.php');
 require_once($id . 'myc-provider.php');
+require_once($id . 'class-myc-cash-endpoint.php');
 
 /* function alert_change( $product, $old_type, $new_type ) {
  *     error_log("changed $product from $old_type to $new_type");
