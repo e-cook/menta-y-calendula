@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-09-01 13:52+0200\n"
-"PO-Revision-Date: 2017-09-01 13:52+0200\n"
+"POT-Creation-Date: 2017-11-14 20:42+0100\n"
+"PO-Revision-Date: 2017-11-14 20:45+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -16,6 +16,33 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: i18n/languages\n"
 "X-Poedit-SearchPath-1: .\n"
+
+#: includes/class-myc-cash-endpoint.php:65
+#: includes/class-myc-cash-endpoint.php:81
+#: includes/class-myc-cash-endpoint.php:127
+msgid "Cash"
+msgstr "Efectiu"
+
+#: includes/class-myc-cash-endpoint.php:104
+msgid "Choose user:"
+msgstr "Escolliu  l'usuari:"
+
+#: includes/class-myc-cash-endpoint.php:117
+msgid "Make Deposit"
+msgstr "Deposita"
+
+#: includes/class-myc-cash-endpoint.php:119
+msgid "Deposit"
+msgstr "Depòsit"
+
+#: includes/class-myc-cash-endpoint.php:121
+msgid "Type"
+msgstr "Tipus"
+
+#: includes/class-myc-cash-endpoint.php:139
+#: includes/class-myc-cash-endpoint.php:213
+msgid "Current balance:"
+msgstr "Balanç actual:"
 
 #: includes/class-myc-email.php:12 includes/class-myc-email.php:14
 msgid "Order Now Email"
@@ -39,8 +66,8 @@ msgid "Send"
 msgstr "Envia"
 
 #: includes/class-myc-email.php:51 includes/class-myc-email.php:129
-#: includes/class-myc-email.php:161 includes/myc-customize.php:247
-#: includes/myc-customize.php:462 includes/myc-customize.php:464
+#: includes/class-myc-email.php:161 includes/myc-customize.php:254
+#: includes/myc-customize.php:512 includes/myc-customize.php:514
 msgid "user"
 msgstr "usuari"
 
@@ -104,7 +131,7 @@ msgid "Coopes Order Now Email"
 msgstr "Avisar a les coopes que poden fer la comanda"
 
 #: includes/class-myc-email.php:144 includes/class-myc-email.php:185
-#: includes/myc-customize.php:258 includes/myc-customize.php:463
+#: includes/myc-customize.php:265 includes/myc-customize.php:513
 msgid "coope"
 msgstr "coope"
 
@@ -131,42 +158,62 @@ msgstr "Fes servir aquest botó per a enviar el recordatori de manera manual"
 msgid "Coopes Order Reminder Email"
 msgstr "Recorda a les coopes que han de fer la comanda (automàtic)"
 
-#: includes/class-myc-lists.php:74 includes/class-myc-lists.php:263
-#: includes/myc-phys-ingredient.php:36
+#: includes/class-myc-lists.php:85 includes/class-myc-lists.php:274
+#: includes/class-myc-lists.php:386 includes/myc-phys-ingredient.php:36
 msgid "Date"
 msgstr "Data"
 
-#: includes/class-myc-lists.php:75 includes/class-myc-lists.php:117
-#: includes/class-myc-lists.php:227 includes/myc-phys-ingredient.php:44
+#: includes/class-myc-lists.php:86 includes/class-myc-lists.php:128
+#: includes/class-myc-lists.php:238 includes/myc-phys-ingredient.php:44
 #: includes/myc-recipe.php:38
 msgid "Quantity"
 msgstr "Quantitat"
 
-#: includes/class-myc-lists.php:76
+#: includes/class-myc-lists.php:87
 msgid "Paid"
 msgstr "Pagat"
 
-#: includes/class-myc-lists.php:77 includes/class-myc-lists.php:265
+#: includes/class-myc-lists.php:88 includes/class-myc-lists.php:276
 msgid "Unit Price"
 msgstr "Preu Unitat"
 
-#: includes/class-myc-lists.php:116 includes/class-myc-lists.php:191
-#: includes/class-myc-lists.php:226 includes/class-myc-lists.php:264
-#: includes/class-myc-lists.php:302 includes/myc-recipe.php:30
+#: includes/class-myc-lists.php:127 includes/class-myc-lists.php:202
+#: includes/class-myc-lists.php:237 includes/class-myc-lists.php:275
+#: includes/class-myc-lists.php:313 includes/myc-recipe.php:30
 msgid "Ingredient"
 msgstr "Ingredient"
 
-#: includes/class-myc-lists.php:154
+#: includes/class-myc-lists.php:165
 msgid "Recipe"
 msgstr "Recepte"
 
-#: includes/class-myc-lists.php:338
+#: includes/class-myc-lists.php:349
 msgid "Order Deadline"
 msgstr "Data limit per comanda"
 
-#: includes/class-myc-lists.php:355
+#: includes/class-myc-lists.php:366
 msgid "Delete"
 msgstr "Esborrar"
+
+#: includes/class-myc-lists.php:385
+msgid "Id"
+msgstr "Id"
+
+#: includes/class-myc-lists.php:387
+msgid "Balance before"
+msgstr "Balanç abans"
+
+#: includes/class-myc-lists.php:388
+msgid "Euros"
+msgstr "Euros"
+
+#: includes/class-myc-lists.php:389
+msgid "Balance after"
+msgstr "Balanç desprès"
+
+#: includes/class-myc-lists.php:390
+msgid "Transaction Type"
+msgstr "Tipus de transacció"
 
 #: includes/class-wp-list-table.php:162
 msgid "List View"
@@ -294,61 +341,81 @@ msgstr "Composició"
 msgid "Recipes"
 msgstr "Receptes"
 
-#: includes/myc-customize.php:327
+#: includes/myc-customize.php:334
 msgid "active"
 msgstr "actiu"
 
-#: includes/myc-customize.php:328
+#: includes/myc-customize.php:335 includes/myc-customize.php:448
 msgid "Visible until"
 msgstr "Visible fins"
 
-#: includes/myc-customize.php:421
+#: includes/myc-customize.php:436
+msgid "Sale price"
+msgstr "Preu de venda"
+
+#: includes/myc-customize.php:437
+msgid "Schedule"
+msgstr "Programació"
+
+#: includes/myc-customize.php:440
 msgid "Visible to"
 msgstr "Visible fins"
 
-#: includes/myc-customize.php:477
+#: includes/myc-customize.php:453
+msgid "— No change —"
+msgstr "— Cap canvi —"
+
+#: includes/myc-customize.php:454
+msgid "Change to:"
+msgstr "Canvia a:"
+
+#: includes/myc-customize.php:527
 msgid "d/m/Y"
 msgstr "d/m/Y"
 
-#: includes/myc-customize.php:484 includes/myc-what-to-cook.php:174
+#: includes/myc-customize.php:534 includes/myc-what-to-cook.php:174
 msgid "Delivery date"
 msgstr "Data d'entrega"
 
-#: includes/myc-customize.php:499
+#: includes/myc-customize.php:549
 msgid "Order deadline"
 msgstr "Data limit per a comandes"
 
-#: includes/myc-customize.php:499 includes/myc-order-dates.php:10
+#: includes/myc-customize.php:549 includes/myc-order-dates.php:10
 msgid "Order deadlines"
 msgstr "Dates límits per a comandes"
 
-#: includes/myc-customize.php:500
+#: includes/myc-customize.php:550
 msgid "What to cook"
 msgstr "Què haig de cuinar"
 
-#: includes/myc-customize.php:509
+#: includes/myc-customize.php:568
 msgid "Orders"
 msgstr "Comandes"
 
-#: includes/myc-customize.php:530
+#: includes/myc-customize.php:589
 msgid "Orders and Comments"
 msgstr "Comandes i Valoracions"
 
-#: includes/myc-customize.php:650
+#: includes/myc-customize.php:710
 msgid "The "
 msgstr "Els "
 
-#: includes/myc-customize.php:652
+#: includes/myc-customize.php:712
 msgid "There was a problem notifying the "
 msgstr "Hi ha hagut un problema amb la notificació "
 
-#: includes/myc-customize.php:668
+#: includes/myc-customize.php:728
 msgid "The users have been successfully notified"
 msgstr "S'han notificat els usuaris amb èxit"
 
-#: includes/myc-customize.php:669
+#: includes/myc-customize.php:729
 msgid "The coopes have been successfully notified"
 msgstr "S'han notificat les coopes amb èxit"
+
+#: includes/myc-customize.php:767
+msgid "Order"
+msgstr "Comanda"
 
 #: includes/myc-meal.php:27
 msgid "Add Recipe"
@@ -449,6 +516,22 @@ msgstr "altres"
 #: includes/myc-what-to-cook.php:178
 msgid "Total"
 msgstr "Total"
+
+#: woocommerce/myaccount/orders.php:89
+msgid "Previous"
+msgstr "Anterior"
+
+#: woocommerce/myaccount/orders.php:93
+msgid "Next"
+msgstr "Següent"
+
+#: woocommerce/myaccount/orders.php:101
+msgid "Go shop"
+msgstr "Anar a la Botiga"
+
+#: woocommerce/myaccount/orders.php:103
+msgid "No order has been made yet."
+msgstr "Encara no s'ha fet cap comanda."
 
 #~ msgid "There was a problem notifying the coopes"
 #~ msgstr "Hi ha hagut un problema amb la notificació de les coopes"

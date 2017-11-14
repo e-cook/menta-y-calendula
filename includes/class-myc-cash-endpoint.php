@@ -134,6 +134,7 @@ class Cash_My_Account_Endpoint {
 			    </select>
 			</div>
 		    <?php else:?>
+			<br>
 			<h4>
 			    <?php echo __( 'Current balance:', 'myc' ) . ' ' . number_format((float) get_last_balance( get_current_user_id() ), 2, '.', ''); ?>
 			</h4>
@@ -209,7 +210,7 @@ add_action( 'wp_ajax_show_user_cash_transactions', function() {
     if ( null == $user_id ) {
 	wp_die();
     }
-    echo '<h4>' . __( 'Current balance:', 'myc' ) . ' ' . number_format((float) get_last_balance( $user_id ), 2, '.', '') . '</h4>';
+    echo '<br><h4>' . __( 'Current balance:', 'myc' ) . ' ' . number_format((float) get_last_balance( $user_id ), 2, '.', '') . '</h4>';
     $table = new MYC_Cash_Transactions( cash_transaction_lines( $user_id ) );
     $table->prepare_items();
     $table->display();
