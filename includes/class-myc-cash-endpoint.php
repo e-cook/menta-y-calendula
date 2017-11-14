@@ -116,7 +116,6 @@ class Cash_My_Account_Endpoint {
 			<div id="transaction-table-button" class="form-field _make_deposit" style="display:none">
 			    <h4><?php echo __( 'Make Deposit', 'myc' );?></h4>
 			    <input type="text" class="make_deposit" id="make_deposit_input"/>
-			    <button class="button" id="make-deposit-button"><?php echo __( 'Deposit', 'myc' )?></button>
 			    <select name="deposit-type-selector" id="deposit-type-selector">
 				<option value="" selected disabled><?php echo __( 'Type', 'myc' ); ?></option>
 				<?php
@@ -132,6 +131,7 @@ class Cash_My_Account_Endpoint {
 				}
 				?>
 			    </select>
+			    <button class="button" id="make-deposit-button"><?php echo __( 'Make Deposit', 'myc' )?></button>
 			</div>
 		    <?php else:?>
 			<br>
