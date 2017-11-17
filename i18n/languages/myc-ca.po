@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Menta i Calendula\n"
-"POT-Creation-Date: 2017-11-14 20:42+0100\n"
-"PO-Revision-Date: 2017-11-14 20:45+0100\n"
+"POT-Creation-Date: 2017-11-15 19:18+0100\n"
+"PO-Revision-Date: 2017-11-16 18:16+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: includes/class-myc-cash-endpoint.php:65
 #: includes/class-myc-cash-endpoint.php:81
-#: includes/class-myc-cash-endpoint.php:127
+#: includes/class-myc-cash-endpoint.php:126
 msgid "Cash"
 msgstr "Efectiu"
 
@@ -28,14 +28,11 @@ msgid "Choose user:"
 msgstr "Escolliu  l'usuari:"
 
 #: includes/class-myc-cash-endpoint.php:117
+#: includes/class-myc-cash-endpoint.php:134
 msgid "Make Deposit"
 msgstr "Deposita"
 
-#: includes/class-myc-cash-endpoint.php:119
-msgid "Deposit"
-msgstr "Depòsit"
-
-#: includes/class-myc-cash-endpoint.php:121
+#: includes/class-myc-cash-endpoint.php:120
 msgid "Type"
 msgstr "Tipus"
 
@@ -159,7 +156,8 @@ msgid "Coopes Order Reminder Email"
 msgstr "Recorda a les coopes que han de fer la comanda (automàtic)"
 
 #: includes/class-myc-lists.php:85 includes/class-myc-lists.php:274
-#: includes/class-myc-lists.php:386 includes/myc-phys-ingredient.php:36
+#: includes/class-myc-lists.php:386 includes/myc-order-dates.php:105
+#: includes/myc-phys-ingredient.php:36
 msgid "Date"
 msgstr "Data"
 
@@ -429,15 +427,43 @@ msgstr "Nova data limit per a comandes"
 msgid "Save date"
 msgstr "Guardar data"
 
-#: includes/myc-order-dates.php:96 includes/myc-order-dates.php:101
-msgid "Date for Delivery"
-msgstr "Data d'entrega"
+#: includes/myc-order-dates.php:100
+msgid "How would you like to receive your order?"
+msgstr "Com vols rebre la teva comanda?"
 
-#: includes/myc-order-dates.php:102
-msgid "Select date for delivery"
-msgstr "Selecciona data d'entrega"
+#: includes/myc-order-dates.php:104
+msgid "Delivery mode"
+msgstr "Modus d'entrega"
 
-#: includes/myc-order-dates.php:111
+#: includes/myc-order-dates.php:106
+msgid "Time"
+msgstr "Hora"
+
+#: includes/myc-order-dates.php:112
+msgid "Pick up"
+msgstr "Recollir"
+
+#: includes/myc-order-dates.php:115
+msgid "At ateneu"
+msgstr "A l'ateneu"
+
+#: includes/myc-order-dates.php:119
+msgid "At obrador"
+msgstr "A l'obrador"
+
+#: includes/myc-order-dates.php:174
+msgid "Receive"
+msgstr "Rebre"
+
+#: includes/myc-order-dates.php:177
+msgid "individually"
+msgstr "individual"
+
+#: includes/myc-order-dates.php:181
+msgid "as group"
+msgstr "en grup"
+
+#: includes/myc-order-dates.php:232
 msgid "Please enter a delivery date"
 msgstr "Si us plau, entri una data vàlida per a la entrega de la seva comanda"
 
@@ -532,6 +558,15 @@ msgstr "Anar a la Botiga"
 #: woocommerce/myaccount/orders.php:103
 msgid "No order has been made yet."
 msgstr "Encara no s'ha fet cap comanda."
+
+#~ msgid "Deposit"
+#~ msgstr "Depòsit"
+
+#~ msgid "Date for Delivery"
+#~ msgstr "Data d'entrega"
+
+#~ msgid "Select date for delivery"
+#~ msgstr "Selecciona data d'entrega"
 
 #~ msgid "There was a problem notifying the coopes"
 #~ msgstr "Hi ha hagut un problema amb la notificació de les coopes"

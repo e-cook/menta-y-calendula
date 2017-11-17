@@ -97,7 +97,8 @@ class Cash_My_Account_Endpoint {
 		<div id="cash-transactions-wrapper" class="wrap">
 		    <?php
 		    function is_user_myc_admin( $user_id ) {
-			return isset( get_user_meta( $user_id, 'myc_capabilities' )[0]['administrator'] );
+			global $wpdb;
+			return isset( get_user_meta( $user_id, "{$wpdb->prefix}capabilities" )[0]['administrator'] );
 		    }
 		    if ( is_user_myc_admin( get_current_user_id() ) ): ?>
 			<select name="cu" id="choose_user">

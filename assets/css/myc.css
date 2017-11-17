@@ -39,3 +39,32 @@ div.myc-customer {
 /* .what-to-cook-table tr:nth-of-type(even) { */
 /*     background-color: #ffccff; */
 /* } */
+
+delivery-input {
+    vertical-align: middle;
+}
+
+delivery-label {
+    vertical-align: middle;
+}
+
+table.delivery-times-table td.delivery-time {
+    text-align: right;
+}
+
+table.delivery-times-table td.gray-background {
+    background-color: #f2f2f2;
+}
+
+table.delivery-times-table th.gray-background {
+    background-color: #f2f2f2;
+}
+
+label[disabled="disabled"] {
+    color: #AAA;
+}
+
+td[disabled="disabled"] {
+    color: #AAA;
+}
+
