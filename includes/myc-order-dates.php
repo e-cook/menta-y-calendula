@@ -108,7 +108,7 @@ add_action( 'woocommerce_checkout_before_customer_details', function() {
 	</thead>
 	<tbody>
 	    <tr class="woocommerce-orders-table__row">
-		<th rowspan="5">
+		<th rowspan="5" class="gray-background">
 		    <?php echo __( 'Pick up', 'myc' ) ?>
 		    <label for="pickup-ateneu" class="delivery-label">
 			<input class="pickup-place" type="radio" name="pickup_place" value="pickup-ateneu" id="pickup-ateneu">
@@ -119,10 +119,10 @@ add_action( 'woocommerce_checkout_before_customer_details', function() {
 			<?php echo __( 'At obrador', 'myc' ) ?>
 		    </label>
 		</th>
-		<td>
+		<td class="gray-background">
 		    <?php echo $next_monday; ?>
 		</td>
-		<td class="delivery-time">
+		<td class="delivery-time gray-background">
 		    <label for="pickup-monday-late" class="delivery-label delivery-pickup">
 			20-22
 			<input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-monday-late" value="pickup_monday_late">
@@ -130,10 +130,10 @@ add_action( 'woocommerce_checkout_before_customer_details', function() {
 		</td>
 	    </tr>
 	    <tr class="woocommerce-orders-table__row">
-		<td rowspan="2" class="gray-background">
+		<td rowspan="2">
 		    <?php echo $next_tuesday; ?>
 		</td>
-		<td class="delivery-time gray-background">
+		<td class="delivery-time">
 		    <label for="pickup-tuesday-early" class="delivery-label delivery-pickup">
 			13-14
 			<input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-tuesday-early" value="pickup_tuesday_early">
@@ -141,86 +141,102 @@ add_action( 'woocommerce_checkout_before_customer_details', function() {
 		</td>
 	    </tr>
 	    <tr class="woocommerce-orders-table__row">
-		    <td class="delivery-time gray-background">
-			<label for="pickup-tuesday-late" class="delivery-label delivery-pickup">
-			    20-22
-			    <input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-tuesday-late" value="pickup_tuesday_late">
-			</label>
-		    </td>
-		</tr>
-		
-		<tr class="woocommerce-orders-table__row">
-		    <td rowspan="2">
-			<?php echo $next_wednesday; ?>
-		    </td>
-		    <td class="delivery-time">
-			<label for="pickup-wednesday-early" class="delivery-label delivery-pickup">
-			    13-14
-			    <input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-wednesday-early" value="pickup_wednesday_early">
-			</label>
-		    </td>
-		</tr>
-		<tr class="woocommerce-orders-table__row">
-		    <td class="delivery-time">
-			<label for="pickup-wednesday-late" class="delivery-label delivery-pickup">
-			    20-22
-			    <input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-wednesday-late" value="pickup_wednesday_late">
-			</label>
-		    </td>
-		</tr>
+		<td class="delivery-time">
+		    <label for="pickup-tuesday-late" class="delivery-label delivery-pickup">
+			20-22
+			<input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-tuesday-late" value="pickup_tuesday_late">
+		    </label>
+		</td>
+	    </tr>
+	    
+	    <tr class="woocommerce-orders-table__row">
+		<td rowspan="2" class="gray-background">
+		    <?php echo $next_wednesday; ?>
+		</td>
+		<td class="delivery-time gray-background">
+		    <label for="pickup-wednesday-early" class="delivery-label delivery-pickup">
+			13-14
+			<input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-wednesday-early" value="pickup_wednesday_early">
+		    </label>
+		</td>
+	    </tr>
+	    <tr class="woocommerce-orders-table__row">
+		<td class="delivery-time gray-background">
+		    <label for="pickup-wednesday-late" class="delivery-label delivery-pickup">
+			20-22
+			<input class="delivery-input delivery-pickup" type="radio" name="pickup_time" id="pickup-wednesday-late" value="pickup_wednesday_late">
+		    </label>
+		</td>
+	    </tr>
 
-		<tr class="woocommerce-orders-table__row">
-		    <th rowspan="5" class="delivery-receive gray-background">
-			<?php echo __( 'Receive', 'myc' ) ?>
-			<label for="receive-individual">
-			    <input class="receive-mode" type="radio" name="pickup_place" value="receive-individual">
-			    <?php echo __( 'individually', 'myc' ) ?> (4&euro;)
-			</label>
-			<label for="receive-group">
-			    <input class="receive-mode" type="radio" name="pickup_place" value="receive-group">
-			    <?php echo __( 'as group', 'myc' ) ?> (2&euro;)
-			</label>
-		    </th>
-		    <td class="delivery-receive gray-background">
-			<?php echo $next_monday; ?>
-		    </td>
-		    <td class="delivery-time delivery-receive gray-background">
-			<label for="receive-monday-late" class="delivery-label delivery-receive">
-			    20-22
-			    <input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-monday-late" value="receive_monday_late">
-			</label>
-		    </td>
-		</tr>
-		<tr class="woocommerce-orders-table__row">
-		    <td class="delivery-receive">
-			<?php echo $next_tuesday; ?>
-		    </td>
-		    <td class="delivery-time delivery-receive">
-			<label for="receive-tuesday-early" class="delivery-label delivery-receive">
-			    14-15:30
-			    <input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-tuesday-early" value="receive_tuesday_early">
-			</label>
-		    </td>
-		</tr>
-		<tr class="woocommerce-orders-table__row">
-		    <td rowspan="2" class="delivery-receive gray-background">
-			<?php echo $next_wednesday; ?>
-		    </td>
-		    <td class="delivery-time delivery-receive gray-background">
-			<label for="receive-wednesday-early" class="delivery-label delivery-receive">
-			    14-15:30
-			    <input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-wednesday-early" value="receive_wednesday_early">
-			</label>
-		    </td>
-		</tr>
-		<tr class="woocommerce-orders-table__row">
-		    <td class="delivery-time delivery-receive gray-background">
-			<label for="receive-wednesday-late" class="delivery-label delivery-receive">
-			    20-22
-			    <input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-wednesday-late" value="receive_wednesday_late">
-			</label>
-		    </td>
-		</tr>
+
+	    <tr class="woocommerce-orders-table__row">
+		<th rowspan="4" class="delivery-receive">
+		    <?php echo __( 'Receive', 'myc' ) ?>
+		    <label for="receive-individual">
+			<input class="receive-mode" type="radio" name="pickup_place" value="receive-individual">
+			<?php echo __( 'individually', 'myc' ) ?> (4&euro;)
+		    </label>
+		    <label for="receive-group">
+			<input class="receive-mode" type="radio" name="pickup_place" value="receive-group">
+			<?php echo __( 'as group', 'myc' ) ?> (2&euro;)
+		    </label>
+		</th>
+		<td class="delivery-receive">
+		    <?php echo $next_monday; ?>
+		</td>
+		<td class="delivery-time delivery-receive">
+		    <label for="receive-monday-late" class="delivery-label delivery-receive">
+			20-22
+			<input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-monday-late" value="receive_monday_late">
+		    </label>
+		</td>
+	    </tr>
+	    <tr class="woocommerce-orders-table__row">
+		<td class="delivery-receive gray-background">
+		    <?php echo $next_tuesday; ?>
+		</td>
+		<td class="delivery-time delivery-receive gray-background">
+		    <label for="receive-tuesday-early" class="delivery-label delivery-receive">
+			14-15:30
+			<input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-tuesday-early" value="receive_tuesday_early">
+		    </label>
+		</td>
+	    </tr>
+	    <tr class="woocommerce-orders-table__row">
+		<td rowspan="2" class="delivery-receive">
+		    <?php echo $next_wednesday; ?>
+		</td>
+		<td class="delivery-time delivery-receive">
+		    <label for="receive-wednesday-early" class="delivery-label delivery-receive">
+			14-15:30
+			<input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-wednesday-early" value="receive_wednesday_early">
+		    </label>
+		</td>
+	    </tr>
+	    <tr class="woocommerce-orders-table__row">
+		<td class="delivery-time delivery-receive">
+		    <label for="receive-wednesday-late" class="delivery-label delivery-receive">
+			20-22
+			<input class="delivery-input delivery-receive" type="radio" name="pickup_time" id="receive-wednesday-late" value="receive_wednesday_late">
+		    </label>
+		</td>
+	    </tr>
+
+	    <tr class="woocommerce-orders-table__row">
+		<th class="gray-background">
+		    <label for="alternative_place">
+			<input type="radio" name="pickup_place" id="pickup_alternative" value="alternative">
+			<?php echo __( 'Alternative place' ) ?>
+		    </label>
+		</th>
+		<td colspan="2" class="gray-background">
+		    <label class="alternative_delivery" for="alternative_day">
+			<?php echo __( 'Where and when?' ) ?>
+			<input class="alternative_delivery" type="text" id="alternative_details">
+		    </label>
+		</td>
+	    </tr>
 	</tbody>
     </table>
 </div>
@@ -283,9 +299,18 @@ add_action( 'wp_footer', function() {
 ?>
 <script type="text/javascript">
  jQuery(document).ready(function() {
-     jQuery( '#<?php echo $pickup_place ?>' ).prop("checked", true);
-     jQuery( '#<?php echo $pickup_time ?>' ).prop("checked", true);
-     jQuery( '.delivery-<?php echo $other_choice ?>' ).attr('disabled', 'true');
+     if ('<?php echo $pickup_place ?>' == 'alternative' ) {
+	 jQuery( '.delivery-pickup'  ).attr( 'disabled', 'true' ).prop("checked", false);	 
+	 jQuery( '.delivery-receive' ).attr( 'disabled', 'true' ).prop("checked", false);
+	 jQuery( '#pickup_alternative' ).prop( 'checked', true );
+	 jQuery( '#alternative_details' ).val( '<?php echo $pickup_time ?>' );
+     } else {
+	 jQuery( '#<?php echo $pickup_place ?>' ).prop("checked", true);
+	 jQuery( '#<?php echo $pickup_time ?>' ).prop("checked", true);
+	 jQuery( '.delivery-<?php echo $other_choice ?>' ).attr('disabled', 'true');
+	 jQuery( '#pickup_alternative' ).prop( 'checked', false );
+	 jQuery( '.alternative_delivery' ).attr( 'disabled', true );
+     }
      function is_one_checked( class_name ) {
 	 if ( jQuery( 'input.' + class_name + '[type=radio]:checked' ).length ) {
 	     return true;
@@ -295,6 +320,7 @@ add_action( 'wp_footer', function() {
      jQuery( '.pickup-place' ).click( function() {
 	 jQuery( '.delivery-pickup' ).removeAttr( 'disabled' );
 	 jQuery( '.delivery-receive' ).attr( 'disabled', 'true' ).prop("checked", false);
+	 jQuery( '.alternative_delivery' ).attr( 'disabled', true );
 	 if ( ! is_one_checked( 'delivery-pickup' ) ) {
 	     jQuery( '#pickup-monday-late' ).prop( 'checked', true );
 	 }
@@ -302,9 +328,15 @@ add_action( 'wp_footer', function() {
      jQuery( '.receive-mode' ).click( function() {
 	 jQuery( '.delivery-receive' ).removeAttr( 'disabled' );
 	 jQuery( '.delivery-pickup' ).attr( 'disabled', 'true' ).prop("checked", false);	 
+	 jQuery( '.alternative_delivery' ).attr( 'disabled', true );
 	 if ( ! is_one_checked( 'delivery-receive' ) ) {
 	     jQuery( '#receive-monday-late' ).prop( 'checked', true );
 	 }
+     });
+     jQuery( '#pickup_alternative' ).click( function() {
+	 jQuery( '.delivery-pickup'  ).attr( 'disabled', 'true' ).prop("checked", false);	 
+	 jQuery( '.delivery-receive' ).attr( 'disabled', 'true' ).prop("checked", false);
+	 jQuery( '.alternative_delivery' ).removeAttr( 'disabled' );
      });
  });
 </script>
