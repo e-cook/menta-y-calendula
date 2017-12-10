@@ -68,3 +68,15 @@ td[disabled="disabled"] {
     color: #AAA;
 }
 
+input[disabled="disabled"] {
+    color: #AAA;
+}
+
+.carousel-inner>.item {
+-webkit-transition: 0.9s ease-in-out left;
+transition: 0.9s ease-in-out left;
+-webkit-transition: 0.9s, ease-in-out, left;
+-moz-transition: 0.9s, ease-in-out, left;
+-o-transition: 0.9s, ease-in-out, left;
+transition: 0.9s, ease-in-out, left;
+}
